@@ -4,6 +4,11 @@ date: "2022-02-17T22:12:03.284Z"
 description: "NeoVim basic setup"
 ---
 
+
+## Neovim
+
+`Neovim` config location: `~/.local/share/nvim`
+
 ## Setting Up NeoVim With Python
 
 Vim plugins are able to execute Python code when Vim is compiled with Python support.
@@ -37,6 +42,8 @@ end)
 ```
 
 To install packages run `:PackerSync`
+
+
 
 ## References
 
