@@ -1,13 +1,14 @@
 module.exports = {
   siteMetadata: {
-    title: `Blog`,
+    title: `Tech Notes`,
     author: {
-      name: `Viktor`,
-      summary: `summary`,
+      name: `Viktor Doroshenko`,
+      summary: `Technical notes on variety of subjects`,
     },
-    description: `init`,
+    description: `Technical notes on variety of subjects`,
     siteUrl: `https://doroshenko-viktor.github.io/`,
     social: {
+      email: "soc.doroshenko@gmail.com",
     },
   },
   plugins: [
@@ -112,8 +113,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `Viktor Doroshenko technical notes`,
+        short_name: `tech notes`,
         start_url: `/`,
         background_color: `#ffffff`,
         // This will impact how browsers show your PWA/website

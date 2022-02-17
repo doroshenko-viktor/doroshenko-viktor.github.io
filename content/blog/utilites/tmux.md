@@ -1,7 +1,7 @@
 ---
 title: Tmux - Terminal Multiplexer Cheatsheet
-date: "2015-05-01T22:12:03.284Z"
-description: "Hello World"
+date: "2022-02-17T22:12:03.284Z"
+description: "Introduction to Tmux, it's basic commands and configuration"
 ---
 
 ## Overview
