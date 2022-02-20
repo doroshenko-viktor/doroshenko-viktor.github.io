@@ -102,6 +102,16 @@ tmux source-file ~/.tmux.conf
   bind -n M-Down select-pane -D
   ```
 
+- Bindings for resizing panes:
+  
+  ```conf
+  bind -n M-_ resize-pane -Z
+  bind -T M-Down resize-pane -D 3
+  bind -n M-Up resize-pane -U 3
+  bind -n M-Left resize-pane -L 3
+  bind -n M-Right resize-pane -R 3
+  ```
+
 - Show activity notifications from background windows:
 
   ```conf
