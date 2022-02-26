@@ -1,4 +1,8 @@
-# Smart Pointers
+---
+title: Rust Smart Pointers
+date: "2022-02-26"
+description: "Rust smart pointers definition, kinds and usecases."
+---
 
 `Smart pointers` are data structures that not only act like a pointer but also have additional 
 metadata and capabilities.
