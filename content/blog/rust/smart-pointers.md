@@ -402,4 +402,5 @@ fn main() {
 ## References
 
 [Reference Cycles](https://doc.rust-lang.org/stable/book/ch15-06-reference-cycles.html)
+[Using Box<T> to Point to Data on the Heap](https://doc.rust-lang.org/stable/book/ch15-01-box.html)
 
