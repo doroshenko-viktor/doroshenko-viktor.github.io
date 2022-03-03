@@ -115,6 +115,7 @@ fn main() {
 But in this case after thread has started, we don't have access to `v` vector, because it has 
 already been moved.
 
+
 ## References
 
 - [Using Threads to Run Code Simultaneously](https://doc.rust-lang.org/stable/book/ch16-01-threads.html)
