@@ -1,4 +1,8 @@
-# Rust Concurrency
+---
+title: Rust Concurrency
+date: "2022-03-05"
+description: "Rust concurrency model and message passing"
+---
 
 Modern operating systems manage programms execution with `processes`.
 
@@ -116,7 +120,63 @@ But in this case after thread has started, we don't have access to `v` vector, b
 already been moved.
 
 
+## Synchronization
+
+### Message Passing
+
+`Message passing` - threads or actors communicate by sending each other messages containing data.
+As an implementation of this concept Rust uses `channels`.
+
+Channel consists of two parts:
+
+- `transmitter` - is an upstream where source data is sent.
+- `receiver` - is a target location of data.
+
+Channel is closing when closing either `transmitter` or `receiver`.
+
+```rust
+use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+    });
+
+    let received = rx.recv().unwrap();
+    println!("Got: {}", received);
+}
+```
+
+`mpsc` stands for multiple producer, single consumer. Channel can have multiple sending ends that 
+produce values but only one receiving end that consumes those values. The `mpsc::channel` function 
+returns a tuple, the first element of which is the sending end and the second element is the 
+receiving end. The abbreviations `tx` and `rx` are traditionally used in many fields for 
+transmitter and receiver respectively, so we name our variables as such to indicate each end.
+
+We move transmitter to the new thread and send a value into it from this thread. The spawned thread 
+needs to own the transmitting end of the channel to be able to send messages through the channel.
+The send method returns a `Result<T, E>` type, so if the receiving end has already been dropped 
+and there’s nowhere to send a value, the send operation will return an error.
+
+Then we are able to receive sent value in the main thread with receiver instance.
+
+`recv`, short for receive, which will block the main thread’s execution and wait until a value is 
+sent down the channel. Once a value is sent, recv will return it in a `Result<T, E>`. When the 
+sending end of the channel closes, recv will return an error to signal that no more values will be 
+coming.
+
+The `try_recv` method doesn’t block, but will instead return a `Result<T, E>` immediately: an `Ok` 
+value holding a message if one is available and an `Err` value if there aren’t any messages this 
+time. Using `try_recv` is useful if this thread has other work to do while waiting for messages: 
+we could write a loop that calls `try_recv` every so often, handles a message if one is available, 
+and otherwise does other work for a little while until checking again.
+
 ## References
 
 - [Using Threads to Run Code Simultaneously](https://doc.rust-lang.org/stable/book/ch16-01-threads.html)
 - [Operating System - Processes](https://www.tutorialspoint.com/operating_system/os_processes.html)
+- [Using Message Passing to Transfer Data Between Threads](https://doc.rust-lang.org/stable/book/ch16-02-message-passing.html)
