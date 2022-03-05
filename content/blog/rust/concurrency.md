@@ -164,6 +164,8 @@ and there’s nowhere to send a value, the send operation will return an error.
 
 Then we are able to receive sent value in the main thread with receiver instance.
 
+Send moves ownership of sent variables so it is not possible to use them after that in this thread.
+
 `recv`, short for receive, which will block the main thread’s execution and wait until a value is 
 sent down the channel. Once a value is sent, recv will return it in a `Result<T, E>`. When the 
 sending end of the channel closes, recv will return an error to signal that no more values will be 
@@ -174,6 +176,51 @@ value holding a message if one is available and an `Err` value if there aren’t
 time. Using `try_recv` is useful if this thread has other work to do while waiting for messages: 
 we could write a loop that calls `try_recv` every so often, handles a message if one is available, 
 and otherwise does other work for a little while until checking again.
+
+### Multiple Producers
+
+```rust
+use std::sync::mpsc;
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    let tx1 = tx.clone();
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+
+        for val in vals {
+            tx1.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("more"),
+            String::from("messages"),
+            String::from("for"),
+            String::from("you"),
+        ];
+
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for received in rx {
+        println!("Got: {}", received);
+    }
+}
+```
 
 ## References
 
