@@ -235,7 +235,12 @@ There are two basic steps to use `mutex`:
 1. Engage lock with mutex before accessing actual data
 2. Release lock from mutex to allow other threads to use it
 
-**Mutex<T>:**
+**Mutex<T>** - is a smart pointer allowing to access inner data concurrently. To use inner value
+we have to call `lock` method on it. It will block the thread and return a `LockResult`. If the
+value is locked by another thread it will wait for release. If another thread, which locked 
+resource before current `lock` call paniced, `LockResult` will return error. Success case is 
+`MutexGuard`, which points to actual data. It implements `Deref` and `Drop` traits, so it will 
+automatically release the locked value after `MutexGuard` will go out of scope.
 
 Let's see, how to use mutex in Rust on example:
 
@@ -254,7 +259,44 @@ fn main() {
 }
 ```
 
+**Sharing mutexes between threads:**
 
+`Mutex<T>` can not be easily shared between threads because of ownership rules ensuring, that 
+there is only a single owner of the variable may exist at one moment of time. So we have to use 
+wrapping to another smart pointer. We may try to use `Rc<T>` smart pointer, but although it 
+can solve the problem partially, it is not intended to use in multithreaded context. But there is 
+a similar concpet - `std::sync::atomic::Arc<T>`, which does the same, `Rc<T>` can, but with 
+guarantees for thread safety. 
+
+The reason, why functionality of `Arc<T>` does not embedded into regular `Rc<T>` is little 
+performance downgrade as a price for thread safety. So if we don't require synchronization, 
+we normally don't need this guarantees.
+
+```rust
+use std::sync::{Arc, Mutex};
+use std::thread;
+
+fn main() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}
+```
 
 ## References
 
