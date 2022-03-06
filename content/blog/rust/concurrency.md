@@ -222,6 +222,40 @@ fn main() {
 }
 ```
 
+## Mutexes
+
+`Mutex` is an abbreviation for mutual exclusion, as in, a mutex allows only one thread to access 
+some data at any given time. To access the data in a mutex, a thread must first signal that it 
+wants access by asking to acquire the mutex’s lock. The lock is a data structure that is part of 
+the mutex that keeps track of who currently has exclusive access to the data. Therefore, the mutex 
+is described as guarding the data it holds via the locking system.
+
+There are two basic steps to use `mutex`:
+
+1. Engage lock with mutex before accessing actual data
+2. Release lock from mutex to allow other threads to use it
+
+**Mutex<T>:**
+
+Let's see, how to use mutex in Rust on example:
+
+```rust
+use std::sync::Mutex;
+
+fn main() {
+    let m = Mutex::new(5);
+
+    {
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+
+    println!("m = {:?}", m);
+}
+```
+
+
+
 ## References
 
 - [Using Threads to Run Code Simultaneously](https://doc.rust-lang.org/stable/book/ch16-01-threads.html)
