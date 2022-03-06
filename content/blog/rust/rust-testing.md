@@ -1,3 +1,9 @@
+---
+title: Rust - Testing Code
+date: "2022-03-02"
+description: "Rust basic test creation and running concepts"
+---
+
 # Rust Testing
 
 ## Cargo Test

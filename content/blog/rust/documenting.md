@@ -1,4 +1,8 @@
-# Rust Documenting
+---
+title: Rust - Creating Documentation
+date: "2022-03-02"
+description: "Rust ways to create documented code"
+---
 
 Rust has a feature of documentation comments. These comments may be implemented with `///`
 directive immediately before piece of documented code. Such comments may be compiled to html docs.
@@ -8,6 +12,9 @@ To generate actual documentation use `cargo doc`. It compiles documentation and 
 `./target/doc` directory inside of the project. 
 
 `cargo doc --open` command not only compiles documentation, but also opens it in the browser.
+
+`//!` declaration used to create documentation for comments. Usually it used for documenting
+crates or modules.
 
 ## Doc Comments Structure
 

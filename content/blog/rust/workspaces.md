@@ -1,3 +1,9 @@
+---
+title: Rust - Workspaces
+date: "2022-03-02"
+description: "Working with complex Rust projects"
+---
+
 # Workspaces
 
 A workspace is a set of packages that share the same Cargo.lock and output directory.

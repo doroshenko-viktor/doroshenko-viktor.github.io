@@ -1,4 +1,10 @@
-# Cargo
+---
+title: Rust Package Management
+date: "2022-03-03"
+description: "Rust package management examples"
+---
+
+## Cargo
 
 ## Profiles
 
