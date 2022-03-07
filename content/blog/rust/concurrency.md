@@ -298,6 +298,12 @@ fn main() {
 }
 ```
 
+## Sync
+
+To be able to send objects and their ownership between threads, these objects have to implement
+`Sync` trait. By default almost all Rust objects implements it. But there are some exceptions, like
+`Rc<T>`, which is not thread safe.
+
 ## References
 
 - [Using Threads to Run Code Simultaneously](https://doc.rust-lang.org/stable/book/ch16-01-threads.html)
