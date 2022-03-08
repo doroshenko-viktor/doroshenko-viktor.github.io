@@ -94,6 +94,7 @@ tmux source-file ~/.tmux.conf
   ```
 
 - Change pane switching to more vim-like combinations with `<Alt>+<Shift>+<hjkl>`:
+  Here `-n` flag defines, that we don't want to use `<Prefix>` in shortcut.
 
   ```conf
   bind -n M-Left select-pane -L
@@ -132,3 +133,4 @@ tmux source-file ~/.tmux.conf
 - [Tmux Github repository](https://github.com/tmux/tmux)
 - [tmux Tutorial — Split Terminal Windows Easily](https://lukaszwrobel.pl/blog/tmux-tutorial-split-terminal-windows-easily/)
 - [tmux - a very simple beginner's guide](https://www.ocf.berkeley.edu/~ckuehl/tmux/)
+- [Writing Your tmux Config: a Detailed Guide](https://thevaluable.dev/tmux-config-mouseless/)
