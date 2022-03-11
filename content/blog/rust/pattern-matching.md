@@ -3,3 +3,112 @@ title: Rust - Pattern Matching
 date: "2022-03-11"
 description: "Pattern matching in Rust"
 ---
+
+Pattern matching in Rust implemented with `match` statement, which contains list of pattern to 
+expression pairs called `arms`. 
+
+```rust
+match VALUE {
+    PATTERN => EXPRESSION,
+    PATTERN => EXPRESSION,
+    PATTERN => EXPRESSION,
+}
+```
+
+`match` arms must contain all possible variants of execution. There will be a compilation error
+if there is some case of exectution which not specified as a `match` arm.
+
+One solution to use `_` pattern, which allows to gather all possible variants, not specified
+directly.
+
+## if let
+
+Another solution for situations when we need to catch only one pattern case is to use `if let` construct.
+
+```rust
+fn main() {
+    let favorite_color: Option<&str> = None;
+    let is_tuesday = false;
+    let age: Result<u8, _> = "34".parse();
+
+    if let Some(color) = favorite_color {
+        println!("Using your favorite color, {}, as the background", color);
+    } else if is_tuesday {
+        println!("Tuesday is green day!");
+    } else if let Ok(age) = age {
+        if age > 30 {
+            println!("Using purple as the background color");
+        } else {
+            println!("Using orange as the background color");
+        }
+    } else {
+        println!("Using blue as the background color");
+    }
+}
+```
+
+Here important to notice, that `let if` as well as `match` can create shadowing varable, like in
+line `} else if let Ok(age) = age {`. This means that further `if age > 30` has the value from `Ok(age)`
+and not original `age`. And also this means that it is not possible to use age this way:
+`} else if let Ok(age) = age && age > 30{`.
+
+## while let
+
+This expression is sililar to `if let`, but here `while` loop will run until pattern is matching.
+
+```rust
+let mut stack = Vec::new();
+
+stack.push(1);
+stack.push(2);
+stack.push(3);
+
+while let Some(top) = stack.pop() {
+    println!("{}", top);
+}
+```
+
+## for
+
+`for` loop in Rust also uses pattern matching. In particular, expression, following `for` keyword
+is a pattern.
+
+```rust
+let v = vec!['a', 'b', 'c'];
+
+for (index, value) in v.iter().enumerate() {
+    println!("{} is at index {}", value, index);
+}
+```
+
+## let
+
+Assignment in Rust is also a pattern. For example: `let x = 5;` is `let PATTERN = EXPRESSION;`. 
+Example, `x` is a pattern that means “bind what matches here to the variable x.” Because the name 
+`x` is the whole pattern, this pattern effectively means “bind everything to the variable `x`, 
+whatever the value is.”
+
+More complex example of it:
+
+```rust
+let (x, y, z) = (1, 2, 3);
+```
+
+Functional parameters also may be patterns:
+
+```rust
+fn print_coordinates(&(x, y): &(i32, i32)) {
+    println!("Current location: ({}, {})", x, y);
+}
+
+fn main() {
+    let point = (3, 5);
+    print_coordinates(&point);
+}
+```
+
+
+
+## References
+
+- [Rust Book - Pattern Matching](https://doc.rust-lang.org/stable/book/ch18-01-all-the-places-for-patterns.html)
