@@ -36,7 +36,7 @@ const arr = Array.from('string');
 // will contain ['s', 't','r', 'i', 'n', 'g'];
 ```
 
-## Looping Over Iterable
+### Looping Over Array
 
 To loop over an iterable object we can use `for .. of ..` loop:
 
@@ -44,7 +44,7 @@ To loop over an iterable object we can use `for .. of ..` loop:
 for (const data of iterable) {}
 ```
 
-## Methods On Collections
+### Array Methods
 
 **push:**
 
@@ -224,7 +224,7 @@ It accepts a reducer function, which signature contains accumulation value and c
 well as usual for some other collection methods index and whole array reference. And also `reduce`
 accepts second optional value - initial accumulation value.
 
-## Sorting
+### Sorting
 
 **sort:**
 
@@ -239,4 +239,73 @@ const sorted = elemsToSort.sort((a, b) => {
   return 0;
 });
 // sorted: [1, 2, 3, 4, 5, 6, 10]
+```
+
+## Set
+
+`Set` is a data structure, which contains unordered and arbitrary number of unique elements. It is
+iterable, but also contains some unique methods. It does not guarantee order of stored elements and
+does not allow access to elements by index.
+
+Creting `Set`:
+
+```js
+const s1 = new Set([1, 2, 3]);
+console.log(s1);
+```
+
+Iterating over `Set`;
+
+```js
+for (const elem of s1.entries()) {
+  console.log(elem);
+}
+```
+
+Cheching existence and deleting of element inside `Set`:
+
+```js
+if (s1.has(2)) {
+  s1.delete(2);
+}
+```
+
+## Map
+
+`Map` is a `key-value` data structure, where key must be a unique value. It is iterable with some
+additional methods. It does not allow acces by index. Instead values may be accessed only by it's
+keys. Unlike `object` keys may be not only of `string`, `number` or `symbol` type, but any type.
+
+Creating of `Map`:
+
+```js
+const m1 = new Map([
+  ["key1", "value1"],
+  ["key2", "value2"],
+]);
+```
+
+Inserting and retrieving values:
+
+```js
+m1.set("key3", "value3");
+const value2 = m1.get("key2");
+```
+
+Iterating over `Map`:
+
+```js
+for (const [key, value] of m1.entries()) {
+  console.log(key, value);
+}
+```
+
+`entries()` returns key/value pairs iterable of two elements arrays. 
+But maps have also `keys()` methods, which returns iterable of only map's keys and
+`values()` method, which returns all values from map.
+
+To get size of map:
+
+```js
+const m1length = m1.size;
 ```
