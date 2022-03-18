@@ -276,6 +276,10 @@ if (s1.has(2)) {
 additional methods. It does not allow acces by index. Instead values may be accessed only by it's
 keys. Unlike `object` keys may be not only of `string`, `number` or `symbol` type, but any type.
 
+Maps are quite similar to js objects, but unlike them maps allow any data as key and also may be
+more performant on large amount of data sets. Also maps are better on frequent inserts/removes of
+data.
+
 Creating of `Map`:
 
 ```js

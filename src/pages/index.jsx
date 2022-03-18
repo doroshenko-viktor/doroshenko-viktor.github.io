@@ -14,11 +14,7 @@ const BlogIndex = ({ data, location }) => {
       <Layout location={location} title={siteTitle}>
         <Seo title="All posts" />
         <Bio />
-        <p>
-          No blog posts found. Add markdown posts to "content/blog" (or the
-          directory you specified for the "gatsby-source-filesystem" plugin in
-          gatsby-config.js).
-        </p>
+        <p>No blog posts found.</p>
       </Layout>
     )
   }
@@ -27,14 +23,14 @@ const BlogIndex = ({ data, location }) => {
     <Layout location={location} title={siteTitle} >
       <Seo title="All posts" />
       <Bio />
-      <ol style={{ listStyle: `none` }}>
+      <ul className="index-post-list" >
         {posts.map(post => {
           const title = post.frontmatter.title || post.fields.slug
 
           return (
-            <li key={post.fields.slug}>
+            <li className="index-post-list__item" key={post.fields.slug}>
               <article
-                className="post-list-item"
+                className="index-post-list__article"
                 itemScope
                 itemType="http://schema.org/Article"
               >
@@ -58,7 +54,7 @@ const BlogIndex = ({ data, location }) => {
             </li>
           )
         })}
-      </ol>
+      </ul>
     </Layout>
   )
 }
