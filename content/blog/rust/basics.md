@@ -1,3 +1,9 @@
+---
+title: Rust Basics
+date: "2022-03-03"
+description: "Rust basic concepts and operators"
+---
+
 ## Never Type
 
 `!` is an empty type in Rust, which can never be instanciated. It usually used to indicate that
