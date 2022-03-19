@@ -4,6 +4,26 @@ date: "2022-03-12"
 description: "Working with Javascript strings"
 ---
 
+## String Object Vs String Primitive
+
+There is a difference between value and reference strings in `js`.
+
+String primitives:
+
+```js
+const s1 = "s1";
+const s2 = 's2';
+const s3 = String("s3");
+console.log(typeof s1) // "string"
+```
+
+String objects:
+
+```js
+const s1 = new String("s1");
+console.log(typeof s1)  // "object"
+```
+
 ## String Methods
 
 **split:**
@@ -29,3 +49,14 @@ const str = parts.join("; ");
 ```
 
 If divisior is not specified, default divisior will be `,`.
+
+**Accessing individual characters:**
+
+To get character from string with given index use `charAt` method:
+
+```js
+const str = "abcde";
+const charB = str.charAt(1);
+// or
+const charB_Ecma5 = str[1];
+```
