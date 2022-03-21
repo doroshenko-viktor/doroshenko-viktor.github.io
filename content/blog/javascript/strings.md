@@ -60,3 +60,14 @@ const charB = str.charAt(1);
 // or
 const charB_Ecma5 = str[1];
 ```
+
+**Multiline strings:**
+
+To create long strings on multiple lines it is possible to add multiple strings with `+`, but the
+following will have same result:
+
+```js
+const str = "line1 \
+  line2 \
+  line3";
+```
