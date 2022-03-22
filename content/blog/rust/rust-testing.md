@@ -13,3 +13,10 @@ To run single specified test case:
 ```bash
 cargo test <test_case_name>
 ```
+
+Test with logs printed:
+
+```bash
+cargo test -- --nocapture
+```
+
