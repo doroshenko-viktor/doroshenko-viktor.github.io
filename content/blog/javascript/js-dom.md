@@ -51,4 +51,58 @@ To traverse the `DOM` there are a bunch of methods on node:
 - `childNodes` - get collection of all element's children including text nodes.
 - `children` - get children element nodes without text nodes
 
+## Modification Of DOM Elements
 
+- `element.innerHTML` - allows to get or set inner content of current element
+
+  ```html
+  <ul>
+    <li>li - 1</li>
+    <li>li - 2</li>
+    <li>li - 3</li>
+  </ul>
+  ```
+
+  ```js
+  const $list = document.querySelector("ul")
+  console.log($list.innerHTML)
+  // <li>li - 1</li>
+  // <li>li - 2</li>
+  // <li>li - 3</li>
+  ```
+
+- `element.innerText` - allows to get or set internal text content of given element and all it's children:
+
+  ```html
+  <ul>
+    <li>li - 1</li>
+    <li>li - 2</li>
+    <li>li - 3</li>
+  </ul>
+  ```
+
+  ```js
+  const $list = document.querySelector("ul")
+  console.log($list.innerText)
+  // li - 1
+  // li - 2
+  // li - 3
+  ```
+
+- `element.style` - object, which contains style css properties, assigned to this element.
+  _Important to notice: name of style attribute in js will be transformed to camel case, e.g. `background-color` -> `backgroundColor`_
+- `element.getAttribute(<attribute-name>)` - allows to get html attribute value
+- `element.setAttribute(<attribute-name>, <value>)` - allows to change node attribute value
+
+  ```js
+  const $input = document.getElementById("text-input")
+  const inputValue = $input.getAttribute("value")
+  $input.setAttribute("value", "new text")
+  ```
+
+- `element.removeAttribute(<attribute-name>)` - remove node attribute
+- `document.createElement(<tag-name>)` - creates new element node of given html tag
+- `element.appendChild(<child>)` - insert given element to target element children
+- `element.insertBefore(<element>)` - insert given element before target element as a sibling
+- `element.replaceChild(newElement, oldElement)` - insert `newElement` instead of `oldElement`
+- `element.remove()` - removes element from DOM
