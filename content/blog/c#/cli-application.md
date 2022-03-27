@@ -459,5 +459,5 @@ $: dotnet run -- subtract 2 2
 Specify --help for a list of available options and commands.
 Unhandled exception. Microsoft.Extensions.CommandLineUtils.CommandParsingException: Unrecognized command or argument 'subtract'
    at Microsoft.Extensions.CommandLineUtils.CommandLineApplication.Execute(String[] args)
-   at Program.<Main>$(String[] args) in /Users/vdoroshenko/study/study-projects/csharp-cli-app/CLI/Program.cs:line 78
+   at Program.<Main>$(String[] args) in ./csharp-cli-app/CLI/Program.cs:line 78
 ```
