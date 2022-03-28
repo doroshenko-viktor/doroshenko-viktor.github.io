@@ -89,6 +89,14 @@ To traverse the `DOM` there are a bunch of methods on node:
   // li - 3
   ```
 
+- `element.insertAdjacentHTML(position, value)` - inserts html content on specified position inside of
+  source element. Where `position` may be:
+
+  - `beforebegin` - before the element. In this case source element should have parent.
+  - `afterbegin` - as a first child
+  - `beforeend` - as a last child
+  - `afterend` - after the source element(which should have a parent)
+
 - `element.style` - object, which contains style css properties, assigned to this element.
   _Important to notice: name of style attribute in js will be transformed to camel case, e.g. `background-color` -> `backgroundColor`_
 - `element.getAttribute(<attribute-name>)` - allows to get html attribute value
@@ -102,7 +110,14 @@ To traverse the `DOM` there are a bunch of methods on node:
 
 - `element.removeAttribute(<attribute-name>)` - remove node attribute
 - `document.createElement(<tag-name>)` - creates new element node of given html tag
+
+  _Note: this method is always called on `document` object and not on any other node element_
+
 - `element.appendChild(<child>)` - insert given element to target element children
+- `element.lastElementChild` - selects last child of element
+  - `before` - selects element before this
+  - `after` - selects element after this
+  - `replaceWith()` - replace this element with new provided
 - `element.insertBefore(<element>)` - insert given element before target element as a sibling
 - `element.replaceChild(newElement, oldElement)` - insert `newElement` instead of `oldElement`
 - `element.remove()` - removes element from DOM
