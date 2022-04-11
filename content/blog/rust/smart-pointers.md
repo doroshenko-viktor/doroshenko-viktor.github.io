@@ -283,7 +283,7 @@ count after creating c = 3
 count after c goes out of scope = 2
 ```
 
-**Dereferencing `Rc`:**
+**Dereferencing `Rc<T>`:**
 
 To dereference `Rc<T>` used operator `*`, but it is also can be done implicitly. So it
 is possible to do:
@@ -292,6 +292,13 @@ is possible to do:
 let x = Rc::new("value".to_string());
 print!("let: {}", x.len());
 ```
+
+**Moving value from `Rc<T>`:**
+
+Sometimes it is useful to move ownership on the underlying value from `Rc` to somewhere else.
+It may be done with `Rc::try_unwrap(rc_pointer)`. But there is a complexity - such move may
+be done only in case, when there is only one strong reference exists in this `Rc`. In other
+case `try_unwrap` will return an error.
 
 ## Interior Mutability And `RefCell`
 
