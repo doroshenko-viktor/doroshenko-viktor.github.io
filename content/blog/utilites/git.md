@@ -35,11 +35,31 @@ where:
 ## Log
 
 To display list of commits there is a `git log` command, which opens view on last commits.
-It is possible to use basic Vim commands to navigate this view.
+It is possible to use basic Vim commands to navigate this view if you need to see some earlier commits.
 
+**Display specific commit:**
+
+To show information about some particular commit there is a `git log <commit id>` command.
+It will display list of commits starting and earlier than specified.
+
+**Simple view:**
+
+By default `log` displays all commit information including `SHA`, author, date and message.
 If you don't need all the additional information, displayed by default, you can use `git log --oneline`.
 It will display shortened commit id and commit message.
 
 **Commit graph:**
 
 Sometimes it is useful to see which branches became sources for our commit history. To see it use `git log --graph`.
+
+**Commit statistics:**
+
+`git log --stat` will display, which files were modified in the commit, how many lines were modified.
+
+`git log --patch` of equivalent `git log -p` will display changes, that were made in the commits.
+
+
+
+## References
+
+- [Git log command](https://www.freecodecamp.org/news/git-log-command/)
