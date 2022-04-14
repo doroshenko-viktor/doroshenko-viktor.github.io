@@ -11,7 +11,36 @@ configuration file
 
 <!-- To set up git TODO: -->
 
-To configure user email `git config user.email `
+To configure user email `git config user.email <email>`
+
+## Committing
+
+### Commit Options
+
+**Verbose mode:**
+
+`git commit -v` allows to see all the changes, made on commit in opened default editor.
+
+_This option is incompatible with `-m` option_
+
+**Commit with specified message:**
+
+`git commit -m "<commit message>"` - create a commit with specified message without opening a default editor
+
+**Commit all:**
+
+`git commit -a` - stage all modified files and commit them.
+_This will not stage new files_
+
+**Add new changes to last commit:**
+
+If you have some changes in the repository and want add them to the last commit, use `-a` flag.
+`git commit --amend`
+_Note, that this command will require commit message change_
+
+To not change last commit's message add `--no-edit` flag
+
+`amend` also allows to change author of commit: `git commit --amend --author="Author Name <email>"`
 
 ## Merge Branches
 
@@ -58,8 +87,7 @@ Sometimes it is useful to see which branches became sources for our commit histo
 
 `git log --patch` of equivalent `git log -p` will display changes, that were made in the commits.
 
-
-
 ## References
 
 - [Git log command](https://www.freecodecamp.org/news/git-log-command/)
+- [Git Commit Command Explained](https://www.freecodecamp.org/news/git-commit-command-explained/)
