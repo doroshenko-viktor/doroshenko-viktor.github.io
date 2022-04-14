@@ -42,6 +42,27 @@ To not change last commit's message add `--no-edit` flag
 
 `amend` also allows to change author of commit: `git commit --amend --author="Author Name <email>"`
 
+## Checkout
+
+`git checkout` allows to switch between branches, commits or files.
+
+**Switch branches:**
+
+Switch branches: `git checkout <branch-name>` - switch to given branch by it's name.
+
+To create a new branch use `-b` flag: `git checkout -b <new-branch-name>`.
+
+`-f` or `--force` flag allows to change branches if there are conflicting changes exist.
+
+**Checkout on particular commit:**
+
+`git checkout <commit-id>` switches to some commit by it's given commit id.
+
+**Resetting changes:**
+
+To reset uncommitted changes you can use: `git checkout -- <file-name>` to reset specific file
+and `git checkout .` to reset all uncommitted changes.
+
 ## Merge Branches
 
 **Merge with automatic accept of all incoming changes:**
