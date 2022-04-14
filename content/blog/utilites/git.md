@@ -80,7 +80,22 @@ where:
 - `strategy option value` - `ours` to ovveride all conflicts with values from current branch and
   `theirs` to override all conflicts with values from incoming branch
 
-## Observing Changes
+## Stash
+
+`stash` in `git` is a special area, where some uncommitted changes may be temporary stored.
+Stashed changes are available to all branches in the repository.
+
+To add current uncommitted changes to stash run: `git stash save "<message>"`
+
+To display available data in stash: `git stash list`.
+To check changes inside of a particular stash: `git stash show <stash-name>`.
+`-p` flag enables display of diff-like changes.
+
+To apply stash data and also keep this data in stash: `git stash apply <stash-name>`
+To apply stash and remove this data from stash: `git stash pop <stash-name>`
+
+To remove stash: `git stash drop <stash-name>`
+and to clear all stashes `git stash clear`.
 
 ## Log
 
@@ -112,3 +127,4 @@ Sometimes it is useful to see which branches became sources for our commit histo
 
 - [Git log command](https://www.freecodecamp.org/news/git-log-command/)
 - [Git Commit Command Explained](https://www.freecodecamp.org/news/git-commit-command-explained/)
+- [Git Stash Explained: How to Temporarily Store Local Changes in Git](https://www.freecodecamp.org/news/git-stash-explained/)
