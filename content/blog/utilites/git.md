@@ -42,6 +42,25 @@ To not change last commit's message add `--no-edit` flag
 
 `amend` also allows to change author of commit: `git commit --amend --author="Author Name <email>"`
 
+## Branches
+
+In `git` branch is a pointer to a specific commit.
+
+To list existing local branches: `git branch`. `*` sign shows current branch.
+To list all existing locals and remote branches run `git branch -a`.
+`git branch -r` displays only remote branches.
+
+**Removing branches:**
+
+To remove **local branch** you need to switch to any other, not removing, branch.
+And then run command: `git branch -d <branch-name>` or `git branch --delete <branch-name>`.
+
+_Important to note: to delete branch, it must not contain unmerged changes or unpushed commits._
+
+To force remove of a branch with blocking issues, you can use `--delete --force` flag or similar `-D`.
+
+To remove **remote branch** run: `git push <remote> -d <branch-name>`.
+
 ## Checkout
 
 `git checkout` allows to switch between branches, commits or files.
@@ -128,3 +147,4 @@ Sometimes it is useful to see which branches became sources for our commit histo
 - [Git log command](https://www.freecodecamp.org/news/git-log-command/)
 - [Git Commit Command Explained](https://www.freecodecamp.org/news/git-commit-command-explained/)
 - [Git Stash Explained: How to Temporarily Store Local Changes in Git](https://www.freecodecamp.org/news/git-stash-explained/)
+- [Git Delete Branch – How to Remove a Local or Remote Branch](https://www.freecodecamp.org/news/git-delete-branch-how-to-remove-a-local-or-remote-branch/)
