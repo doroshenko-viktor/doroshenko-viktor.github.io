@@ -142,6 +142,24 @@ Sometimes it is useful to see which branches became sources for our commit histo
 
 `git log --patch` of equivalent `git log -p` will display changes, that were made in the commits.
 
+**Get history of specific fragment:**
+
+To display history of some fragment of particular file:
+
+```bash
+git log -L<start>,<end>:<file>
+```
+
+where `<start>` is a line number to begin inspect and `<end>` is a line number to finish inspect.
+
+`<end>` - may be also an offset in form of `+<number>`, e.g:
+
+```bash
+git log -L355:+10,~/repo/file
+```
+
+
+
 ## References
 
 - [Git log command](https://www.freecodecamp.org/news/git-log-command/)
