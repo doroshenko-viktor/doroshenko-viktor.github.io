@@ -6,12 +6,62 @@ description: "Basic GIT usage"
 
 ## Configuration
 
-Configuration levels - local, global
-configuration file
+Configuration file placed in `~/git/config` or `~/.gitconfig`.
 
-<!-- To set up git TODO: -->
+Configuration ares:
 
-To configure user email `git config user.email <email>`
+- `--gloabal` - global configuration, which will take effect on all local repositories
+- `--local` - configuration, relevant only to the current GIT repository
+
+**Setting up user:**
+
+```bash
+git config --<local|global> user.email <email>
+```
+
+**Setting up default editor:**
+
+Setting for default editor, which will be opened for any git text manipulations, e.g. on commit:
+
+```bash
+git config --<local|global> core.editor nvim
+```
+
+**Configuring remote:**
+
+To configure remote source for GIT repository run:
+
+```bash
+git remote add <remote-name> <remote-repo-url>
+```
+
+To check what is url set for some remote by it's name:
+
+```bash
+git remote show origin
+```
+
+Set git repository origin url:
+
+```bash
+git remote set-url
+```
+
+## Cloning
+
+If you don't want to clone the entire repo it is possible to make a shallow clone.
+For example to clone only first level of folders:
+
+```bash
+git clone --depth 1
+```
+
+If you want to clone a sub-directory, use `git sparse-checkout`:
+
+```bash
+git clone --filter=blob:none --sparse <repo-url>
+git sparse-checkout add <folder-path>
+```
 
 ## Committing
 
@@ -77,6 +127,14 @@ To create a new branch use `-b` flag: `git checkout -b <new-branch-name>`.
 
 `git checkout <commit-id>` switches to some commit by it's given commit id.
 
+**Go to previous branch:**
+
+To switch to previously active branch run:
+
+```bash
+git checkout -
+```
+
 **Resetting changes:**
 
 To reset uncommitted changes you can use: `git checkout -- <file-name>` to reset specific file
@@ -99,6 +157,23 @@ where:
 - `strategy option value` - `ours` to ovveride all conflicts with values from current branch and
   `theirs` to override all conflicts with values from incoming branch
 
+## Rebase
+
+To rewrite a bunch of commits locally:
+
+```bash
+git rebase -i <commit hash> # where the commit hash is the one before all the changes you want to make
+```
+
+This will open up an interactive prompt where you can select which commits to keep, squash, or delete.
+You can also change commit messages here. This is very useful when cleaning up typo or linting commits, for example.
+
+Abort rebase until it is not completed:
+
+```bash
+git rebase --abort
+```
+
 ## Stash
 
 `stash` in `git` is a special area, where some uncommitted changes may be temporary stored.
@@ -113,8 +188,15 @@ To check changes inside of a particular stash: `git stash show <stash-name>`.
 To apply stash data and also keep this data in stash: `git stash apply <stash-name>`
 To apply stash and remove this data from stash: `git stash pop <stash-name>`
 
-To remove stash: `git stash drop <stash-name>`
-and to clear all stashes `git stash clear`.
+To remove stash: `git stash drop <stash-name>` and to clear all stashes `git stash clear`.
+
+Adding the `-u` option (or `--include-untracked`) tells `git stash`to also stash your untracked files.
+
+**Creating new branch from stash:**
+
+```bash
+git stash branch <new-branch-name> <stash-name>
+```
 
 ## Log
 
@@ -158,7 +240,80 @@ where `<start>` is a line number to begin inspect and `<end>` is a line number t
 git log -L355:+10,~/repo/file
 ```
 
+## Removing Changes Or Reverting
 
+To uncommit and un-stage changes but leave these files in the working directory:
+
+```bash
+git reset <commit-sha>
+```
+
+This will reset your local directory to match the latest commit and discard un-staged changes:
+
+```bash
+git reset --hard HEAD
+```
+
+Reset particular file:
+
+```bash
+git checkout -- <filename>
+```
+
+Undo last commit and rewrite history:
+
+```bash
+git reset --hard HEAD~1
+```
+
+Reset last several commits:
+
+```bash
+git reset --hard HEAD~n        # n is the last n commits
+git reset --hard <commit-sha>  # or to a specific commit
+```
+
+There is an important distinction between `soft`, `mixed`, and `hard` resets. Basically:
+
+- `--soft`: Uncommit changes but leave those changes staged
+
+- `--mixed` (the default): Uncommit and un-stage changes, but changes are left in the working directory
+
+- `--hard`: Uncommit, un-stage, and delete changes
+
+### Clean
+
+`git clean` command designed to find and remove all not committed and not staged changes.
+
+**Attributes:**
+
+- `-d` - specifies to remove untracked directories;
+- `-n` / `--dry-run` - `clean` will only list files it is going to delete but not really remove them;
+- `-f` / `--force` - specifies that untracked files will be removed(with no way to restore);
+
+**Examples:**
+
+To list files which will be deleted:
+
+```bash
+git clean -n -d
+```
+
+To actually remove these files:
+
+```bash
+git clean -f -d
+```
+
+## Showing Difference
+
+Show difference:
+
+```bash
+git diff --staged # for staged changes
+git diff # for un-staged changes
+git diff branch1..branch2 # difference between two branches
+```
 
 ## References
 
