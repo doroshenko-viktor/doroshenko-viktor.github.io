@@ -1,6 +1,6 @@
 ---
 title: JavaScript Error Handling
-date: "2022-04-135
+date: "2022-04-13"
 description: "JS error handling best practices"
 ---
 
