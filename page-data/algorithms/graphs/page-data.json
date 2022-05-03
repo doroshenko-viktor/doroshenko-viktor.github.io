@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-templates-blog-post-js",
+    "path": "/algorithms/graphs/",
+    "result": {"data":{"site":{"siteMetadata":{"title":"Tech Notes"}},"markdownRemark":{"id":"00439999-8568-503d-9cec-e2d08514a40d","excerpt":"Breadth First Search Plan Breadth First Search\nDijkstra Algorithm References","html":"<h2>Breadth First Search</h2>\n<h2>Plan</h2>\n<p>Breadth First Search\nDijkstra Algorithm</p>\n<h2>References</h2>","frontmatter":{"title":"Graphs","date":"March 31, 2022","description":"Theory of graphs"}},"previous":{"fields":{"slug":"/algorithms/hash-tables/"},"frontmatter":{"title":"Hash Tables"}},"next":{"fields":{"slug":"/rust/useful-traits/"},"frontmatter":{"title":"Rust Useful Traits"}}},"pageContext":{"id":"00439999-8568-503d-9cec-e2d08514a40d","previousPostId":"27ae078c-5294-5a2f-bb65-5e3add8728b0","nextPostId":"f8b495af-7e95-58a9-936a-55206f5cffa3"}},
+    "staticQueryHashes": ["2063783301","2841359383","3274528899"]}

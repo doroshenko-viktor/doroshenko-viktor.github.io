@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-templates-blog-post-js",
+    "path": "/csharp/csharp-testing-with-autofixture/",
+    "result": {"data":{"site":{"siteMetadata":{"title":"Tech Notes"}},"markdownRemark":{"id":"225af259-4d21-5a18-83d5-d1b18e0f1cca","excerpt":"References Why I stopped worrying about test setups by using AutoFixture","html":"<h2>References</h2>\n<ul>\n<li><a href=\"https://timdeschryver.dev/blog/why-i-stopped-worrying-about-test-setups-by-using-autofixture#composite-customizations\">Why I stopped worrying about test setups by using AutoFixture</a></li>\n</ul>","frontmatter":{"title":"AutoFixture In C#","date":"April 10, 2022","description":"AutoFixture testing strategies in C#"}},"previous":{"fields":{"slug":"/javascript/js-events/"},"frontmatter":{"title":"JavaScript Events"}},"next":{"fields":{"slug":"/javascript/js-error-handling/"},"frontmatter":{"title":"JavaScript Error Handling"}}},"pageContext":{"id":"225af259-4d21-5a18-83d5-d1b18e0f1cca","previousPostId":"644d410c-9c0e-519d-87db-5069065a4416","nextPostId":"e84a3e49-116a-52ab-bb80-ba0ef6dea8a6"}},
+    "staticQueryHashes": ["2063783301","2841359383","3274528899"]}
