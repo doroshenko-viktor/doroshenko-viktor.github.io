@@ -1,0 +1,27 @@
+.frame {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin: var(--indent-4);
+}
+
+.centeredSection {
+  max-width: 50%;
+  margin: var(--indent-4) auto;
+}
+
+@media (max-width: 1300px) {
+  .frame {
+    flex-direction: column;
+  }
+
+  .centeredSection {
+    max-width: 90%;
+  }
+}
+
+@media (min-width: 3000px) {
+  .centeredSection {
+    width: 1000px;
+  }
+}
