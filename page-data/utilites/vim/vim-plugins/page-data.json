@@ -1,5 +1,0 @@
-{
-    "componentChunkName": "component---src-templates-blog-post-js",
-    "path": "/utilites/vim/vim-plugins/",
-    "result": {"data":{"site":{"siteMetadata":{"title":"Tech Notes"}},"markdownRemark":{"id":"a069407a-20f5-53e4-b756-5ceef926a9b9","excerpt":"Emmet To create a basic html template type  and press .","html":"<h2>Emmet</h2>\n<p>To create a basic html template type <code class=\"language-text\">html:5</code> and press <code class=\"language-text\">&lt;C-y>,</code>.</p>","frontmatter":{"title":"Vim Plugins Configuration","date":"February 17, 2022","description":"Conviguration of Vim with plugins"}},"previous":{"fields":{"slug":"/utilites/vim/neovim/"},"frontmatter":{"title":"Neovim"}},"next":{"fields":{"slug":"/utilites/vim/vim/"},"frontmatter":{"title":"Vim Cheatsheet"}}},"pageContext":{"id":"a069407a-20f5-53e4-b756-5ceef926a9b9","previousPostId":"faf353b8-9060-5c95-a201-66dcf81cae76","nextPostId":"7584746c-c6e8-506d-908b-ef8bc5c0843c"}},
-    "staticQueryHashes": ["2063783301","2841359383","3274528899"]}
