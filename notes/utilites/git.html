@@ -1,0 +1,222 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Git Cheatsheet</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/0282754560c77cfd.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0282754560c77cfd.css" data-n-g=""/><link rel="preload" href="/_next/static/css/4126e5d30510bf5a.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4126e5d30510bf5a.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/369-aaa550419eab31e8.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-da4eaccc7e295342.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_buildManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_ssgManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><div><a href="/"><header class="Header_mainHeader__VLamk Header_mainHeaderM__OlGKU"><div class="Header_mainLogoImg__eX6Vr"><img src="/images/profile-pic.png" alt="logo"/></div><h1 class="Header_blogName__4JblC">Tech Notes</h1></header></a></div><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Git Cheatsheet</h1><article class="NoteFormattedContent_note__8cHeE">
+<h2>Configuration</h2>
+<p>Configuration file placed in <code>~/git/config</code> or <code>~/.gitconfig</code>.</p>
+<p>Configuration ares:</p>
+<ul>
+  <li><code>--gloabal</code> - global configuration, which will take effect on all local repositories</li>
+  <li><code>--local</code> - configuration, relevant only to the current GIT repository</li>
+</ul>
+<p><strong>Setting up user:</strong></p>
+<pre><code class="hljs language-bash">git config --&#x3C;<span class="hljs-built_in">local</span>|global> user.email &#x3C;email>
+</code></pre>
+<p><strong>Setting up default editor:</strong></p>
+<p>Setting for default editor, which will be opened for any git text manipulations, e.g. on commit:</p>
+<pre><code class="hljs language-bash">git config --&#x3C;<span class="hljs-built_in">local</span>|global> core.editor nvim
+</code></pre>
+<p><strong>Configuring remote:</strong></p>
+<p>To configure remote source for GIT repository run:</p>
+<pre><code class="hljs language-bash">git remote add &#x3C;remote-name> &#x3C;remote-repo-url>
+</code></pre>
+<p>To check what is url set for some remote by it's name:</p>
+<pre><code class="hljs language-bash">git remote show origin
+</code></pre>
+<p>Set git repository origin url:</p>
+<pre><code class="hljs language-bash">git remote set-url
+</code></pre>
+<h2>Cloning</h2>
+<p>
+  If you don't want to clone the entire repo it is possible to make a shallow clone.
+  For example to clone only first level of folders:
+</p>
+<pre><code class="hljs language-bash">git <span class="hljs-built_in">clone</span> --depth 1
+</code></pre>
+<p>If you want to clone a sub-directory, use <code>git sparse-checkout</code>:</p>
+<pre><code class="hljs language-bash">git <span class="hljs-built_in">clone</span> --filter=blob:none --sparse &#x3C;repo-url>
+git sparse-checkout add &#x3C;folder-path>
+</code></pre>
+<h2>Committing</h2>
+<h3>Commit Options</h3>
+<p><strong>Verbose mode:</strong></p>
+<p><code>git commit -v</code> allows to see all the changes, made on commit in opened default editor.</p>
+<p><em>This option is incompatible with <code>-m</code> option</em></p>
+<p><strong>Commit with specified message:</strong></p>
+<p><code>git commit -m "&#x3C;commit message>"</code> - create a commit with specified message without opening a default editor</p>
+<p><strong>Commit all:</strong></p>
+<p>
+  <code>git commit -a</code> - stage all modified files and commit them.
+  <em>This will not stage new files</em>
+</p>
+<p><strong>Add new changes to last commit:</strong></p>
+<p>
+  If you have some changes in the repository and want add them to the last commit, use <code>-a</code> flag.
+  <code>git commit --amend</code>
+  <em>Note, that this command will require commit message change</em>
+</p>
+<p>To not change last commit's message add <code>--no-edit</code> flag</p>
+<p><code>amend</code> also allows to change author of commit: <code>git commit --amend --author="Author Name &#x3C;email>"</code></p>
+<h2>Branches</h2>
+<p>In <code>git</code> branch is a pointer to a specific commit.</p>
+<p>
+  To list existing local branches: <code>git branch</code>. <code>*</code> sign shows current branch.
+  To list all existing locals and remote branches run <code>git branch -a</code>.
+  <code>git branch -r</code> displays only remote branches.
+</p>
+<p><strong>Removing branches:</strong></p>
+<p>
+  To remove <strong>local branch</strong> you need to switch to any other, not removing, branch.
+  And then run command: <code>git branch -d &#x3C;branch-name></code> or <code>git branch --delete &#x3C;branch-name></code>.
+</p>
+<p><em>Important to note: to delete branch, it must not contain unmerged changes or unpushed commits.</em></p>
+<p>To force remove of a branch with blocking issues, you can use <code>--delete --force</code> flag or similar <code>-D</code>.</p>
+<p>To remove <strong>remote branch</strong> run: <code>git push &#x3C;remote> -d &#x3C;branch-name></code>.</p>
+<h2>Checkout</h2>
+<p><code>git checkout</code> allows to switch between branches, commits or files.</p>
+<p><strong>Switch branches:</strong></p>
+<p>Switch branches: <code>git checkout &#x3C;branch-name></code> - switch to given branch by it's name.</p>
+<p>To create a new branch use <code>-b</code> flag: <code>git checkout -b &#x3C;new-branch-name></code>.</p>
+<p><code>-f</code> or <code>--force</code> flag allows to change branches if there are conflicting changes exist.</p>
+<p><strong>Checkout on particular commit:</strong></p>
+<p><code>git checkout &#x3C;commit-id></code> switches to some commit by it's given commit id.</p>
+<p><strong>Go to previous branch:</strong></p>
+<p>To switch to previously active branch run:</p>
+<pre><code class="hljs language-bash">git checkout -
+</code></pre>
+<p><strong>Resetting changes:</strong></p>
+<p>
+  To reset uncommitted changes you can use: <code>git checkout -- &#x3C;file-name></code> to reset specific file
+  and <code>git checkout .</code> to reset all uncommitted changes.
+</p>
+<h2>Merge Branches</h2>
+<p><strong>Merge with automatic accept of all incoming changes:</strong></p>
+<p>
+  If you need to merge some branch into yours and you know that there will be merge conflicts, but
+  you want to accept all incoming changes automatically:
+</p>
+<pre><code class="hljs language-bash">git merge &#x3C;branch name> --strategy-option &#x3C;strategy option value>
+</code></pre>
+<p>where:</p>
+<ul>
+  <li><code>branch name</code> is name of the branch you want to merge into current</li>
+  <li>
+    <code>strategy option value</code> - <code>ours</code> to ovveride all conflicts with values from current branch and
+    <code>theirs</code> to override all conflicts with values from incoming branch
+  </li>
+</ul>
+<h2>Rebase</h2>
+<p>To rewrite a bunch of commits locally:</p>
+<pre><code class="hljs language-bash">git rebase -i &#x3C;commit <span class="hljs-built_in">hash</span>> <span class="hljs-comment"># where the commit hash is the one before all the changes you want to make</span>
+</code></pre>
+<p>
+  This will open up an interactive prompt where you can select which commits to keep, squash, or delete.
+  You can also change commit messages here. This is very useful when cleaning up typo or linting commits, for example.
+</p>
+<p>Abort rebase until it is not completed:</p>
+<pre><code class="hljs language-bash">git rebase --abort
+</code></pre>
+<h2>Stash</h2>
+<p>
+  <code>stash</code> in <code>git</code> is a special area, where some uncommitted changes may be temporary stored.
+  Stashed changes are available to all branches in the repository.
+</p>
+<p>To add current uncommitted changes to stash run: <code>git stash save "&#x3C;message>"</code></p>
+<p>
+  To display available data in stash: <code>git stash list</code>.
+  To check changes inside of a particular stash: <code>git stash show &#x3C;stash-name></code>.
+  <code>-p</code> flag enables display of diff-like changes.
+</p>
+<p>
+  To apply stash data and also keep this data in stash: <code>git stash apply &#x3C;stash-name></code>
+  To apply stash and remove this data from stash: <code>git stash pop &#x3C;stash-name></code>
+</p>
+<p>To remove stash: <code>git stash drop &#x3C;stash-name></code> and to clear all stashes <code>git stash clear</code>.</p>
+<p>Adding the <code>-u</code> option (or <code>--include-untracked</code>) tells <code>git stash</code>to also stash your untracked files.</p>
+<p><strong>Creating new branch from stash:</strong></p>
+<pre><code class="hljs language-bash">git stash branch &#x3C;new-branch-name> &#x3C;stash-name>
+</code></pre>
+<h2>Log</h2>
+<p>
+  To display list of commits there is a <code>git log</code> command, which opens view on last commits.
+  It is possible to use basic Vim commands to navigate this view if you need to see some earlier commits.
+</p>
+<p><strong>Display specific commit:</strong></p>
+<p>
+  To show information about some particular commit there is a <code>git log &#x3C;commit id></code> command.
+  It will display list of commits starting and earlier than specified.
+</p>
+<p><strong>Simple view:</strong></p>
+<p>
+  By default <code>log</code> displays all commit information including <code>SHA</code>, author, date and message.
+  If you don't need all the additional information, displayed by default, you can use <code>git log --oneline</code>.
+  It will display shortened commit id and commit message.
+</p>
+<p><strong>Commit graph:</strong></p>
+<p>Sometimes it is useful to see which branches became sources for our commit history. To see it use <code>git log --graph</code>.</p>
+<p><strong>Commit statistics:</strong></p>
+<p><code>git log --stat</code> will display, which files were modified in the commit, how many lines were modified.</p>
+<p><code>git log --patch</code> of equivalent <code>git log -p</code> will display changes, that were made in the commits.</p>
+<p><strong>Get history of specific fragment:</strong></p>
+<p>To display history of some fragment of particular file:</p>
+<pre><code class="hljs language-bash">git <span class="hljs-built_in">log</span> -L&#x3C;start>,&#x3C;end>:&#x3C;file>
+</code></pre>
+<p>where <code>&#x3C;start></code> is a line number to begin inspect and <code>&#x3C;end></code> is a line number to finish inspect.</p>
+<p><code>&#x3C;end></code> - may be also an offset in form of <code>+&#x3C;number></code>, e.g:</p>
+<pre><code class="hljs language-bash">git <span class="hljs-built_in">log</span> -L355:+10,~/repo/file
+</code></pre>
+<h2>Removing Changes Or Reverting</h2>
+<p>To uncommit and un-stage changes but leave these files in the working directory:</p>
+<pre><code class="hljs language-bash">git reset &#x3C;commit-sha>
+</code></pre>
+<p>This will reset your local directory to match the latest commit and discard un-staged changes:</p>
+<pre><code class="hljs language-bash">git reset --hard HEAD
+</code></pre>
+<p>Reset particular file:</p>
+<pre><code class="hljs language-bash">git checkout -- &#x3C;filename>
+</code></pre>
+<p>Undo last commit and rewrite history:</p>
+<pre><code class="hljs language-bash">git reset --hard HEAD~1
+</code></pre>
+<p>Reset last several commits:</p>
+<pre><code class="hljs language-bash">git reset --hard HEAD~n        <span class="hljs-comment"># n is the last n commits</span>
+git reset --hard &#x3C;commit-sha>  <span class="hljs-comment"># or to a specific commit</span>
+</code></pre>
+<p>There is an important distinction between <code>soft</code>, <code>mixed</code>, and <code>hard</code> resets. Basically:</p>
+<ul>
+  <li>
+    <p><code>--soft</code>: Uncommit changes but leave those changes staged</p>
+  </li>
+  <li>
+    <p><code>--mixed</code> (the default): Uncommit and un-stage changes, but changes are left in the working directory</p>
+  </li>
+  <li>
+    <p><code>--hard</code>: Uncommit, un-stage, and delete changes</p>
+  </li>
+</ul>
+<h3>Clean</h3>
+<p><code>git clean</code> command designed to find and remove all not committed and not staged changes.</p>
+<p><strong>Attributes:</strong></p>
+<ul>
+  <li><code>-d</code> - specifies to remove untracked directories;</li>
+  <li><code>-n</code> / <code>--dry-run</code> - <code>clean</code> will only list files it is going to delete but not really remove them;</li>
+  <li><code>-f</code> / <code>--force</code> - specifies that untracked files will be removed(with no way to restore);</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<p>To list files which will be deleted:</p>
+<pre><code class="hljs language-bash">git clean -n -d
+</code></pre>
+<p>To actually remove these files:</p>
+<pre><code class="hljs language-bash">git clean -f -d
+</code></pre>
+<h2>Showing Difference</h2>
+<p>Show difference:</p>
+<pre><code class="hljs language-bash">git diff --staged <span class="hljs-comment"># for staged changes</span>
+git diff <span class="hljs-comment"># for un-staged changes</span>
+git diff branch1..branch2 <span class="hljs-comment"># difference between two branches</span>
+</code></pre>
+<h2>References</h2>
+<ul>
+  <li><a href="https://www.freecodecamp.org/news/git-log-command/">Git log command</a></li>
+  <li><a href="https://www.freecodecamp.org/news/git-commit-command-explained/">Git Commit Command Explained</a></li>
+  <li><a href="https://www.freecodecamp.org/news/git-stash-explained/">Git Stash Explained: How to Temporarily Store Local Changes in Git</a></li>
+  <li><a href="https://www.freecodecamp.org/news/git-delete-branch-how-to-remove-a-local-or-remote-branch/">Git Delete Branch – How to Remove a Local or Remote Branch</a></li>
+</ul>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["utilites","git"],"note":{"title":"Git Cheatsheet","date":"2022-03-13","content":"\n\u003ch2\u003eConfiguration\u003c/h2\u003e\n\u003cp\u003eConfiguration file placed in \u003ccode\u003e~/git/config\u003c/code\u003e or \u003ccode\u003e~/.gitconfig\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eConfiguration ares:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ccode\u003e--gloabal\u003c/code\u003e - global configuration, which will take effect on all local repositories\u003c/li\u003e\n  \u003cli\u003e\u003ccode\u003e--local\u003c/code\u003e - configuration, relevant only to the current GIT repository\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eSetting up user:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit config --\u0026#x3C;\u003cspan class=\"hljs-built_in\"\u003elocal\u003c/span\u003e|global\u003e user.email \u0026#x3C;email\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSetting up default editor:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eSetting for default editor, which will be opened for any git text manipulations, e.g. on commit:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit config --\u0026#x3C;\u003cspan class=\"hljs-built_in\"\u003elocal\u003c/span\u003e|global\u003e core.editor nvim\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eConfiguring remote:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eTo configure remote source for GIT repository run:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit remote add \u0026#x3C;remote-name\u003e \u0026#x3C;remote-repo-url\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eTo check what is url set for some remote by it's name:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit remote show origin\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eSet git repository origin url:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit remote set-url\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eCloning\u003c/h2\u003e\n\u003cp\u003e\n  If you don't want to clone the entire repo it is possible to make a shallow clone.\n  For example to clone only first level of folders:\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit \u003cspan class=\"hljs-built_in\"\u003eclone\u003c/span\u003e --depth 1\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eIf you want to clone a sub-directory, use \u003ccode\u003egit sparse-checkout\u003c/code\u003e:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit \u003cspan class=\"hljs-built_in\"\u003eclone\u003c/span\u003e --filter=blob:none --sparse \u0026#x3C;repo-url\u003e\ngit sparse-checkout add \u0026#x3C;folder-path\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eCommitting\u003c/h2\u003e\n\u003ch3\u003eCommit Options\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eVerbose mode:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003egit commit -v\u003c/code\u003e allows to see all the changes, made on commit in opened default editor.\u003c/p\u003e\n\u003cp\u003e\u003cem\u003eThis option is incompatible with \u003ccode\u003e-m\u003c/code\u003e option\u003c/em\u003e\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eCommit with specified message:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003egit commit -m \"\u0026#x3C;commit message\u003e\"\u003c/code\u003e - create a commit with specified message without opening a default editor\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eCommit all:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  \u003ccode\u003egit commit -a\u003c/code\u003e - stage all modified files and commit them.\n  \u003cem\u003eThis will not stage new files\u003c/em\u003e\n\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eAdd new changes to last commit:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  If you have some changes in the repository and want add them to the last commit, use \u003ccode\u003e-a\u003c/code\u003e flag.\n  \u003ccode\u003egit commit --amend\u003c/code\u003e\n  \u003cem\u003eNote, that this command will require commit message change\u003c/em\u003e\n\u003c/p\u003e\n\u003cp\u003eTo not change last commit's message add \u003ccode\u003e--no-edit\u003c/code\u003e flag\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003eamend\u003c/code\u003e also allows to change author of commit: \u003ccode\u003egit commit --amend --author=\"Author Name \u0026#x3C;email\u003e\"\u003c/code\u003e\u003c/p\u003e\n\u003ch2\u003eBranches\u003c/h2\u003e\n\u003cp\u003eIn \u003ccode\u003egit\u003c/code\u003e branch is a pointer to a specific commit.\u003c/p\u003e\n\u003cp\u003e\n  To list existing local branches: \u003ccode\u003egit branch\u003c/code\u003e. \u003ccode\u003e*\u003c/code\u003e sign shows current branch.\n  To list all existing locals and remote branches run \u003ccode\u003egit branch -a\u003c/code\u003e.\n  \u003ccode\u003egit branch -r\u003c/code\u003e displays only remote branches.\n\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eRemoving branches:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  To remove \u003cstrong\u003elocal branch\u003c/strong\u003e you need to switch to any other, not removing, branch.\n  And then run command: \u003ccode\u003egit branch -d \u0026#x3C;branch-name\u003e\u003c/code\u003e or \u003ccode\u003egit branch --delete \u0026#x3C;branch-name\u003e\u003c/code\u003e.\n\u003c/p\u003e\n\u003cp\u003e\u003cem\u003eImportant to note: to delete branch, it must not contain unmerged changes or unpushed commits.\u003c/em\u003e\u003c/p\u003e\n\u003cp\u003eTo force remove of a branch with blocking issues, you can use \u003ccode\u003e--delete --force\u003c/code\u003e flag or similar \u003ccode\u003e-D\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eTo remove \u003cstrong\u003eremote branch\u003c/strong\u003e run: \u003ccode\u003egit push \u0026#x3C;remote\u003e -d \u0026#x3C;branch-name\u003e\u003c/code\u003e.\u003c/p\u003e\n\u003ch2\u003eCheckout\u003c/h2\u003e\n\u003cp\u003e\u003ccode\u003egit checkout\u003c/code\u003e allows to switch between branches, commits or files.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eSwitch branches:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eSwitch branches: \u003ccode\u003egit checkout \u0026#x3C;branch-name\u003e\u003c/code\u003e - switch to given branch by it's name.\u003c/p\u003e\n\u003cp\u003eTo create a new branch use \u003ccode\u003e-b\u003c/code\u003e flag: \u003ccode\u003egit checkout -b \u0026#x3C;new-branch-name\u003e\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003e-f\u003c/code\u003e or \u003ccode\u003e--force\u003c/code\u003e flag allows to change branches if there are conflicting changes exist.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eCheckout on particular commit:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003egit checkout \u0026#x3C;commit-id\u003e\u003c/code\u003e switches to some commit by it's given commit id.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eGo to previous branch:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eTo switch to previously active branch run:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit checkout -\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eResetting changes:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  To reset uncommitted changes you can use: \u003ccode\u003egit checkout -- \u0026#x3C;file-name\u003e\u003c/code\u003e to reset specific file\n  and \u003ccode\u003egit checkout .\u003c/code\u003e to reset all uncommitted changes.\n\u003c/p\u003e\n\u003ch2\u003eMerge Branches\u003c/h2\u003e\n\u003cp\u003e\u003cstrong\u003eMerge with automatic accept of all incoming changes:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  If you need to merge some branch into yours and you know that there will be merge conflicts, but\n  you want to accept all incoming changes automatically:\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit merge \u0026#x3C;branch name\u003e --strategy-option \u0026#x3C;strategy option value\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003ewhere:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ccode\u003ebranch name\u003c/code\u003e is name of the branch you want to merge into current\u003c/li\u003e\n  \u003cli\u003e\n    \u003ccode\u003estrategy option value\u003c/code\u003e - \u003ccode\u003eours\u003c/code\u003e to ovveride all conflicts with values from current branch and\n    \u003ccode\u003etheirs\u003c/code\u003e to override all conflicts with values from incoming branch\n  \u003c/li\u003e\n\u003c/ul\u003e\n\u003ch2\u003eRebase\u003c/h2\u003e\n\u003cp\u003eTo rewrite a bunch of commits locally:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit rebase -i \u0026#x3C;commit \u003cspan class=\"hljs-built_in\"\u003ehash\u003c/span\u003e\u003e \u003cspan class=\"hljs-comment\"\u003e# where the commit hash is the one before all the changes you want to make\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  This will open up an interactive prompt where you can select which commits to keep, squash, or delete.\n  You can also change commit messages here. This is very useful when cleaning up typo or linting commits, for example.\n\u003c/p\u003e\n\u003cp\u003eAbort rebase until it is not completed:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit rebase --abort\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eStash\u003c/h2\u003e\n\u003cp\u003e\n  \u003ccode\u003estash\u003c/code\u003e in \u003ccode\u003egit\u003c/code\u003e is a special area, where some uncommitted changes may be temporary stored.\n  Stashed changes are available to all branches in the repository.\n\u003c/p\u003e\n\u003cp\u003eTo add current uncommitted changes to stash run: \u003ccode\u003egit stash save \"\u0026#x3C;message\u003e\"\u003c/code\u003e\u003c/p\u003e\n\u003cp\u003e\n  To display available data in stash: \u003ccode\u003egit stash list\u003c/code\u003e.\n  To check changes inside of a particular stash: \u003ccode\u003egit stash show \u0026#x3C;stash-name\u003e\u003c/code\u003e.\n  \u003ccode\u003e-p\u003c/code\u003e flag enables display of diff-like changes.\n\u003c/p\u003e\n\u003cp\u003e\n  To apply stash data and also keep this data in stash: \u003ccode\u003egit stash apply \u0026#x3C;stash-name\u003e\u003c/code\u003e\n  To apply stash and remove this data from stash: \u003ccode\u003egit stash pop \u0026#x3C;stash-name\u003e\u003c/code\u003e\n\u003c/p\u003e\n\u003cp\u003eTo remove stash: \u003ccode\u003egit stash drop \u0026#x3C;stash-name\u003e\u003c/code\u003e and to clear all stashes \u003ccode\u003egit stash clear\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eAdding the \u003ccode\u003e-u\u003c/code\u003e option (or \u003ccode\u003e--include-untracked\u003c/code\u003e) tells \u003ccode\u003egit stash\u003c/code\u003eto also stash your untracked files.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eCreating new branch from stash:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit stash branch \u0026#x3C;new-branch-name\u003e \u0026#x3C;stash-name\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eLog\u003c/h2\u003e\n\u003cp\u003e\n  To display list of commits there is a \u003ccode\u003egit log\u003c/code\u003e command, which opens view on last commits.\n  It is possible to use basic Vim commands to navigate this view if you need to see some earlier commits.\n\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eDisplay specific commit:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  To show information about some particular commit there is a \u003ccode\u003egit log \u0026#x3C;commit id\u003e\u003c/code\u003e command.\n  It will display list of commits starting and earlier than specified.\n\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eSimple view:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  By default \u003ccode\u003elog\u003c/code\u003e displays all commit information including \u003ccode\u003eSHA\u003c/code\u003e, author, date and message.\n  If you don't need all the additional information, displayed by default, you can use \u003ccode\u003egit log --oneline\u003c/code\u003e.\n  It will display shortened commit id and commit message.\n\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eCommit graph:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eSometimes it is useful to see which branches became sources for our commit history. To see it use \u003ccode\u003egit log --graph\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eCommit statistics:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003egit log --stat\u003c/code\u003e will display, which files were modified in the commit, how many lines were modified.\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003egit log --patch\u003c/code\u003e of equivalent \u003ccode\u003egit log -p\u003c/code\u003e will display changes, that were made in the commits.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eGet history of specific fragment:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eTo display history of some fragment of particular file:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit \u003cspan class=\"hljs-built_in\"\u003elog\u003c/span\u003e -L\u0026#x3C;start\u003e,\u0026#x3C;end\u003e:\u0026#x3C;file\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003ewhere \u003ccode\u003e\u0026#x3C;start\u003e\u003c/code\u003e is a line number to begin inspect and \u003ccode\u003e\u0026#x3C;end\u003e\u003c/code\u003e is a line number to finish inspect.\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003e\u0026#x3C;end\u003e\u003c/code\u003e - may be also an offset in form of \u003ccode\u003e+\u0026#x3C;number\u003e\u003c/code\u003e, e.g:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit \u003cspan class=\"hljs-built_in\"\u003elog\u003c/span\u003e -L355:+10,~/repo/file\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eRemoving Changes Or Reverting\u003c/h2\u003e\n\u003cp\u003eTo uncommit and un-stage changes but leave these files in the working directory:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit reset \u0026#x3C;commit-sha\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThis will reset your local directory to match the latest commit and discard un-staged changes:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit reset --hard HEAD\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eReset particular file:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit checkout -- \u0026#x3C;filename\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eUndo last commit and rewrite history:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit reset --hard HEAD~1\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eReset last several commits:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit reset --hard HEAD~n        \u003cspan class=\"hljs-comment\"\u003e# n is the last n commits\u003c/span\u003e\ngit reset --hard \u0026#x3C;commit-sha\u003e  \u003cspan class=\"hljs-comment\"\u003e# or to a specific commit\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThere is an important distinction between \u003ccode\u003esoft\u003c/code\u003e, \u003ccode\u003emixed\u003c/code\u003e, and \u003ccode\u003ehard\u003c/code\u003e resets. Basically:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\n    \u003cp\u003e\u003ccode\u003e--soft\u003c/code\u003e: Uncommit changes but leave those changes staged\u003c/p\u003e\n  \u003c/li\u003e\n  \u003cli\u003e\n    \u003cp\u003e\u003ccode\u003e--mixed\u003c/code\u003e (the default): Uncommit and un-stage changes, but changes are left in the working directory\u003c/p\u003e\n  \u003c/li\u003e\n  \u003cli\u003e\n    \u003cp\u003e\u003ccode\u003e--hard\u003c/code\u003e: Uncommit, un-stage, and delete changes\u003c/p\u003e\n  \u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eClean\u003c/h3\u003e\n\u003cp\u003e\u003ccode\u003egit clean\u003c/code\u003e command designed to find and remove all not committed and not staged changes.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eAttributes:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ccode\u003e-d\u003c/code\u003e - specifies to remove untracked directories;\u003c/li\u003e\n  \u003cli\u003e\u003ccode\u003e-n\u003c/code\u003e / \u003ccode\u003e--dry-run\u003c/code\u003e - \u003ccode\u003eclean\u003c/code\u003e will only list files it is going to delete but not really remove them;\u003c/li\u003e\n  \u003cli\u003e\u003ccode\u003e-f\u003c/code\u003e / \u003ccode\u003e--force\u003c/code\u003e - specifies that untracked files will be removed(with no way to restore);\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eExamples:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003eTo list files which will be deleted:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit clean -n -d\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eTo actually remove these files:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit clean -f -d\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eShowing Difference\u003c/h2\u003e\n\u003cp\u003eShow difference:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003egit diff --staged \u003cspan class=\"hljs-comment\"\u003e# for staged changes\u003c/span\u003e\ngit diff \u003cspan class=\"hljs-comment\"\u003e# for un-staged changes\u003c/span\u003e\ngit diff branch1..branch2 \u003cspan class=\"hljs-comment\"\u003e# difference between two branches\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eReferences\u003c/h2\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ca href=\"https://www.freecodecamp.org/news/git-log-command/\"\u003eGit log command\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href=\"https://www.freecodecamp.org/news/git-commit-command-explained/\"\u003eGit Commit Command Explained\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href=\"https://www.freecodecamp.org/news/git-stash-explained/\"\u003eGit Stash Explained: How to Temporarily Store Local Changes in Git\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href=\"https://www.freecodecamp.org/news/git-delete-branch-how-to-remove-a-local-or-remote-branch/\"\u003eGit Delete Branch – How to Remove a Local or Remote Branch\u003c/a\u003e\u003c/li\u003e\n\u003c/ul\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["utilites","git"]},"buildId":"CLxGZSj0Hrsl_jR3C8i21","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

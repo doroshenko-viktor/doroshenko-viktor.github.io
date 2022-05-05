@@ -1,0 +1,88 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Rust - Macros</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/0282754560c77cfd.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0282754560c77cfd.css" data-n-g=""/><link rel="preload" href="/_next/static/css/4126e5d30510bf5a.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4126e5d30510bf5a.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/369-aaa550419eab31e8.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-da4eaccc7e295342.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_buildManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_ssgManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><div><a href="/"><header class="Header_mainHeader__VLamk Header_mainHeaderM__OlGKU"><div class="Header_mainLogoImg__eX6Vr"><img src="/images/profile-pic.png" alt="logo"/></div><h1 class="Header_blogName__4JblC">Tech Notes</h1></header></a></div><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Rust - Macros</h1><article class="NoteFormattedContent_note__8cHeE">
+<p><code>Macros</code> is a Rust way of <code>metaprogramming</code> - writing a code that creates another code.</p>
+<p>
+  <code>println!</code> and <code>vec!</code> are examples of macroses. Internally they execute more code, that has to be
+  written manually. e.g. with <code>vec!</code> it is possible to create an instance of <code>Vec&#x3C;T></code> and add some
+  values inside of it during single statement.
+</p>
+<p>
+  Macros are similar to functions, but the bigges difference between them in moment of execution -
+  <code>function</code> is executed in runtime, whereas <code>macros</code> is executed during compile time. That quality
+  allows for example implement trait for some type inside of a <code>macros</code>.
+</p>
+<p>
+  The main con for <code>macros</code> is higher complexity to write and read. Also macros have to be defined
+  strictly before place, where it is used.
+</p>
+<p><strong>Macros types in Rust:</strong></p>
+<ul>
+  <li>declarative - declared with <code>macro_rules!</code></li>
+  <li>procedural:
+    <ul>
+      <li>
+        Custom <code>#[derive]</code> macros that specify code added with the derive attribute used on structs
+        and enums
+      </li>
+      <li><code>Attribute-like</code> macros that define custom attributes usable on any item</li>
+      <li>
+        <code>Function-like</code> macros that look like function calls but operate on the tokens specified as
+        their argument
+      </li>
+    </ul>
+  </li>
+</ul>
+<h2>Declarative macros</h2>
+<p>
+  <code>Declarative macros</code> are something similar to <code>match</code> expressions, which allows to get values,
+  compare it with some value and then execute required branch of code and do it on compilation stage.
+</p>
+<p><code>declarative macros</code> are defined with <code>macro_rules!</code>.</p>
+<p>Consider for example <code>vec!</code> macro, which allows to create filled <code>Vec&#x3C;T></code> instance:</p>
+<pre><code class="hljs language-rust"><span class="hljs-meta">#[macro_export]</span>
+<span class="hljs-built_in">macro_rules!</span> vec {
+    ( $( $x:expr ),* ) => {
+        {
+            <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">temp_vec</span> = Vec::<span class="hljs-title function_ invoke__">new</span>();
+            $(
+                temp_vec.<span class="hljs-title function_ invoke__">push</span>($x);
+            )*
+            temp_vec
+        }
+    };
+}
+</code></pre>
+<p>
+  <code>#[macro_export]</code> allows to import created macro into usage scope. <code>macro_rules!</code> is a beginning of
+  macro definition. After we define the name of the macro and then starts the scope of the macro.
+  Macro definition has a structure similar to <code>match</code> expresstion, where it is possible to define
+  several arm cases with pattern on the left side and executable code on the right.
+</p>
+<p>
+  Here <code>( $( $x:expr ),* )</code> is a pattern. When user enters inside of a macro value data, which will
+  match this pattern, the code, assosiated with it will be executed.
+</p>
+<p><strong>Pattern syntax:</strong></p>
+<p>
+  Pattern begins with <code>(...)</code>. Inside <code>$(...)</code> captures entered value. <code>$x:expr</code> defines a name <code>$x</code>
+  for captured value. <code>expr</code> is a Rust expression. <code>,</code> indicates, that after captured expression
+  comma character may appear. And finally <code>*</code> indicates, that this patter may be repetetive.
+</p>
+<p>So for <code>vec![1, 2, 3];</code> this pattern will capture numbers 1, 2 and 3 repetitively.</p>
+<p>
+  Inside of arm executable code we defined <code>$(...)*</code>, which means that code inside of it will be
+  emmitted for every <code>$( $x:expr )</code> pattern match.
+</p>
+<p>That way, after this macro will generate actual Rust code, it will emit:</p>
+<pre><code class="hljs language-rust">{
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">temp_vec</span> = Vec::<span class="hljs-title function_ invoke__">new</span>();
+    temp_vec.<span class="hljs-title function_ invoke__">push</span>(<span class="hljs-number">1</span>);
+    temp_vec.<span class="hljs-title function_ invoke__">push</span>(<span class="hljs-number">2</span>);
+    temp_vec.<span class="hljs-title function_ invoke__">push</span>(<span class="hljs-number">3</span>);
+    temp_vec
+}
+</code></pre>
+<h2>References</h2>
+<ul>
+  <li><a href="https://doc.rust-lang.org/stable/book/ch19-06-macros.html">Macros - The Rust Programming Language</a></li>
+</ul>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["rust","maros"],"note":{"title":"Rust - Macros","date":"2022-03-16","content":"\n\u003cp\u003e\u003ccode\u003eMacros\u003c/code\u003e is a Rust way of \u003ccode\u003emetaprogramming\u003c/code\u003e - writing a code that creates another code.\u003c/p\u003e\n\u003cp\u003e\n  \u003ccode\u003eprintln!\u003c/code\u003e and \u003ccode\u003evec!\u003c/code\u003e are examples of macroses. Internally they execute more code, that has to be\n  written manually. e.g. with \u003ccode\u003evec!\u003c/code\u003e it is possible to create an instance of \u003ccode\u003eVec\u0026#x3C;T\u003e\u003c/code\u003e and add some\n  values inside of it during single statement.\n\u003c/p\u003e\n\u003cp\u003e\n  Macros are similar to functions, but the bigges difference between them in moment of execution -\n  \u003ccode\u003efunction\u003c/code\u003e is executed in runtime, whereas \u003ccode\u003emacros\u003c/code\u003e is executed during compile time. That quality\n  allows for example implement trait for some type inside of a \u003ccode\u003emacros\u003c/code\u003e.\n\u003c/p\u003e\n\u003cp\u003e\n  The main con for \u003ccode\u003emacros\u003c/code\u003e is higher complexity to write and read. Also macros have to be defined\n  strictly before place, where it is used.\n\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eMacros types in Rust:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003edeclarative - declared with \u003ccode\u003emacro_rules!\u003c/code\u003e\u003c/li\u003e\n  \u003cli\u003eprocedural:\n    \u003cul\u003e\n      \u003cli\u003e\n        Custom \u003ccode\u003e#[derive]\u003c/code\u003e macros that specify code added with the derive attribute used on structs\n        and enums\n      \u003c/li\u003e\n      \u003cli\u003e\u003ccode\u003eAttribute-like\u003c/code\u003e macros that define custom attributes usable on any item\u003c/li\u003e\n      \u003cli\u003e\n        \u003ccode\u003eFunction-like\u003c/code\u003e macros that look like function calls but operate on the tokens specified as\n        their argument\n      \u003c/li\u003e\n    \u003c/ul\u003e\n  \u003c/li\u003e\n\u003c/ul\u003e\n\u003ch2\u003eDeclarative macros\u003c/h2\u003e\n\u003cp\u003e\n  \u003ccode\u003eDeclarative macros\u003c/code\u003e are something similar to \u003ccode\u003ematch\u003c/code\u003e expressions, which allows to get values,\n  compare it with some value and then execute required branch of code and do it on compilation stage.\n\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003edeclarative macros\u003c/code\u003e are defined with \u003ccode\u003emacro_rules!\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eConsider for example \u003ccode\u003evec!\u003c/code\u003e macro, which allows to create filled \u003ccode\u003eVec\u0026#x3C;T\u003e\u003c/code\u003e instance:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-meta\"\u003e#[macro_export]\u003c/span\u003e\n\u003cspan class=\"hljs-built_in\"\u003emacro_rules!\u003c/span\u003e vec {\n    ( $( $x:expr ),* ) =\u003e {\n        {\n            \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003emut \u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003etemp_vec\u003c/span\u003e = Vec::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e();\n            $(\n                temp_vec.\u003cspan class=\"hljs-title function_ invoke__\"\u003epush\u003c/span\u003e($x);\n            )*\n            temp_vec\n        }\n    };\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  \u003ccode\u003e#[macro_export]\u003c/code\u003e allows to import created macro into usage scope. \u003ccode\u003emacro_rules!\u003c/code\u003e is a beginning of\n  macro definition. After we define the name of the macro and then starts the scope of the macro.\n  Macro definition has a structure similar to \u003ccode\u003ematch\u003c/code\u003e expresstion, where it is possible to define\n  several arm cases with pattern on the left side and executable code on the right.\n\u003c/p\u003e\n\u003cp\u003e\n  Here \u003ccode\u003e( $( $x:expr ),* )\u003c/code\u003e is a pattern. When user enters inside of a macro value data, which will\n  match this pattern, the code, assosiated with it will be executed.\n\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003ePattern syntax:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  Pattern begins with \u003ccode\u003e(...)\u003c/code\u003e. Inside \u003ccode\u003e$(...)\u003c/code\u003e captures entered value. \u003ccode\u003e$x:expr\u003c/code\u003e defines a name \u003ccode\u003e$x\u003c/code\u003e\n  for captured value. \u003ccode\u003eexpr\u003c/code\u003e is a Rust expression. \u003ccode\u003e,\u003c/code\u003e indicates, that after captured expression\n  comma character may appear. And finally \u003ccode\u003e*\u003c/code\u003e indicates, that this patter may be repetetive.\n\u003c/p\u003e\n\u003cp\u003eSo for \u003ccode\u003evec![1, 2, 3];\u003c/code\u003e this pattern will capture numbers 1, 2 and 3 repetitively.\u003c/p\u003e\n\u003cp\u003e\n  Inside of arm executable code we defined \u003ccode\u003e$(...)*\u003c/code\u003e, which means that code inside of it will be\n  emmitted for every \u003ccode\u003e$( $x:expr )\u003c/code\u003e pattern match.\n\u003c/p\u003e\n\u003cp\u003eThat way, after this macro will generate actual Rust code, it will emit:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e{\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003emut \u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003etemp_vec\u003c/span\u003e = Vec::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e();\n    temp_vec.\u003cspan class=\"hljs-title function_ invoke__\"\u003epush\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e);\n    temp_vec.\u003cspan class=\"hljs-title function_ invoke__\"\u003epush\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e);\n    temp_vec.\u003cspan class=\"hljs-title function_ invoke__\"\u003epush\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e);\n    temp_vec\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eReferences\u003c/h2\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ca href=\"https://doc.rust-lang.org/stable/book/ch19-06-macros.html\"\u003eMacros - The Rust Programming Language\u003c/a\u003e\u003c/li\u003e\n\u003c/ul\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["rust","maros"]},"buildId":"CLxGZSj0Hrsl_jR3C8i21","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Rust Object Destructuring</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/0282754560c77cfd.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0282754560c77cfd.css" data-n-g=""/><link rel="preload" href="/_next/static/css/4126e5d30510bf5a.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4126e5d30510bf5a.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/369-aaa550419eab31e8.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-da4eaccc7e295342.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_buildManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_ssgManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><div><a href="/"><header class="Header_mainHeader__VLamk Header_mainHeaderM__OlGKU"><div class="Header_mainLogoImg__eX6Vr"><img src="/images/profile-pic.png" alt="logo"/></div><h1 class="Header_blogName__4JblC">Tech Notes</h1></header></a></div><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Rust Object Destructuring</h1><article class="NoteFormattedContent_note__8cHeE">
+<p>Rust allows to easily decompose complex objects into simple.</p>
+<h2>Structs</h2>
+<p>For example, destructuring struct:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span> {
+    x: <span class="hljs-type">i32</span>,
+    y: <span class="hljs-type">i32</span>,
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">p</span> = Point { x: <span class="hljs-number">0</span>, y: <span class="hljs-number">7</span> };
+
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">Point</span> { x: a, y: b } = p;
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">0</span>, a);
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">7</span>, b);
+}
+</code></pre>
+<p>and even more simple case:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span> {
+    x: <span class="hljs-type">i32</span>,
+    y: <span class="hljs-type">i32</span>,
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">p</span> = Point { x: <span class="hljs-number">0</span>, y: <span class="hljs-number">7</span> };
+
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">Point</span> { x, y } = p;
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">0</span>, x);
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">7</span>, y);
+}
+</code></pre>
+<p>Destructuring is effectively a pattern, so it may be used in pattern matching scenarios:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">p</span> = Point { x: <span class="hljs-number">0</span>, y: <span class="hljs-number">7</span> };
+
+    <span class="hljs-keyword">match</span> p {
+        Point { x, y: <span class="hljs-number">0</span> } => <span class="hljs-built_in">println!</span>(<span class="hljs-string">"On the x axis at {}"</span>, x),
+        Point { x: <span class="hljs-number">0</span>, y } => <span class="hljs-built_in">println!</span>(<span class="hljs-string">"On the y axis at {}"</span>, y),
+        Point { x, y } => <span class="hljs-built_in">println!</span>(<span class="hljs-string">"On neither axis: ({}, {})"</span>, x, y),
+    }
+}
+</code></pre>
+<h2>Enums</h2>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Message</span> {
+    Quit,
+    Move { x: <span class="hljs-type">i32</span>, y: <span class="hljs-type">i32</span> },
+    <span class="hljs-title function_ invoke__">Write</span>(<span class="hljs-type">String</span>),
+    <span class="hljs-title function_ invoke__">ChangeColor</span>(<span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>),
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">msg</span> = Message::<span class="hljs-title function_ invoke__">ChangeColor</span>(<span class="hljs-number">0</span>, <span class="hljs-number">160</span>, <span class="hljs-number">255</span>);
+
+    <span class="hljs-keyword">match</span> msg {
+        Message::Quit => {
+            <span class="hljs-built_in">println!</span>(<span class="hljs-string">"The Quit variant has no data to destructure."</span>)
+        }
+        Message::Move { x, y } => {
+            <span class="hljs-built_in">println!</span>(
+                <span class="hljs-string">"Move in the x direction {} and in the y direction {}"</span>,
+                x, y
+            );
+        }
+        Message::<span class="hljs-title function_ invoke__">Write</span>(text) => <span class="hljs-built_in">println!</span>(<span class="hljs-string">"Text message: {}"</span>, text),
+        Message::<span class="hljs-title function_ invoke__">ChangeColor</span>(r, g, b) => <span class="hljs-built_in">println!</span>(
+            <span class="hljs-string">"Change the color to red {}, green {}, and blue {}"</span>,
+            r, g, b
+        ),
+    }
+}
+</code></pre>
+<h2>Destructuring Of Nested Objects</h2>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Color</span> {
+    <span class="hljs-title function_ invoke__">Rgb</span>(<span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>),
+    <span class="hljs-title function_ invoke__">Hsv</span>(<span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>),
+}
+
+<span class="hljs-keyword">enum</span> <span class="hljs-title class_">Message</span> {
+    Quit,
+    Move { x: <span class="hljs-type">i32</span>, y: <span class="hljs-type">i32</span> },
+    <span class="hljs-title function_ invoke__">Write</span>(<span class="hljs-type">String</span>),
+    <span class="hljs-title function_ invoke__">ChangeColor</span>(Color),
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">msg</span> = Message::<span class="hljs-title function_ invoke__">ChangeColor</span>(Color::<span class="hljs-title function_ invoke__">Hsv</span>(<span class="hljs-number">0</span>, <span class="hljs-number">160</span>, <span class="hljs-number">255</span>));
+
+    <span class="hljs-keyword">match</span> msg {
+        Message::<span class="hljs-title function_ invoke__">ChangeColor</span>(Color::<span class="hljs-title function_ invoke__">Rgb</span>(r, g, b)) => <span class="hljs-built_in">println!</span>(
+            <span class="hljs-string">"Change the color to red {}, green {}, and blue {}"</span>,
+            r, g, b
+        ),
+        Message::<span class="hljs-title function_ invoke__">ChangeColor</span>(Color::<span class="hljs-title function_ invoke__">Hsv</span>(h, s, v)) => <span class="hljs-built_in">println!</span>(
+            <span class="hljs-string">"Change the color to hue {}, saturation {}, and value {}"</span>,
+            h, s, v
+        ),
+        _ => (),
+    }
+}
+</code></pre>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span> {
+        x: <span class="hljs-type">i32</span>,
+        y: <span class="hljs-type">i32</span>,
+    }
+
+    <span class="hljs-keyword">let</span> ((feet, inches), Point { x, y }) = ((<span class="hljs-number">3</span>, <span class="hljs-number">10</span>), Point { x: <span class="hljs-number">3</span>, y: -<span class="hljs-number">10</span> });
+}
+</code></pre>
+<h2>Ignore Some Destructured Values</h2>
+<p>In function signature:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">foo</span>(_: <span class="hljs-type">i32</span>, y: <span class="hljs-type">i32</span>) {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"This code only uses the y parameter: {}"</span>, y);
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-title function_ invoke__">foo</span>(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);
+}
+</code></pre>
+<p>In pattern matching:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">numbers</span> = (<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">16</span>, <span class="hljs-number">32</span>);
+
+<span class="hljs-keyword">match</span> numbers {
+    (first, _, third, _, fifth) => {
+        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"Some numbers: {}, {}, {}"</span>, first, third, fifth)
+    }
+}
+</code></pre>
+<p>Ignore unused variable:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">_x</span> = <span class="hljs-number">5</span>;
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">y</span> = <span class="hljs-number">10</span>;
+}
+</code></pre>
+<p>
+  The syntax <code>_x</code> still binds the value to the variable, but disables the warning about unused
+  variable, whereas _ doesn’t bind at all.
+</p>
+<p>
+  It is possible to ignore all remaining parts of structure, which are not explicitly specified to
+  destructure with <code>..</code> operator:
+</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span> {
+    x: <span class="hljs-type">i32</span>,
+    y: <span class="hljs-type">i32</span>,
+    z: <span class="hljs-type">i32</span>,
+}
+
+<span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">origin</span> = Point { x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>, z: <span class="hljs-number">0</span> };
+
+<span class="hljs-keyword">match</span> origin {
+    Point { x, .. } => <span class="hljs-built_in">println!</span>(<span class="hljs-string">"x is {}"</span>, x),
+}
+</code></pre>
+<p>Specificially with tuples, we can ignore positionally:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">numbers</span> = (<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">16</span>, <span class="hljs-number">32</span>);
+
+    <span class="hljs-keyword">match</span> numbers {
+        (first, .., last) => {
+            <span class="hljs-built_in">println!</span>(<span class="hljs-string">"Some numbers: {}, {}"</span>, first, last);
+        }
+    }
+}
+</code></pre>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["rust","destructuring"],"note":{"title":"Rust Object Destructuring","date":"2022-03-13","content":"\n\u003cp\u003eRust allows to easily decompose complex objects into simple.\u003c/p\u003e\n\u003ch2\u003eStructs\u003c/h2\u003e\n\u003cp\u003eFor example, destructuring struct:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003ePoint\u003c/span\u003e {\n    x: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n    y: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ep\u003c/span\u003e = Point { x: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, y: \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e };\n\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ePoint\u003c/span\u003e { x: a, y: b } = p;\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, a);\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e, b);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eand even more simple case:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003ePoint\u003c/span\u003e {\n    x: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n    y: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ep\u003c/span\u003e = Point { x: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, y: \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e };\n\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ePoint\u003c/span\u003e { x, y } = p;\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, x);\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e, y);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eDestructuring is effectively a pattern, so it may be used in pattern matching scenarios:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ep\u003c/span\u003e = Point { x: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, y: \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e };\n\n    \u003cspan class=\"hljs-keyword\"\u003ematch\u003c/span\u003e p {\n        Point { x, y: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e } =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"On the x axis at {}\"\u003c/span\u003e, x),\n        Point { x: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, y } =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"On the y axis at {}\"\u003c/span\u003e, y),\n        Point { x, y } =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"On neither axis: ({}, {})\"\u003c/span\u003e, x, y),\n    }\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eEnums\u003c/h2\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003eenum\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eMessage\u003c/span\u003e {\n    Quit,\n    Move { x: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, y: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e },\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eWrite\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003eString\u003c/span\u003e),\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eChangeColor\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e),\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003emsg\u003c/span\u003e = Message::\u003cspan class=\"hljs-title function_ invoke__\"\u003eChangeColor\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e160\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e255\u003c/span\u003e);\n\n    \u003cspan class=\"hljs-keyword\"\u003ematch\u003c/span\u003e msg {\n        Message::Quit =\u003e {\n            \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"The Quit variant has no data to destructure.\"\u003c/span\u003e)\n        }\n        Message::Move { x, y } =\u003e {\n            \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n                \u003cspan class=\"hljs-string\"\u003e\"Move in the x direction {} and in the y direction {}\"\u003c/span\u003e,\n                x, y\n            );\n        }\n        Message::\u003cspan class=\"hljs-title function_ invoke__\"\u003eWrite\u003c/span\u003e(text) =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"Text message: {}\"\u003c/span\u003e, text),\n        Message::\u003cspan class=\"hljs-title function_ invoke__\"\u003eChangeColor\u003c/span\u003e(r, g, b) =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n            \u003cspan class=\"hljs-string\"\u003e\"Change the color to red {}, green {}, and blue {}\"\u003c/span\u003e,\n            r, g, b\n        ),\n    }\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eDestructuring Of Nested Objects\u003c/h2\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003eenum\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eColor\u003c/span\u003e {\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eRgb\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e),\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eHsv\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e),\n}\n\n\u003cspan class=\"hljs-keyword\"\u003eenum\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eMessage\u003c/span\u003e {\n    Quit,\n    Move { x: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, y: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e },\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eWrite\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003eString\u003c/span\u003e),\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eChangeColor\u003c/span\u003e(Color),\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003emsg\u003c/span\u003e = Message::\u003cspan class=\"hljs-title function_ invoke__\"\u003eChangeColor\u003c/span\u003e(Color::\u003cspan class=\"hljs-title function_ invoke__\"\u003eHsv\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e160\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e255\u003c/span\u003e));\n\n    \u003cspan class=\"hljs-keyword\"\u003ematch\u003c/span\u003e msg {\n        Message::\u003cspan class=\"hljs-title function_ invoke__\"\u003eChangeColor\u003c/span\u003e(Color::\u003cspan class=\"hljs-title function_ invoke__\"\u003eRgb\u003c/span\u003e(r, g, b)) =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n            \u003cspan class=\"hljs-string\"\u003e\"Change the color to red {}, green {}, and blue {}\"\u003c/span\u003e,\n            r, g, b\n        ),\n        Message::\u003cspan class=\"hljs-title function_ invoke__\"\u003eChangeColor\u003c/span\u003e(Color::\u003cspan class=\"hljs-title function_ invoke__\"\u003eHsv\u003c/span\u003e(h, s, v)) =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n            \u003cspan class=\"hljs-string\"\u003e\"Change the color to hue {}, saturation {}, and value {}\"\u003c/span\u003e,\n            h, s, v\n        ),\n        _ =\u003e (),\n    }\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003ePoint\u003c/span\u003e {\n        x: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n        y: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n    }\n\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e ((feet, inches), Point { x, y }) = ((\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e), Point { x: \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, y: -\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e });\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eIgnore Some Destructured Values\u003c/h2\u003e\n\u003cp\u003eIn function signature:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efoo\u003c/span\u003e(_: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, y: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e) {\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"This code only uses the y parameter: {}\"\u003c/span\u003e, y);\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003efoo\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eIn pattern matching:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003enumbers\u003c/span\u003e = (\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e16\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e32\u003c/span\u003e);\n\n\u003cspan class=\"hljs-keyword\"\u003ematch\u003c/span\u003e numbers {\n    (first, _, third, _, fifth) =\u003e {\n        \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"Some numbers: {}, {}, {}\"\u003c/span\u003e, first, third, fifth)\n    }\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eIgnore unused variable:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003e_x\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e;\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ey\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e;\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  The syntax \u003ccode\u003e_x\u003c/code\u003e still binds the value to the variable, but disables the warning about unused\n  variable, whereas _ doesn’t bind at all.\n\u003c/p\u003e\n\u003cp\u003e\n  It is possible to ignore all remaining parts of structure, which are not explicitly specified to\n  destructure with \u003ccode\u003e..\u003c/code\u003e operator:\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003ePoint\u003c/span\u003e {\n    x: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n    y: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n    z: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eorigin\u003c/span\u003e = Point { x: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, y: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, z: \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e };\n\n\u003cspan class=\"hljs-keyword\"\u003ematch\u003c/span\u003e origin {\n    Point { x, .. } =\u003e \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"x is {}\"\u003c/span\u003e, x),\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eSpecificially with tuples, we can ignore positionally:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003enumbers\u003c/span\u003e = (\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e16\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e32\u003c/span\u003e);\n\n    \u003cspan class=\"hljs-keyword\"\u003ematch\u003c/span\u003e numbers {\n        (first, .., last) =\u003e {\n            \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"Some numbers: {}, {}\"\u003c/span\u003e, first, last);\n        }\n    }\n}\n\u003c/code\u003e\u003c/pre\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["rust","destructuring"]},"buildId":"CLxGZSj0Hrsl_jR3C8i21","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

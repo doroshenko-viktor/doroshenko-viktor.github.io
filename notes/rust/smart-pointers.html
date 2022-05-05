@@ -1,0 +1,392 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Rust Smart Pointers</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/0282754560c77cfd.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0282754560c77cfd.css" data-n-g=""/><link rel="preload" href="/_next/static/css/4126e5d30510bf5a.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4126e5d30510bf5a.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/369-aaa550419eab31e8.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-da4eaccc7e295342.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_buildManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_ssgManifest.js" defer=""></script><script src="/_next/static/CLxGZSj0Hrsl_jR3C8i21/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><div><a href="/"><header class="Header_mainHeader__VLamk Header_mainHeaderM__OlGKU"><div class="Header_mainLogoImg__eX6Vr"><img src="/images/profile-pic.png" alt="logo"/></div><h1 class="Header_blogName__4JblC">Tech Notes</h1></header></a></div><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Rust Smart Pointers</h1><article class="NoteFormattedContent_note__8cHeE">
+<p>
+  <code>Smart pointers</code> are data structures that not only act like a pointer but also have additional
+  metadata and capabilities.
+</p>
+<p>
+  e.g. <code>String</code> and <code>Vec&#x3C;T></code> are smart pointers. They own some memory and allow to manipulate it.
+  They also have metadata (such as their capacity) and extra capabilities or guarantees (such as
+  with <code>String</code> ensuring its data will always be valid <code>UTF-8</code>).
+</p>
+<p>
+  Smart pointers are usually implemented using structs. The characteristic that distinguishes a
+  smart pointer from an ordinary struct is that smart pointers implement the <code>Deref</code> and <code>Drop</code> traits.
+  The <code>Deref</code> trait allows an instance of the smart pointer struct to behave like a reference so
+  you can write code that works with either references or smart pointers. The <code>Drop</code> trait allows
+  you to customize the code that is run when an instance of the smart pointer goes out of scope.
+</p>
+<p>Examples from standard library:</p>
+<ul>
+  <li><code>Box&#x3C;T></code> for allocating values on the heap</li>
+  <li><code>Rc&#x3C;T></code>, a reference counting type that enables multiple ownership</li>
+  <li>
+    <code>Ref&#x3C;T></code> and <code>RefMut&#x3C;T></code>, accessed through <code>RefCell&#x3C;T></code>, a type that enforces the borrowing
+    rules at runtime instead of compile time
+  </li>
+</ul>
+<h2>Box</h2>
+<p>
+  Boxes allow you to store data on the heap rather than the stack. What remains on the stack is the
+  pointer to the heap data.
+</p>
+<p>They are used mostly for:</p>
+<ul>
+  <li>
+    When you have a type whose size can’t be known at compile time and you want to use a value of
+    that type in a context that requires an exact size
+  </li>
+  <li>
+    When you have a large amount of data and you want to transfer ownership but ensure the data
+    won’t be copied when you do so
+  </li>
+  <li>
+    When you want to own a value and you care only that it’s a type that implements a particular
+    trait rather than being of a specific type
+  </li>
+</ul>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">b</span> = Box::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-number">5</span>);
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"b = {}"</span>, b);
+}
+</code></pre>
+<p>
+  At compile time, Rust needs to know how much space a type takes up. One type whose size can’t be
+  known at compile time is a recursive type, where a value can have as part of itself another value
+  of the same type. Because this nesting of values could theoretically continue infinitely, Rust
+  doesn’t know how much space a value of a recursive type needs. However, boxes have a known size,
+  so by inserting a box in a recursive type definition, you can have recursive types.
+</p>
+<h2>Linked List</h2>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">List</span> {
+    <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-type">i32</span>, <span class="hljs-type">Box</span>&#x3C;List>),
+    Nil,
+}
+
+<span class="hljs-keyword">use</span> crate::List::{Cons, Nil};
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">list</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">1</span>, Box::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">2</span>, Box::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">3</span>, Box::<span class="hljs-title function_ invoke__">new</span>(Nil))))));
+}
+</code></pre>
+<h2>Deref Trait</h2>
+<p>Implementing the <code>Deref</code> trait allows to customize the behavior of the dereference operator <code>*</code>.</p>
+<p>
+  A regular reference is a type of pointer, and one way to think of a pointer is as an arrow to a
+  value stored somewhere else.
+</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">x</span> = <span class="hljs-number">5</span>;
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">y</span> = &#x26;x;
+
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">5</span>, x);
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">5</span>, *y);
+}
+</code></pre>
+<p>
+  The variable <code>x</code> holds an <code>i32</code> value, <code>5</code>. We set <code>y</code> equal to a reference to <code>x</code>. We can assert
+  that <code>x</code> is equal to <code>5</code>. However, if we want to make an assertion about the value in <code>y</code>, we have
+  to use <code>*y</code> to follow the reference to the value it’s pointing to (hence dereference). Once we
+  dereference <code>y</code>, we have access to the integer value <code>y</code> is pointing to that we can compare with <code>5</code>.
+</p>
+<p>Comparing a number and a reference to a number isn’t allowed because they’re different types. We must use the dereference operator to follow the reference to the value it’s pointing to.</p>
+<p>It is possible to rewrite this code with <code>Box&#x3C;T></code>:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">x</span> = <span class="hljs-number">5</span>;
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">y</span> = Box::<span class="hljs-title function_ invoke__">new</span>(x);
+
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">5</span>, x);
+    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-number">5</span>, *y);
+}
+</code></pre>
+<h2>Custom Smart Pointers</h2>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">use</span> std::ops::Deref;
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">MyBox</span>&#x3C;T>(T);
+
+<span class="hljs-keyword">impl</span>&#x3C;T> MyBox&#x3C;T> {
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">new</span>(x: T) <span class="hljs-punctuation">-></span> MyBox&#x3C;T> {
+        <span class="hljs-title function_ invoke__">MyBox</span>(x)
+    }
+}
+
+<span class="hljs-keyword">impl</span>&#x3C;T> Deref <span class="hljs-keyword">for</span> <span class="hljs-title class_">MyBox</span>&#x3C;T> {
+    <span class="hljs-keyword">type</span> <span class="hljs-title class_">Target</span> = T;
+
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">deref</span>(&#x26;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-></span> &#x26;<span class="hljs-keyword">Self</span>::Target {
+        &#x26;<span class="hljs-keyword">self</span>.<span class="hljs-number">0</span>
+    }
+}
+</code></pre>
+<p>
+  Rust substitutes the <code>*</code> operator with a call to the <code>deref</code> method and then a plain dereference
+  so we don’t have to think about whether or not we need to call the deref method.
+</p>
+<p>
+  Deref coercion is a convenience that Rust performs on arguments to functions and methods.
+  Deref coercion works only on types that implement the Deref trait. Deref coercion converts such
+  a type into a reference to another type. For example, deref coercion can convert <code>&#x26;String</code> to <code>&#x26;str</code>
+  because <code>String</code> implements the <code>Deref</code> trait such that it returns <code>&#x26;str</code>. Deref coercion happens
+  automatically when we pass a reference to a particular type’s value as an argument to a function
+  or method that doesn’t match the parameter type in the function or method definition. A sequence
+  of calls to the deref method converts the type we provided into the type the parameter needs.
+</p>
+<p>Example of deref coercion:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">hello</span>(name: &#x26;<span class="hljs-type">str</span>) {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"Hello, {}!"</span>, name);
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">m</span> = MyBox::<span class="hljs-title function_ invoke__">new</span>(String::<span class="hljs-title function_ invoke__">from</span>(<span class="hljs-string">"Rust"</span>));
+    <span class="hljs-title function_ invoke__">hello</span>(&#x26;m);
+}
+</code></pre>
+<p>
+  Similar to immutable references, you can use the <code>DerefMut</code> trait to override the <code>*</code> operator
+  on mutable references.
+</p>
+<p>Rust does deref coercion when it finds types and trait implementations in three cases:</p>
+<ul>
+  <li>From <code>&#x26;T</code> to <code>&#x26;U</code> when <code>T: Deref&#x3C;Target=U></code></li>
+  <li>From <code>&#x26;mut T</code> to <code>&#x26;mut U</code> when <code>T: DerefMut&#x3C;Target=U></code></li>
+  <li>From <code>&#x26;mut T</code> to <code>&#x26;U</code> when <code>T: Deref&#x3C;Target=U></code></li>
+</ul>
+<p>
+  The first two cases are the same except for mutability. The first case states that if you have a
+  <code>&#x26;T</code>, and <code>T</code> implements <code>Deref</code> to some type <code>U</code>, you can get a <code>&#x26;U</code> transparently. The second
+  case states that the same deref coercion happens for mutable references.
+</p>
+<h2>Drop</h2>
+<p>
+  <code>Drop</code>, which lets you customize what happens when a value is about to go out of scope. You can
+  provide an implementation for the Drop trait on any type, and the code you specify can be used to
+  release resources like files or network connections. For example, when a <code>Box&#x3C;T></code> is dropped it
+  will deallocate the space on the heap that the box points to.
+</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">CustomSmartPointer</span> {
+    data: <span class="hljs-type">String</span>,
+}
+
+<span class="hljs-keyword">impl</span> <span class="hljs-title class_">Drop</span> <span class="hljs-keyword">for</span> <span class="hljs-title class_">CustomSmartPointer</span> {
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">drop</span>(&#x26;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) {
+        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"Dropping CustomSmartPointer with data `{}`!"</span>, <span class="hljs-keyword">self</span>.data);
+    }
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">c</span> = CustomSmartPointer {
+        data: String::<span class="hljs-title function_ invoke__">from</span>(<span class="hljs-string">"my stuff"</span>),
+    };
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">d</span> = CustomSmartPointer {
+        data: String::<span class="hljs-title function_ invoke__">from</span>(<span class="hljs-string">"other stuff"</span>),
+    };
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"CustomSmartPointers created."</span>);
+}
+</code></pre>
+<p>this will print:</p>
+<pre><code class="hljs language-txt">CustomSmartPointers created.
+Dropping CustomSmartPointer with data `other stuff`!
+Dropping CustomSmartPointer with data `my stuff`!
+</code></pre>
+<p>Variables are dropped in the reverse order of their creation, so <code>d</code> was dropped before <code>c</code>.</p>
+<h2>Reference Counted Smart Pointers</h2>
+<p>
+  <code>Rc&#x3C;T></code> - reference counted smart pointer allows to have multiple ownership on same entity.
+  The <code>Rc&#x3C;T></code> type keeps track of the number of references to a value to determine whether or not
+  the value is still in use. If there are zero references to a value, the value can be cleaned up
+  without any references becoming invalid.
+</p>
+<p>
+  <img src="_images/smart_pointers_1.png" alt="shared ownership">
+</p>
+<p>Here <code>b</code> and <code>c</code> have references to <code>a</code>.</p>
+<p>This is highly useful in many use cases, for example in graphs and it's derivatives - trees, linked lists e.t.c.</p>
+<p><em><code>Rc&#x3C;T></code> is only for single threaded usecase</em></p>
+<p>Example of the problem:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">List</span> {
+    <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-type">i32</span>, <span class="hljs-type">Box</span>&#x3C;List>),
+    Nil,
+}
+
+<span class="hljs-keyword">use</span> crate::List::{Cons, Nil};
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">a</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">5</span>, Box::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">10</span>, Box::<span class="hljs-title function_ invoke__">new</span>(Nil))));
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">b</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">3</span>, Box::<span class="hljs-title function_ invoke__">new</span>(a));
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">c</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">4</span>, Box::<span class="hljs-title function_ invoke__">new</span>(a));
+}
+</code></pre>
+<p>This code will not compile, because here multiple ownership of <code>a</code> occures, which is not allowed.</p>
+<p>Fix it with <code>Rc&#x3C;T></code>:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">List</span> {
+    <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-type">i32</span>, Rc&#x3C;List>),
+    Nil,
+}
+
+<span class="hljs-keyword">use</span> crate::List::{Cons, Nil};
+<span class="hljs-keyword">use</span> std::rc::Rc;
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">a</span> = Rc::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">5</span>, Rc::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">10</span>, Rc::<span class="hljs-title function_ invoke__">new</span>(Nil)))));
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">b</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">3</span>, Rc::<span class="hljs-title function_ invoke__">clone</span>(&#x26;a));
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">c</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">4</span>, Rc::<span class="hljs-title function_ invoke__">clone</span>(&#x26;a));
+}
+</code></pre>
+<p>
+  Every time we call <code>Rc::clone</code>, the reference count to the data within the <code>Rc&#x3C;List></code> will
+  increase, and the data won’t be cleaned up unless there are zero references to it.
+</p>
+<p>
+  The call to <code>Rc::clone</code> only increments the reference count, which doesn’t take much time. Deep
+  copies of data can take a lot of time. By using <code>Rc::clone</code> for reference counting, we can visually
+  distinguish between the deep-copy kinds of clones and the kinds of clones that increase the
+  reference count.
+</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">a</span> = Rc::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">5</span>, Rc::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">10</span>, Rc::<span class="hljs-title function_ invoke__">new</span>(Nil)))));
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"count after creating a = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;a));
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">b</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">3</span>, Rc::<span class="hljs-title function_ invoke__">clone</span>(&#x26;a));
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"count after creating b = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;a));
+    {
+        <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">c</span> = <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">4</span>, Rc::<span class="hljs-title function_ invoke__">clone</span>(&#x26;a));
+        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"count after creating c = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;a));
+    }
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"count after c goes out of scope = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;a));
+}
+</code></pre>
+<p>This will result in:</p>
+<pre><code class="hljs language-rust">count after creating a = <span class="hljs-number">1</span>
+count after creating b = <span class="hljs-number">2</span>
+count after creating c = <span class="hljs-number">3</span>
+count after c goes out of scope = <span class="hljs-number">2</span>
+</code></pre>
+<p><strong>Dereferencing <code>Rc&#x3C;T></code>:</strong></p>
+<p>
+  To dereference <code>Rc&#x3C;T></code> used operator <code>*</code>, but it is also can be done implicitly. So it
+  is possible to do:
+</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">x</span> = Rc::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-string">"value"</span>.<span class="hljs-title function_ invoke__">to_string</span>());
+<span class="hljs-built_in">print!</span>(<span class="hljs-string">"let: {}"</span>, x.<span class="hljs-title function_ invoke__">len</span>());
+</code></pre>
+<p><strong>Moving value from <code>Rc&#x3C;T></code>:</strong></p>
+<p>
+  Sometimes it is useful to move ownership on the underlying value from <code>Rc</code> to somewhere else.
+  It may be done with <code>Rc::try_unwrap(rc_pointer)</code>. But there is a complexity - such move may
+  be done only in case, when there is only one strong reference exists in this <code>Rc</code>. In other
+  case <code>try_unwrap</code> will return an error.
+</p>
+<h2>Interior Mutability And <code>RefCell</code></h2>
+<h2>Memory Leaks</h2>
+<p>
+  It is possible to create memory leak in <code>Rust</code> with <code>Rc&#x3C;T></code> or <code>RefCell&#x3C;T></code> by creating cycle
+  references. Such a way that one object may reference itself and always having active references
+  it will not be cleaned.
+</p>
+<p>For example:</p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">use</span> crate::List::{Cons, Nil};
+<span class="hljs-keyword">use</span> std::cell::RefCell;
+<span class="hljs-keyword">use</span> std::rc::Rc;
+
+<span class="hljs-meta">#[derive(Debug)]</span>
+<span class="hljs-keyword">enum</span> <span class="hljs-title class_">List</span> {
+    <span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-type">i32</span>, RefCell&#x3C;Rc&#x3C;List>>),
+    Nil,
+}
+
+<span class="hljs-keyword">impl</span> <span class="hljs-title class_">List</span> {
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">tail</span>(&#x26;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-></span> <span class="hljs-type">Option</span>&#x3C;&#x26;RefCell&#x3C;Rc&#x3C;List>>> {
+        <span class="hljs-keyword">match</span> <span class="hljs-keyword">self</span> {
+            <span class="hljs-title function_ invoke__">Cons</span>(_, item) => <span class="hljs-title function_ invoke__">Some</span>(item),
+            Nil => <span class="hljs-literal">None</span>,
+        }
+    }
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+  <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">a</span> = Rc::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">5</span>, RefCell::<span class="hljs-title function_ invoke__">new</span>(Rc::<span class="hljs-title function_ invoke__">new</span>(Nil))));
+
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">"a initial rc count = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;a));
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">"a next item = {:?}"</span>, a.<span class="hljs-title function_ invoke__">tail</span>());
+
+  <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">b</span> = Rc::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-title function_ invoke__">Cons</span>(<span class="hljs-number">10</span>, RefCell::<span class="hljs-title function_ invoke__">new</span>(Rc::<span class="hljs-title function_ invoke__">clone</span>(&#x26;a))));
+
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">"a rc count after b creation = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;a));
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">"b initial rc count = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;b));
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">"b next item = {:?}"</span>, b.<span class="hljs-title function_ invoke__">tail</span>());
+
+  <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">Some</span>(link) = a.<span class="hljs-title function_ invoke__">tail</span>() {
+      *link.<span class="hljs-title function_ invoke__">borrow_mut</span>() = Rc::<span class="hljs-title function_ invoke__">clone</span>(&#x26;b);
+  }
+
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">"b rc count after changing a = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;b));
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">"a rc count after changing a = {}"</span>, Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;a));
+
+  <span class="hljs-comment">// Uncomment the next line to see that we have a cycle;</span>
+  <span class="hljs-comment">// it will overflow the stack</span>
+  <span class="hljs-comment">// println!("a next item = {:?}", a.tail());</span>
+}
+</code></pre>
+<h2>Preventing Reference Cycles</h2>
+<p>So far, we’ve demonstrated that calling Rc::clone increases the strong_count of an Rc instance, and an Rc instance is only cleaned up if its strong_count is 0. You can also create a weak reference to the value within an Rc instance by calling Rc::downgrade and passing a reference to the Rc. When you call Rc::downgrade, you get a smart pointer of type Weak. Instead of increasing the strong_count in the Rc instance by 1, calling Rc::downgrade increases the weak_count by 1. The Rc type uses weak_count to keep track of how many Weak references exist, similar to strong_count. The difference is the weak_count doesn’t need to be 0 for the Rc instance to be cleaned up.</p>
+<p>Strong references are how you can share ownership of an Rc istance. Weak references don’t express an ownership relationship. They won’t cause a reference cycle because any cycle involving some weak references will be broken once the strong reference count of values involved is 0.</p>
+<p>Because the value that Weak references might have been dropped, to do anything with the value that a Weak is pointing to, you must make sure the value still exists. Do this by calling the upgrade method on a Weak instance, which will return an Option&#x3C;Rc>. You’ll get a result of Some if the Rc value has not been dropped yet and a result of None if the Rc value has been dropped. Because upgrade returns an Option&#x3C;Rc>, Rust will ensure that the Some case and the None case are handled, and there won’t be an invalid pointer.</p>
+<p>As an example, rather than using a list whose items know only about the next item, we’ll create a tree whose items know about their children items and their parent items.</p>
+<h2>Tree</h2>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">use</span> std::cell::RefCell;
+<span class="hljs-keyword">use</span> std::rc::{Rc, Weak};
+
+<span class="hljs-meta">#[derive(Debug)]</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Node</span> {
+    value: <span class="hljs-type">i32</span>,
+    parent: RefCell&#x3C;Weak&#x3C;Node>>,
+    children: RefCell&#x3C;<span class="hljs-type">Vec</span>&#x3C;Rc&#x3C;Node>>>,
+}
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">leaf</span> = Rc::<span class="hljs-title function_ invoke__">new</span>(Node {
+        value: <span class="hljs-number">3</span>,
+        parent: RefCell::<span class="hljs-title function_ invoke__">new</span>(Weak::<span class="hljs-title function_ invoke__">new</span>()),
+        children: RefCell::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-built_in">vec!</span>[]),
+    });
+
+    <span class="hljs-built_in">println!</span>(
+        <span class="hljs-string">"leaf strong = {}, weak = {}"</span>,
+        Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;leaf),
+        Rc::<span class="hljs-title function_ invoke__">weak_count</span>(&#x26;leaf),
+    );
+
+    {
+        <span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">branch</span> = Rc::<span class="hljs-title function_ invoke__">new</span>(Node {
+            value: <span class="hljs-number">5</span>,
+            parent: RefCell::<span class="hljs-title function_ invoke__">new</span>(Weak::<span class="hljs-title function_ invoke__">new</span>()),
+            children: RefCell::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-built_in">vec!</span>[Rc::<span class="hljs-title function_ invoke__">clone</span>(&#x26;leaf)]),
+        });
+
+        *leaf.parent.<span class="hljs-title function_ invoke__">borrow_mut</span>() = Rc::<span class="hljs-title function_ invoke__">downgrade</span>(&#x26;branch);
+
+        <span class="hljs-built_in">println!</span>(
+            <span class="hljs-string">"branch strong = {}, weak = {}"</span>,
+            Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;branch),
+            Rc::<span class="hljs-title function_ invoke__">weak_count</span>(&#x26;branch),
+        );
+
+        <span class="hljs-built_in">println!</span>(
+            <span class="hljs-string">"leaf strong = {}, weak = {}"</span>,
+            Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;leaf),
+            Rc::<span class="hljs-title function_ invoke__">weak_count</span>(&#x26;leaf),
+        );
+    }
+
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"leaf parent = {:?}"</span>, leaf.parent.<span class="hljs-title function_ invoke__">borrow</span>().<span class="hljs-title function_ invoke__">upgrade</span>());
+    <span class="hljs-built_in">println!</span>(
+        <span class="hljs-string">"leaf strong = {}, weak = {}"</span>,
+        Rc::<span class="hljs-title function_ invoke__">strong_count</span>(&#x26;leaf),
+        Rc::<span class="hljs-title function_ invoke__">weak_count</span>(&#x26;leaf),
+    );
+}
+</code></pre>
+<h2>References</h2>
+<p>
+  <a href="https://doc.rust-lang.org/stable/book/ch15-06-reference-cycles.html">Reference Cycles</a>
+  <a href="https://doc.rust-lang.org/stable/book/ch15-01-box.html">Using Box to Point to Data on the Heap</a>
+</p>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["rust","smart-pointers"],"note":{"title":"Rust Smart Pointers","date":"2022-02-26","content":"\n\u003cp\u003e\n  \u003ccode\u003eSmart pointers\u003c/code\u003e are data structures that not only act like a pointer but also have additional\n  metadata and capabilities.\n\u003c/p\u003e\n\u003cp\u003e\n  e.g. \u003ccode\u003eString\u003c/code\u003e and \u003ccode\u003eVec\u0026#x3C;T\u003e\u003c/code\u003e are smart pointers. They own some memory and allow to manipulate it.\n  They also have metadata (such as their capacity) and extra capabilities or guarantees (such as\n  with \u003ccode\u003eString\u003c/code\u003e ensuring its data will always be valid \u003ccode\u003eUTF-8\u003c/code\u003e).\n\u003c/p\u003e\n\u003cp\u003e\n  Smart pointers are usually implemented using structs. The characteristic that distinguishes a\n  smart pointer from an ordinary struct is that smart pointers implement the \u003ccode\u003eDeref\u003c/code\u003e and \u003ccode\u003eDrop\u003c/code\u003e traits.\n  The \u003ccode\u003eDeref\u003c/code\u003e trait allows an instance of the smart pointer struct to behave like a reference so\n  you can write code that works with either references or smart pointers. The \u003ccode\u003eDrop\u003c/code\u003e trait allows\n  you to customize the code that is run when an instance of the smart pointer goes out of scope.\n\u003c/p\u003e\n\u003cp\u003eExamples from standard library:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ccode\u003eBox\u0026#x3C;T\u003e\u003c/code\u003e for allocating values on the heap\u003c/li\u003e\n  \u003cli\u003e\u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e, a reference counting type that enables multiple ownership\u003c/li\u003e\n  \u003cli\u003e\n    \u003ccode\u003eRef\u0026#x3C;T\u003e\u003c/code\u003e and \u003ccode\u003eRefMut\u0026#x3C;T\u003e\u003c/code\u003e, accessed through \u003ccode\u003eRefCell\u0026#x3C;T\u003e\u003c/code\u003e, a type that enforces the borrowing\n    rules at runtime instead of compile time\n  \u003c/li\u003e\n\u003c/ul\u003e\n\u003ch2\u003eBox\u003c/h2\u003e\n\u003cp\u003e\n  Boxes allow you to store data on the heap rather than the stack. What remains on the stack is the\n  pointer to the heap data.\n\u003c/p\u003e\n\u003cp\u003eThey are used mostly for:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\n    When you have a type whose size can’t be known at compile time and you want to use a value of\n    that type in a context that requires an exact size\n  \u003c/li\u003e\n  \u003cli\u003e\n    When you have a large amount of data and you want to transfer ownership but ensure the data\n    won’t be copied when you do so\n  \u003c/li\u003e\n  \u003cli\u003e\n    When you want to own a value and you care only that it’s a type that implements a particular\n    trait rather than being of a specific type\n  \u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eb\u003c/span\u003e = Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e);\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"b = {}\"\u003c/span\u003e, b);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  At compile time, Rust needs to know how much space a type takes up. One type whose size can’t be\n  known at compile time is a recursive type, where a value can have as part of itself another value\n  of the same type. Because this nesting of values could theoretically continue infinitely, Rust\n  doesn’t know how much space a value of a recursive type needs. However, boxes have a known size,\n  so by inserting a box in a recursive type definition, you can have recursive types.\n\u003c/p\u003e\n\u003ch2\u003eLinked List\u003c/h2\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003eenum\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eList\u003c/span\u003e {\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003eBox\u003c/span\u003e\u0026#x3C;List\u003e),\n    Nil,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e crate::List::{Cons, Nil};\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003elist\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Nil))))));\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eDeref Trait\u003c/h2\u003e\n\u003cp\u003eImplementing the \u003ccode\u003eDeref\u003c/code\u003e trait allows to customize the behavior of the dereference operator \u003ccode\u003e*\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003e\n  A regular reference is a type of pointer, and one way to think of a pointer is as an arrow to a\n  value stored somewhere else.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ex\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e;\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ey\u003c/span\u003e = \u0026#x26;x;\n\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, x);\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, *y);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  The variable \u003ccode\u003ex\u003c/code\u003e holds an \u003ccode\u003ei32\u003c/code\u003e value, \u003ccode\u003e5\u003c/code\u003e. We set \u003ccode\u003ey\u003c/code\u003e equal to a reference to \u003ccode\u003ex\u003c/code\u003e. We can assert\n  that \u003ccode\u003ex\u003c/code\u003e is equal to \u003ccode\u003e5\u003c/code\u003e. However, if we want to make an assertion about the value in \u003ccode\u003ey\u003c/code\u003e, we have\n  to use \u003ccode\u003e*y\u003c/code\u003e to follow the reference to the value it’s pointing to (hence dereference). Once we\n  dereference \u003ccode\u003ey\u003c/code\u003e, we have access to the integer value \u003ccode\u003ey\u003c/code\u003e is pointing to that we can compare with \u003ccode\u003e5\u003c/code\u003e.\n\u003c/p\u003e\n\u003cp\u003eComparing a number and a reference to a number isn’t allowed because they’re different types. We must use the dereference operator to follow the reference to the value it’s pointing to.\u003c/p\u003e\n\u003cp\u003eIt is possible to rewrite this code with \u003ccode\u003eBox\u0026#x3C;T\u003e\u003c/code\u003e:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ex\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e;\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ey\u003c/span\u003e = Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(x);\n\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, x);\n    \u003cspan class=\"hljs-built_in\"\u003eassert_eq!\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, *y);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eCustom Smart Pointers\u003c/h2\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e std::ops::Deref;\n\n\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eMyBox\u003c/span\u003e\u0026#x3C;T\u003e(T);\n\n\u003cspan class=\"hljs-keyword\"\u003eimpl\u003c/span\u003e\u0026#x3C;T\u003e MyBox\u0026#x3C;T\u003e {\n    \u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003enew\u003c/span\u003e(x: T) \u003cspan class=\"hljs-punctuation\"\u003e-\u003e\u003c/span\u003e MyBox\u0026#x3C;T\u003e {\n        \u003cspan class=\"hljs-title function_ invoke__\"\u003eMyBox\u003c/span\u003e(x)\n    }\n}\n\n\u003cspan class=\"hljs-keyword\"\u003eimpl\u003c/span\u003e\u0026#x3C;T\u003e Deref \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eMyBox\u003c/span\u003e\u0026#x3C;T\u003e {\n    \u003cspan class=\"hljs-keyword\"\u003etype\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eTarget\u003c/span\u003e = T;\n\n    \u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ederef\u003c/span\u003e(\u0026#x26;\u003cspan class=\"hljs-keyword\"\u003eself\u003c/span\u003e) \u003cspan class=\"hljs-punctuation\"\u003e-\u003e\u003c/span\u003e \u0026#x26;\u003cspan class=\"hljs-keyword\"\u003eSelf\u003c/span\u003e::Target {\n        \u0026#x26;\u003cspan class=\"hljs-keyword\"\u003eself\u003c/span\u003e.\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    }\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  Rust substitutes the \u003ccode\u003e*\u003c/code\u003e operator with a call to the \u003ccode\u003ederef\u003c/code\u003e method and then a plain dereference\n  so we don’t have to think about whether or not we need to call the deref method.\n\u003c/p\u003e\n\u003cp\u003e\n  Deref coercion is a convenience that Rust performs on arguments to functions and methods.\n  Deref coercion works only on types that implement the Deref trait. Deref coercion converts such\n  a type into a reference to another type. For example, deref coercion can convert \u003ccode\u003e\u0026#x26;String\u003c/code\u003e to \u003ccode\u003e\u0026#x26;str\u003c/code\u003e\n  because \u003ccode\u003eString\u003c/code\u003e implements the \u003ccode\u003eDeref\u003c/code\u003e trait such that it returns \u003ccode\u003e\u0026#x26;str\u003c/code\u003e. Deref coercion happens\n  automatically when we pass a reference to a particular type’s value as an argument to a function\n  or method that doesn’t match the parameter type in the function or method definition. A sequence\n  of calls to the deref method converts the type we provided into the type the parameter needs.\n\u003c/p\u003e\n\u003cp\u003eExample of deref coercion:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ehello\u003c/span\u003e(name: \u0026#x26;\u003cspan class=\"hljs-type\"\u003estr\u003c/span\u003e) {\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"Hello, {}!\"\u003c/span\u003e, name);\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003em\u003c/span\u003e = MyBox::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(String::\u003cspan class=\"hljs-title function_ invoke__\"\u003efrom\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"Rust\"\u003c/span\u003e));\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003ehello\u003c/span\u003e(\u0026#x26;m);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  Similar to immutable references, you can use the \u003ccode\u003eDerefMut\u003c/code\u003e trait to override the \u003ccode\u003e*\u003c/code\u003e operator\n  on mutable references.\n\u003c/p\u003e\n\u003cp\u003eRust does deref coercion when it finds types and trait implementations in three cases:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eFrom \u003ccode\u003e\u0026#x26;T\u003c/code\u003e to \u003ccode\u003e\u0026#x26;U\u003c/code\u003e when \u003ccode\u003eT: Deref\u0026#x3C;Target=U\u003e\u003c/code\u003e\u003c/li\u003e\n  \u003cli\u003eFrom \u003ccode\u003e\u0026#x26;mut T\u003c/code\u003e to \u003ccode\u003e\u0026#x26;mut U\u003c/code\u003e when \u003ccode\u003eT: DerefMut\u0026#x3C;Target=U\u003e\u003c/code\u003e\u003c/li\u003e\n  \u003cli\u003eFrom \u003ccode\u003e\u0026#x26;mut T\u003c/code\u003e to \u003ccode\u003e\u0026#x26;U\u003c/code\u003e when \u003ccode\u003eT: Deref\u0026#x3C;Target=U\u003e\u003c/code\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\n  The first two cases are the same except for mutability. The first case states that if you have a\n  \u003ccode\u003e\u0026#x26;T\u003c/code\u003e, and \u003ccode\u003eT\u003c/code\u003e implements \u003ccode\u003eDeref\u003c/code\u003e to some type \u003ccode\u003eU\u003c/code\u003e, you can get a \u003ccode\u003e\u0026#x26;U\u003c/code\u003e transparently. The second\n  case states that the same deref coercion happens for mutable references.\n\u003c/p\u003e\n\u003ch2\u003eDrop\u003c/h2\u003e\n\u003cp\u003e\n  \u003ccode\u003eDrop\u003c/code\u003e, which lets you customize what happens when a value is about to go out of scope. You can\n  provide an implementation for the Drop trait on any type, and the code you specify can be used to\n  release resources like files or network connections. For example, when a \u003ccode\u003eBox\u0026#x3C;T\u003e\u003c/code\u003e is dropped it\n  will deallocate the space on the heap that the box points to.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eCustomSmartPointer\u003c/span\u003e {\n    data: \u003cspan class=\"hljs-type\"\u003eString\u003c/span\u003e,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003eimpl\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eDrop\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eCustomSmartPointer\u003c/span\u003e {\n    \u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003edrop\u003c/span\u003e(\u0026#x26;\u003cspan class=\"hljs-keyword\"\u003emut\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eself\u003c/span\u003e) {\n        \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"Dropping CustomSmartPointer with data `{}`!\"\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eself\u003c/span\u003e.data);\n    }\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ec\u003c/span\u003e = CustomSmartPointer {\n        data: String::\u003cspan class=\"hljs-title function_ invoke__\"\u003efrom\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"my stuff\"\u003c/span\u003e),\n    };\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ed\u003c/span\u003e = CustomSmartPointer {\n        data: String::\u003cspan class=\"hljs-title function_ invoke__\"\u003efrom\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"other stuff\"\u003c/span\u003e),\n    };\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"CustomSmartPointers created.\"\u003c/span\u003e);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003ethis will print:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-txt\"\u003eCustomSmartPointers created.\nDropping CustomSmartPointer with data `other stuff`!\nDropping CustomSmartPointer with data `my stuff`!\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eVariables are dropped in the reverse order of their creation, so \u003ccode\u003ed\u003c/code\u003e was dropped before \u003ccode\u003ec\u003c/code\u003e.\u003c/p\u003e\n\u003ch2\u003eReference Counted Smart Pointers\u003c/h2\u003e\n\u003cp\u003e\n  \u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e - reference counted smart pointer allows to have multiple ownership on same entity.\n  The \u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e type keeps track of the number of references to a value to determine whether or not\n  the value is still in use. If there are zero references to a value, the value can be cleaned up\n  without any references becoming invalid.\n\u003c/p\u003e\n\u003cp\u003e\n  \u003cimg src=\"_images/smart_pointers_1.png\" alt=\"shared ownership\"\u003e\n\u003c/p\u003e\n\u003cp\u003eHere \u003ccode\u003eb\u003c/code\u003e and \u003ccode\u003ec\u003c/code\u003e have references to \u003ccode\u003ea\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eThis is highly useful in many use cases, for example in graphs and it's derivatives - trees, linked lists e.t.c.\u003c/p\u003e\n\u003cp\u003e\u003cem\u003e\u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e is only for single threaded usecase\u003c/em\u003e\u003c/p\u003e\n\u003cp\u003eExample of the problem:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003eenum\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eList\u003c/span\u003e {\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003eBox\u003c/span\u003e\u0026#x3C;List\u003e),\n    Nil,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e crate::List::{Cons, Nil};\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ea\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Nil))));\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eb\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(a));\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ec\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, Box::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(a));\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThis code will not compile, because here multiple ownership of \u003ccode\u003ea\u003c/code\u003e occures, which is not allowed.\u003c/p\u003e\n\u003cp\u003eFix it with \u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003eenum\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eList\u003c/span\u003e {\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, Rc\u0026#x3C;List\u003e),\n    Nil,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e crate::List::{Cons, Nil};\n\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e std::rc::Rc;\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ea\u003c/span\u003e = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Nil)))));\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eb\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eclone\u003c/span\u003e(\u0026#x26;a));\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ec\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eclone\u003c/span\u003e(\u0026#x26;a));\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  Every time we call \u003ccode\u003eRc::clone\u003c/code\u003e, the reference count to the data within the \u003ccode\u003eRc\u0026#x3C;List\u003e\u003c/code\u003e will\n  increase, and the data won’t be cleaned up unless there are zero references to it.\n\u003c/p\u003e\n\u003cp\u003e\n  The call to \u003ccode\u003eRc::clone\u003c/code\u003e only increments the reference count, which doesn’t take much time. Deep\n  copies of data can take a lot of time. By using \u003ccode\u003eRc::clone\u003c/code\u003e for reference counting, we can visually\n  distinguish between the deep-copy kinds of clones and the kinds of clones that increase the\n  reference count.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ea\u003c/span\u003e = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Nil)))));\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"count after creating a = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;a));\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eb\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eclone\u003c/span\u003e(\u0026#x26;a));\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"count after creating b = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;a));\n    {\n        \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ec\u003c/span\u003e = \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eclone\u003c/span\u003e(\u0026#x26;a));\n        \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"count after creating c = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;a));\n    }\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"count after c goes out of scope = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;a));\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThis will result in:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003ecount after creating a = \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\ncount after creating b = \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\ncount after creating c = \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\ncount after c goes out of scope = \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eDereferencing \u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  To dereference \u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e used operator \u003ccode\u003e*\u003c/code\u003e, but it is also can be done implicitly. So it\n  is possible to do:\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ex\u003c/span\u003e = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"value\"\u003c/span\u003e.\u003cspan class=\"hljs-title function_ invoke__\"\u003eto_string\u003c/span\u003e());\n\u003cspan class=\"hljs-built_in\"\u003eprint!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"let: {}\"\u003c/span\u003e, x.\u003cspan class=\"hljs-title function_ invoke__\"\u003elen\u003c/span\u003e());\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eMoving value from \u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e:\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\n  Sometimes it is useful to move ownership on the underlying value from \u003ccode\u003eRc\u003c/code\u003e to somewhere else.\n  It may be done with \u003ccode\u003eRc::try_unwrap(rc_pointer)\u003c/code\u003e. But there is a complexity - such move may\n  be done only in case, when there is only one strong reference exists in this \u003ccode\u003eRc\u003c/code\u003e. In other\n  case \u003ccode\u003etry_unwrap\u003c/code\u003e will return an error.\n\u003c/p\u003e\n\u003ch2\u003eInterior Mutability And \u003ccode\u003eRefCell\u003c/code\u003e\u003c/h2\u003e\n\u003ch2\u003eMemory Leaks\u003c/h2\u003e\n\u003cp\u003e\n  It is possible to create memory leak in \u003ccode\u003eRust\u003c/code\u003e with \u003ccode\u003eRc\u0026#x3C;T\u003e\u003c/code\u003e or \u003ccode\u003eRefCell\u0026#x3C;T\u003e\u003c/code\u003e by creating cycle\n  references. Such a way that one object may reference itself and always having active references\n  it will not be cleaned.\n\u003c/p\u003e\n\u003cp\u003eFor example:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e crate::List::{Cons, Nil};\n\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e std::cell::RefCell;\n\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e std::rc::Rc;\n\n\u003cspan class=\"hljs-meta\"\u003e#[derive(Debug)]\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eenum\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eList\u003c/span\u003e {\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e, RefCell\u0026#x3C;Rc\u0026#x3C;List\u003e\u003e),\n    Nil,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003eimpl\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eList\u003c/span\u003e {\n    \u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003etail\u003c/span\u003e(\u0026#x26;\u003cspan class=\"hljs-keyword\"\u003eself\u003c/span\u003e) \u003cspan class=\"hljs-punctuation\"\u003e-\u003e\u003c/span\u003e \u003cspan class=\"hljs-type\"\u003eOption\u003c/span\u003e\u0026#x3C;\u0026#x26;RefCell\u0026#x3C;Rc\u0026#x3C;List\u003e\u003e\u003e {\n        \u003cspan class=\"hljs-keyword\"\u003ematch\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eself\u003c/span\u003e {\n            \u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(_, item) =\u003e \u003cspan class=\"hljs-title function_ invoke__\"\u003eSome\u003c/span\u003e(item),\n            Nil =\u003e \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e,\n        }\n    }\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n  \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ea\u003c/span\u003e = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, RefCell::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Nil))));\n\n  \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"a initial rc count = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;a));\n  \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"a next item = {:?}\"\u003c/span\u003e, a.\u003cspan class=\"hljs-title function_ invoke__\"\u003etail\u003c/span\u003e());\n\n  \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eb\u003c/span\u003e = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-title function_ invoke__\"\u003eCons\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, RefCell::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eclone\u003c/span\u003e(\u0026#x26;a))));\n\n  \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"a rc count after b creation = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;a));\n  \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"b initial rc count = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;b));\n  \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"b next item = {:?}\"\u003c/span\u003e, b.\u003cspan class=\"hljs-title function_ invoke__\"\u003etail\u003c/span\u003e());\n\n  \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eSome\u003c/span\u003e(link) = a.\u003cspan class=\"hljs-title function_ invoke__\"\u003etail\u003c/span\u003e() {\n      *link.\u003cspan class=\"hljs-title function_ invoke__\"\u003eborrow_mut\u003c/span\u003e() = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eclone\u003c/span\u003e(\u0026#x26;b);\n  }\n\n  \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"b rc count after changing a = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;b));\n  \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"a rc count after changing a = {}\"\u003c/span\u003e, Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;a));\n\n  \u003cspan class=\"hljs-comment\"\u003e// Uncomment the next line to see that we have a cycle;\u003c/span\u003e\n  \u003cspan class=\"hljs-comment\"\u003e// it will overflow the stack\u003c/span\u003e\n  \u003cspan class=\"hljs-comment\"\u003e// println!(\"a next item = {:?}\", a.tail());\u003c/span\u003e\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003ePreventing Reference Cycles\u003c/h2\u003e\n\u003cp\u003eSo far, we’ve demonstrated that calling Rc::clone increases the strong_count of an Rc instance, and an Rc instance is only cleaned up if its strong_count is 0. You can also create a weak reference to the value within an Rc instance by calling Rc::downgrade and passing a reference to the Rc. When you call Rc::downgrade, you get a smart pointer of type Weak. Instead of increasing the strong_count in the Rc instance by 1, calling Rc::downgrade increases the weak_count by 1. The Rc type uses weak_count to keep track of how many Weak references exist, similar to strong_count. The difference is the weak_count doesn’t need to be 0 for the Rc instance to be cleaned up.\u003c/p\u003e\n\u003cp\u003eStrong references are how you can share ownership of an Rc istance. Weak references don’t express an ownership relationship. They won’t cause a reference cycle because any cycle involving some weak references will be broken once the strong reference count of values involved is 0.\u003c/p\u003e\n\u003cp\u003eBecause the value that Weak references might have been dropped, to do anything with the value that a Weak is pointing to, you must make sure the value still exists. Do this by calling the upgrade method on a Weak instance, which will return an Option\u0026#x3C;Rc\u003e. You’ll get a result of Some if the Rc value has not been dropped yet and a result of None if the Rc value has been dropped. Because upgrade returns an Option\u0026#x3C;Rc\u003e, Rust will ensure that the Some case and the None case are handled, and there won’t be an invalid pointer.\u003c/p\u003e\n\u003cp\u003eAs an example, rather than using a list whose items know only about the next item, we’ll create a tree whose items know about their children items and their parent items.\u003c/p\u003e\n\u003ch2\u003eTree\u003c/h2\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e std::cell::RefCell;\n\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e std::rc::{Rc, Weak};\n\n\u003cspan class=\"hljs-meta\"\u003e#[derive(Debug)]\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eNode\u003c/span\u003e {\n    value: \u003cspan class=\"hljs-type\"\u003ei32\u003c/span\u003e,\n    parent: RefCell\u0026#x3C;Weak\u0026#x3C;Node\u003e\u003e,\n    children: RefCell\u0026#x3C;\u003cspan class=\"hljs-type\"\u003eVec\u003c/span\u003e\u0026#x3C;Rc\u0026#x3C;Node\u003e\u003e\u003e,\n}\n\n\u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emain\u003c/span\u003e() {\n    \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eleaf\u003c/span\u003e = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Node {\n        value: \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e,\n        parent: RefCell::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Weak::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e()),\n        children: RefCell::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003evec!\u003c/span\u003e[]),\n    });\n\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n        \u003cspan class=\"hljs-string\"\u003e\"leaf strong = {}, weak = {}\"\u003c/span\u003e,\n        Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;leaf),\n        Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eweak_count\u003c/span\u003e(\u0026#x26;leaf),\n    );\n\n    {\n        \u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003ebranch\u003c/span\u003e = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Node {\n            value: \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e,\n            parent: RefCell::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(Weak::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e()),\n            children: RefCell::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003evec!\u003c/span\u003e[Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eclone\u003c/span\u003e(\u0026#x26;leaf)]),\n        });\n\n        *leaf.parent.\u003cspan class=\"hljs-title function_ invoke__\"\u003eborrow_mut\u003c/span\u003e() = Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003edowngrade\u003c/span\u003e(\u0026#x26;branch);\n\n        \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n            \u003cspan class=\"hljs-string\"\u003e\"branch strong = {}, weak = {}\"\u003c/span\u003e,\n            Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;branch),\n            Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eweak_count\u003c/span\u003e(\u0026#x26;branch),\n        );\n\n        \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n            \u003cspan class=\"hljs-string\"\u003e\"leaf strong = {}, weak = {}\"\u003c/span\u003e,\n            Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;leaf),\n            Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eweak_count\u003c/span\u003e(\u0026#x26;leaf),\n        );\n    }\n\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"leaf parent = {:?}\"\u003c/span\u003e, leaf.parent.\u003cspan class=\"hljs-title function_ invoke__\"\u003eborrow\u003c/span\u003e().\u003cspan class=\"hljs-title function_ invoke__\"\u003eupgrade\u003c/span\u003e());\n    \u003cspan class=\"hljs-built_in\"\u003eprintln!\u003c/span\u003e(\n        \u003cspan class=\"hljs-string\"\u003e\"leaf strong = {}, weak = {}\"\u003c/span\u003e,\n        Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003estrong_count\u003c/span\u003e(\u0026#x26;leaf),\n        Rc::\u003cspan class=\"hljs-title function_ invoke__\"\u003eweak_count\u003c/span\u003e(\u0026#x26;leaf),\n    );\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eReferences\u003c/h2\u003e\n\u003cp\u003e\n  \u003ca href=\"https://doc.rust-lang.org/stable/book/ch15-06-reference-cycles.html\"\u003eReference Cycles\u003c/a\u003e\n  \u003ca href=\"https://doc.rust-lang.org/stable/book/ch15-01-box.html\"\u003eUsing Box to Point to Data on the Heap\u003c/a\u003e\n\u003c/p\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["rust","smart-pointers"]},"buildId":"CLxGZSj0Hrsl_jR3C8i21","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

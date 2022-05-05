@@ -1,0 +1,1 @@
+{"pageProps":{"noteKey":["rust","workspaces"],"note":{"title":"Rust - Workspaces","date":"2022-03-02","content":"\n<h1>Workspaces</h1>\n<p>A workspace is a set of packages that share the same Cargo.lock and output directory.</p>\n<h2>References</h2>\n<p><a href=\"https://doc.rust-lang.org/stable/book/ch14-03-cargo-workspaces.html\">Cargo Workspaces</a></p>\n"}},"__N_SSG":true}
