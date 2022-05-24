@@ -41,3 +41,4 @@ some data from the context.
 ## References
 
 - [Refactoring Guru](https://refactoring.guru/design-patterns/state)
+- [Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine#UML_state_machines)
