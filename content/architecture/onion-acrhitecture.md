@@ -26,7 +26,7 @@ The typical layer structure consists of 4 layers:
 - `Infrastructure`: databases, external service connectivity, file system...
 - `UI`: frameworks, web, CLI or other ways to use application
 
-![onion architecture diagram](_images/onion-arch-diagram.png)
+![onion architecture diagram](/_images/onion-arch-diagram.png)
 
 Layers are coupled only with interfaces. For this purpose each inner level defines an interface for
 the external layer and external layer implements this interface. Later on app configuration this implementations are injected and inner level can use them through the interface. This configuration usually happend on the highest level of the application. 

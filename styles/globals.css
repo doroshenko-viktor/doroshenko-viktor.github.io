@@ -82,6 +82,15 @@ a {
   color: var(--color-text);
 }
 
+blockquote {
+  border-left: 3px solid var(--color-accent);
+  margin: var(--indent-3) 0;
+  padding: var(--indent-0) var(--indent-0) var(--indent-0) var(--indent-4);
+  font-family: monospace;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+}
+
 pre code.hljs {
   font-size: calc(var(--font-size-2) - 0.3rem);
   line-height: var(--font-size-2);

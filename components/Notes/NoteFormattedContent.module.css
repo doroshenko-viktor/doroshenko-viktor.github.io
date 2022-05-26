@@ -6,6 +6,15 @@
   line-height: var(--font-size-3);
 }
 
+.note a {
+  text-decoration: underline;
+  transition: all 0.3s;
+}
+
+.note a:hover {
+  color: var(--color-accent);
+}
+
 .note img {
   display: block;
   margin: var(--indent-4) auto;
