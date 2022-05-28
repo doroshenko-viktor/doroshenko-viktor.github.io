@@ -15,8 +15,8 @@ They normally not include any particular use case specific or persistence logic 
 
 According to Eric Evans:
 
-> When a significant process or transformation in the domain is not a natural responsibility of an ENTITY or VALUE OBJECT, add an operation to the model as standalone interface declared as a SERVICE. 
-> Define the interface in terms of the language of the model and make sure the operation name is part of the UBIQUITOUS LANGUAGE. Make the SERVICE stateless.
+> When a significant process or transformation in the domain is not a natural responsibility of an `ENTITY` or `VALUE OBJECT`, add an operation to the model as standalone interface declared as a `SERVICE`. 
+> Define the interface in terms of the language of the model and make sure the operation name is part of the `UBIQUITOUS LANGUAGE`. Make the `SERVICE` stateless.
 
 It is important to keep track of what logic goes to this services and not overuse it, because
 it may lead to appearance of anemic domain models with all logic in services and domain entities
@@ -43,3 +43,4 @@ Infrastructure layer services should not contain any core business logic. They a
 ## Resources
 
 - [Services in Domain-Driven Design (DDD)](http://gorodinski.com/blog/2012/04/14/services-in-domain-driven-design-ddd/)
+- [Domain Driven Design: Domain Service, Application Service](https://stackoverflow.com/questions/2268699/domain-driven-design-domain-service-application-service)
