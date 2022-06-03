@@ -1,6 +1,6 @@
 ---
 title: JavaScript Web Workers
-date: "2022-04-13"
+date: "2022-06-03"
 description: "JS concurrency model"
 ---
 
