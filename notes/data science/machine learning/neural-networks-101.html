@@ -1,0 +1,60 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Neural Networks 101</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/3bdcb86edbe4b2cb.css" as="style"/><link rel="stylesheet" href="/_next/static/css/3bdcb86edbe4b2cb.css" data-n-g=""/><link rel="preload" href="/_next/static/css/e5ce53dde55ec42b.css" as="style"/><link rel="stylesheet" href="/_next/static/css/e5ce53dde55ec42b.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/369-aaa550419eab31e8.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-da4eaccc7e295342.js" defer=""></script><script src="/_next/static/4-0sjHnIyCdpNern-AmeU/_buildManifest.js" defer=""></script><script src="/_next/static/4-0sjHnIyCdpNern-AmeU/_ssgManifest.js" defer=""></script><script src="/_next/static/4-0sjHnIyCdpNern-AmeU/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><div><a href="/"><header class="Header_mainHeader__VLamk Header_mainHeaderM__OlGKU"><div class="Header_mainLogoImg__eX6Vr"><img src="/images/profile-pic.png" alt="logo"/></div><h1 class="Header_blogName__4JblC">Tech Notes</h1></header></a></div><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Neural Networks 101</h1><article class="NoteFormattedContent_note__8cHeE">
+<p><code>Feedforward neural network</code> consists of two main components - <code>neurons</code> and <code>synapses</code>.</p>
+<p>
+  <img src="/_images/neural-networks-1.png" alt="neural network example">
+</p>
+<p>
+  On this example we see simple neural network with 3 neurons and 5 synapses.
+  There are two layers - inputs and outputs layers. There may be more layers with arbitrary number
+  of neurons. These middle layers are called hidden. But on input and output layers we have same amount of neurons as we have input sources
+  and outputs we want to receive.
+</p>
+<p>The more layers and neurons neural network has, the more advanced and abstract concept it can handle.</p>
+<p>
+  Basic principle of <code>FFNN</code> - send some numbers to the inputs, than neural network propagating these
+  values through it's neurons, which change the values somehow. This is called <code>feedforwarding</code>. And
+  on the output we receive some changed numbers, which in their turn will be an answer.
+</p>
+<p>
+  For the neural network this is only numbers and their respective change. We give these numbers their
+  meaning. For example, we send to the neural network a picture as a bite array and on single output
+  we have a number between 0 and 1. We decide, that this output means presence or absence of some object
+  on the provided image. Initially all outputs of our network may be completely useless. We need to
+  train neural network. Feeding it with some data set and giving a feedback we seek a moment, when
+  it will return proper output. From now on we can consider our neural network trained and can feed it
+  with some new data, which it does not know yet and with high probability will get meaningful results.
+</p>
+<p>
+  <code>neurons</code> are processing unit, which has at least one input and output. It receives some value,
+  changes it with some criteria and returns changed value into output. Neuron has a <code>bias</code>, which
+  works similarly to threshold - when input value is big enough it will be propagated, otherwise will
+  output 0.
+</p>
+<p>
+  <code>synapses</code> are connections between <code>neurons</code>. Each synapse has <code>weight</code>, which is a multiplicator on
+  a value, transferred through this synapse.
+</p>
+<p>
+  <img src="/_images/neural-networks-2.png" alt="neural network with weights and biases">
+</p>
+<p>
+  On the first attempt we can give weights and biases totally random values. And then we need to train
+  neural network in order to get meaningful results. To do that some algorithms used, for example
+  <code>back propagation</code>. It works like that: network is feed with some amount of different data, it
+  responds to it and here we need to tell it the correct result it should have been responded with.
+  Back propagation goes back on neural network, adjusting weights and biases accordingly. This
+  approximates future results.
+</p>
+<p>
+  Important to note, that this learning may improve results to some close point or stop on local
+  optimum and not improve further.
+</p>
+<p>Back propagation is good, when we have rich set of data with certain output.</p>
+<h2>References</h2>
+<ul>
+  <li><a href="https://pwy.io/en/posts/learning-to-fly-pt1/"></a></li>
+  <li><a href="https://towardsdatascience.com/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53">A Comprehensive Guide to Convolutional Neural Networks — the ELI5 way</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Multilayer_perceptron">Multilayer perceptron</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Feedforward_neural_network">Feedforward neural network</a></li>
+</ul>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["data science","machine learning","neural-networks-101"],"note":{"title":"Neural Networks 101","date":"2022-06-06","content":"\n\u003cp\u003e\u003ccode\u003eFeedforward neural network\u003c/code\u003e consists of two main components - \u003ccode\u003eneurons\u003c/code\u003e and \u003ccode\u003esynapses\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003e\n  \u003cimg src=\"/_images/neural-networks-1.png\" alt=\"neural network example\"\u003e\n\u003c/p\u003e\n\u003cp\u003e\n  On this example we see simple neural network with 3 neurons and 5 synapses.\n  There are two layers - inputs and outputs layers. There may be more layers with arbitrary number\n  of neurons. These middle layers are called hidden. But on input and output layers we have same amount of neurons as we have input sources\n  and outputs we want to receive.\n\u003c/p\u003e\n\u003cp\u003eThe more layers and neurons neural network has, the more advanced and abstract concept it can handle.\u003c/p\u003e\n\u003cp\u003e\n  Basic principle of \u003ccode\u003eFFNN\u003c/code\u003e - send some numbers to the inputs, than neural network propagating these\n  values through it's neurons, which change the values somehow. This is called \u003ccode\u003efeedforwarding\u003c/code\u003e. And\n  on the output we receive some changed numbers, which in their turn will be an answer.\n\u003c/p\u003e\n\u003cp\u003e\n  For the neural network this is only numbers and their respective change. We give these numbers their\n  meaning. For example, we send to the neural network a picture as a bite array and on single output\n  we have a number between 0 and 1. We decide, that this output means presence or absence of some object\n  on the provided image. Initially all outputs of our network may be completely useless. We need to\n  train neural network. Feeding it with some data set and giving a feedback we seek a moment, when\n  it will return proper output. From now on we can consider our neural network trained and can feed it\n  with some new data, which it does not know yet and with high probability will get meaningful results.\n\u003c/p\u003e\n\u003cp\u003e\n  \u003ccode\u003eneurons\u003c/code\u003e are processing unit, which has at least one input and output. It receives some value,\n  changes it with some criteria and returns changed value into output. Neuron has a \u003ccode\u003ebias\u003c/code\u003e, which\n  works similarly to threshold - when input value is big enough it will be propagated, otherwise will\n  output 0.\n\u003c/p\u003e\n\u003cp\u003e\n  \u003ccode\u003esynapses\u003c/code\u003e are connections between \u003ccode\u003eneurons\u003c/code\u003e. Each synapse has \u003ccode\u003eweight\u003c/code\u003e, which is a multiplicator on\n  a value, transferred through this synapse.\n\u003c/p\u003e\n\u003cp\u003e\n  \u003cimg src=\"/_images/neural-networks-2.png\" alt=\"neural network with weights and biases\"\u003e\n\u003c/p\u003e\n\u003cp\u003e\n  On the first attempt we can give weights and biases totally random values. And then we need to train\n  neural network in order to get meaningful results. To do that some algorithms used, for example\n  \u003ccode\u003eback propagation\u003c/code\u003e. It works like that: network is feed with some amount of different data, it\n  responds to it and here we need to tell it the correct result it should have been responded with.\n  Back propagation goes back on neural network, adjusting weights and biases accordingly. This\n  approximates future results.\n\u003c/p\u003e\n\u003cp\u003e\n  Important to note, that this learning may improve results to some close point or stop on local\n  optimum and not improve further.\n\u003c/p\u003e\n\u003cp\u003eBack propagation is good, when we have rich set of data with certain output.\u003c/p\u003e\n\u003ch2\u003eReferences\u003c/h2\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ca href=\"https://pwy.io/en/posts/learning-to-fly-pt1/\"\u003e\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href=\"https://towardsdatascience.com/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53\"\u003eA Comprehensive Guide to Convolutional Neural Networks — the ELI5 way\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href=\"https://en.wikipedia.org/wiki/Multilayer_perceptron\"\u003eMultilayer perceptron\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href=\"https://en.wikipedia.org/wiki/Feedforward_neural_network\"\u003eFeedforward neural network\u003c/a\u003e\u003c/li\u003e\n\u003c/ul\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["data science","machine learning","neural-networks-101"]},"buildId":"4-0sjHnIyCdpNern-AmeU","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
