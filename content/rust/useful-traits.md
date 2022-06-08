@@ -9,6 +9,7 @@ description: "List of good to know common traits in Rust"
   - [std::cmp::PartialOrd](#stdcmppartialord)
 - [Lifecycle](#lifecycle)
   - [std::ops::Drop](#stdopsdrop)
+  - [std::ops::Deref](#stdopsderef)
   - [std::future::Future](#stdfuturefuture)
 
 ## Comparison
@@ -84,6 +85,21 @@ impl Drop for HasDrop {
 ```
 
 e.g. `Box`, `Vec`, `String`, `File`, and `Process` implement the `Drop` trait to free resources.
+
+### std::ops::Deref
+
+[Full Doc](https://doc.rust-lang.org/std/ops/trait.Deref.html)
+
+```rust
+pub trait Deref {
+    type Target: ?Sized;
+    fn deref(&self) -> &Self::Target;
+}
+```
+
+Used for immutable dereferencing operations, like `*v`. `Deref` also used implicitly by the compiler in many circumstances. This mechanism is called `Deref coercion`. In mutable contexts, `DerefMut` is used.
+
+`Deref` should only be implemented for smart pointers to avoid confusion. This trait should never fail. Failure during dereferencing can be extremely confusing when `Deref` is invoked implicitly.
 
 ### std::future::Future
 
