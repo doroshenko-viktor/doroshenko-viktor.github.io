@@ -10,6 +10,9 @@ description: "List of good to know common traits in Rust"
 - [Lifecycle](#lifecycle)
   - [std::ops::Drop](#stdopsdrop)
   - [std::ops::Deref](#stdopsderef)
+- [Operators](#operators)
+  - [std::ops::Index](#stdopsindex)
+- [Async](#async)
   - [std::future::Future](#stdfuturefuture)
 
 ## Comparison
@@ -100,6 +103,28 @@ pub trait Deref {
 Used for immutable dereferencing operations, like `*v`. `Deref` also used implicitly by the compiler in many circumstances. This mechanism is called `Deref coercion`. In mutable contexts, `DerefMut` is used.
 
 `Deref` should only be implemented for smart pointers to avoid confusion. This trait should never fail. Failure during dereferencing can be extremely confusing when `Deref` is invoked implicitly.
+
+## Operators
+
+### std::ops::Index
+
+[Doc](https://doc.rust-lang.org/std/ops/trait.Index.html)
+
+```rust
+pub trait Index<Idx> 
+where
+    Idx: ?Sized, 
+{
+    type Output: ?Sized;
+    fn index(&self, index: Idx) -> &Self::Output;
+}
+```
+
+Used for indexing operations `(`container[index]`)` in immutable contexts.
+
+`container[index]` is actually syntactic sugar for `*container.index(index)`, but only when used as an immutable value. If a mutable value is requested, `IndexMut` is used instead. This allows nice things such as `let value = v[index]` if the type of value implements `Copy`.
+
+## Async
 
 ### std::future::Future
 
