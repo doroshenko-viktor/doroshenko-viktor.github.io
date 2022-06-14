@@ -76,3 +76,9 @@ We can use it with any stream we may need:
 var memoryStream = new MemoryStream();
 memoryStream.WriteJsonToStream(objects);
 ```
+
+## References
+
+- https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonTextWriter.htm
+- https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonWriter.htm
+- https://www.newtonsoft.com/json/help/html/Performance.htm
