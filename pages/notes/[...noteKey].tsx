@@ -24,7 +24,7 @@ const Note: React.FC<Props> = ({ note }) => {
             <div>
                 <Link href='/'>
                     <a>
-                        <MainHeader title="Tech Notes" size="m" />
+                        <MainHeader title="Tech Notes" size="s" />
                     </a>
                 </Link>
             </div>

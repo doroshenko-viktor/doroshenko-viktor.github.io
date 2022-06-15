@@ -44,10 +44,10 @@
   /* COLORS */
   --color-primary: #d4d4d4;
   --color-primary-light: #f5f5f9;
-  --color-text: #403757;
+  --color-text: #3a2769;
   --color-black: #1b0f3a;
   --color-white: #fff;
-  --color-accent: #824ed7;
+  --color-accent: #7542c8;
   --color-accent-opposite: #e64e20;
   --color-accent-light: #ad98dd;
   --color-accent-extra-light: #edecf2;
@@ -118,7 +118,7 @@ pre code.hljs {
 }
 
 .hljs-comment {
-  color: var(--code-color-text);
+  color: var(--code-color-3);
 }
 
 .hljs-meta {
