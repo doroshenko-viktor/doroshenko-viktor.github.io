@@ -72,3 +72,10 @@ Dijkstra Algorithm
 
 ## References
 
+## Next
+
+https://medium.com/basecs/finding-the-shortest-path-with-a-little-help-from-dijkstra-613149fbdc8e
+https://medium.com/basecs/spinning-around-in-cycles-with-directed-acyclic-graphs-a233496d4688
+https://medium.com/basecs/deep-dive-through-a-graph-dfs-traversal-8177df5d0f13
+https://medium.com/basecs/going-broad-in-a-graph-bfs-traversal-959bd1a09255
+https://medium.com/basecs/from-theory-to-practice-representing-graphs-cfd782c5be38
