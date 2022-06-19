@@ -22,8 +22,10 @@
 }
 
 .noteTitle {
-  margin: var(--indent-6) 0 var(--indent-6) 0;
+  margin: var(--indent-8) 0 var(--indent-6) 0;
+  font-size: var(--font-size-5);
   font-family: var(--font-subheading);
+  font-weight: var(--font-weight-strong);
 }
 
 .note h2 {

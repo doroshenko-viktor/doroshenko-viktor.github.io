@@ -20,8 +20,14 @@
   }
 }
 
-@media (min-width: 3000px) {
+@media (min-width: 2000px) {
   .centeredSection {
     width: 1000px;
+  }
+}
+
+@media (min-width: 3000px) {
+  .centeredSection {
+    width: 1300px;
   }
 }

@@ -59,6 +59,10 @@
   margin-bottom: var(--indent-0);
 }
 
+.noteHeader h2 {
+  /* color: var(--color-black); */
+}
+
 .noteBody {
   padding-right: var(--indent-5);
   padding-bottom: var(--indent-2);
