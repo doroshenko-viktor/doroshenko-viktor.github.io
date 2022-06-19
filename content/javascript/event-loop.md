@@ -19,6 +19,13 @@ environment are executed in separate threads, but outside of main program runtim
 `JS environment` may differ from the context of execution. It may be a browser api for the frontend or 
 `libuv` in `node.js`.
 
+Basically `event loop` is an infinite loop, which waits until main thread stack is empty, then trying to take 
+a task from the task queue. 
+It takes oldest task, places it into the main thread stack and the process loops. If there is no tasks in the queue, 
+`event loop` simply waits until they appear. Any user or system event ocurred and created new task in the queue.
+
+While waiting for tasks to appear, event loop is very efficient in terms of CPU usage.
+
 ## How It Works In Details
 
 Simplest example:
@@ -103,7 +110,7 @@ queue already contains some scheduled events, rendering steps will be performed 
 
 Ideally when there is no blocking tasks, render steps are executed 60 times per second.
 
-### requestAnimationFrame
+### Rendering With `requestAnimationFrame`
 
 If you need to make a changes related to rendering to the display it there is a special method for this - 
 `requestAnimationFrame`. It is called immediately before rendering steps. The reason, why it is better to
@@ -116,6 +123,51 @@ waste of a computational power. Moreover, as this is not designed for animation 
 schedule tasks to recalculate picture once per frame, there still could be some misses, e.g. garbage 
 collection started and such task will not hit necessary frame, but on the next frame we will have two 
 calculations.
+
+## Microtasks
+
+The main difference of `microtask` from regular task is in queue consumption. While main task queue executes
+task one by one and allows page rendering stages between them, microtask queue when started execution, blocks
+the main thread until all microtask queue will not be empty. This is useful, when we need to schedule next
+task and ensure it will be handled before next rerender phase.
+
+`Promises` internally implemented using microtasks.
+
+```js
+setTimeout(() => alert("1"));
+Promise.resolve().then(() => alert("2"));
+console.log("3");
+```
+
+this example will print
+
+```txt
+3
+2
+1
+```
+
+to the console. This is happening because `setTimeout` schedules regular task and `Promise` creates a microtask,
+which has priority over macrotasks.
+
+If we need to ensure, that application state will not be changed after we schedule a task, we can use `queueMicrotask`
+function. It will create a new task in microtask queue, which will have a priority over all other tasks, such as
+event listeners and macrotasks.
+
+## Performance Tips
+
+When there is a need to perform some heavy calculation, which may potentially block the main thread it may
+be a good idea to split it in time. For example using `setTimeout` with `0` delay. This will reschedule some
+part of heavy code into the event loop task queue, which will introduce possibility for rerendering the
+content of the page.
+
+Such separation does not make a big difference in overall heavy calculation time, but increases page responsiveness.
+
+Another option is separating heavy calculation to the working thread. Such a way we can introduce some kind
+of multithreading. Our main thread will execute only light tasks and rendering, while blocking calculation
+in working thread will not affect page responsiveness.
+
+
 
 ## References
 

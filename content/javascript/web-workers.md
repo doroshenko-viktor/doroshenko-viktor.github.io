@@ -68,3 +68,6 @@ of data. It is not possible to share data by reference.
 To test it locally better to use some server, because it is not possible to run workers from local
 file system by security concerns. At least in Chrome.
 
+## References
+
+- https://html.spec.whatwg.org/multipage/workers.html
