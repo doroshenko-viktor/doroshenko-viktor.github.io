@@ -4,17 +4,6 @@ date: "2022-04-04"
 description: "List of good to know common traits in Rust"
 ---
 
-- [Comparison](#comparison)
-  - [std::cmp::PartialEq](#stdcmppartialeq)
-  - [std::cmp::PartialOrd](#stdcmppartialord)
-- [Lifecycle](#lifecycle)
-  - [std::ops::Drop](#stdopsdrop)
-  - [std::ops::Deref](#stdopsderef)
-- [Operators](#operators)
-  - [std::ops::Index](#stdopsindex)
-- [Async](#async)
-  - [std::future::Future](#stdfuturefuture)
-
 ## Comparison
 
 ### std::cmp::PartialEq
