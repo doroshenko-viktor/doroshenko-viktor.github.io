@@ -4,7 +4,6 @@
   gap: var(--indent-3);
   flex-wrap: wrap;
   flex-direction: row-reverse;
-  padding-right: var(--indent-2);
 }
 
 .categories a {
@@ -12,7 +11,16 @@
   text-decoration: none;
 }
 
-@media (min-width: 1000) and (max-width: 1300px) {
+@media (max-width: 999px) {
+  .categories {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1300px) {
+}
+
+@media (min-width: 1000px) {
 }
 
 @media (max-width: 1301px) {

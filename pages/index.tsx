@@ -33,7 +33,9 @@ const Home: NextPage<Props> = ({ categories, notes }) => {
           </Link>
         }
         alt={
-          <Categories values={categories} />
+          <SectionCategories >
+            <Categories values={categories} />
+          </SectionCategories>
         }
       >
         <NotesList values={notes} />

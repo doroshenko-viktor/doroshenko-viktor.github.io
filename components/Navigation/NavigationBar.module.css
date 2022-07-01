@@ -1,0 +1,30 @@
+.navbar {
+  display: flex;
+  list-style: none;
+  gap: var(--indent-3);
+  justify-content: flex-start;
+}
+
+.navitem {
+  font-family: var(--font-subheading);
+  font-size: var(--font-size-1);
+  text-decoration: none;
+  border: 0;
+  background-color: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.navitem:hover {
+  color: var(--color-accent-opposite);
+  text-decoration: underline;
+}
+
+.separator:last-child {
+  display: none;
+}
+
+.separator {
+  margin: 0 0.3rem 0 0.3rem;
+}

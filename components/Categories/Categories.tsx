@@ -18,8 +18,6 @@ type Props = {
 };
 
 const Categories: React.FC<Props> = ({ values }: Props) => {
-    const [menuOpened, setMenuOpened] = useState(false);
-
     const elements = values.map((categoryData, index) => {
         if ((categoryData as Action).action) {
             return <ActionItem
@@ -38,20 +36,15 @@ const Categories: React.FC<Props> = ({ values }: Props) => {
 
 
     let categoriesClasses = styles.categories;
-    // if (!menuOpened) {
-        categoriesClasses + 'hidden';
-    // }
 
     return (<>
-        <button onClick={toggleMenu}>menu</button>
-        <ul className={categoriesClasses}>
-            {elements}
-        </ul>
+        <div className={styles.container}>
+            <ul className={categoriesClasses}>
+                {elements}
+            </ul>
+        </div>
     </>);
 }
 
-function toggleMenu(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-
-}
 
 export default Categories;

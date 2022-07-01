@@ -8,6 +8,8 @@ import Link from "next/link";
 import { NoteFormattedContent } from "../../components/Notes/NoteFormattedContent";
 import { MainHeader } from "../../components/Header";
 import { SingleColumnLayout } from "../../components/Layouts";
+import { useRouter } from "next/router";
+import NavigationBar, { ActionNavigationItem, LinkNavigationItem } from "../../components/Navigation/NavigationBar";
 
 type Props = {
     note: NoteContent;
@@ -15,19 +17,18 @@ type Props = {
 };
 
 const Note: React.FC<Props> = ({ note }) => {
+    const router = useRouter();
+
     return (<>
         <Head>
             <title>{note.title}</title>
             <link rel="icon" href="/images/favicon.ico" />
         </Head>
         <SingleColumnLayout>
-            <div>
-                <Link href='/'>
-                    <a>
-                        <MainHeader title="Tech Notes" size="s" />
-                    </a>
-                </Link>
-            </div>
+            <NavigationBar items={[
+                new LinkNavigationItem('Home', '/'),
+                new ActionNavigationItem('Back', () => router.back())
+            ]} />
             <NoteFormattedContent title={note.title} content={note.content} />
         </SingleColumnLayout>
     </>);

@@ -11,10 +11,13 @@ export const MainPageLayout: React.FC<Props> = ({ header, alt, children }) => {
     return (<>
         <div className={styles.frame}>
             <div className={styles.alt}>
+
                 <div className={styles.header}>
                     {header}
                 </div>
                 {alt}
+            </div>
+            <div className={styles.border}>
             </div>
             <main className={styles.main}>
 
