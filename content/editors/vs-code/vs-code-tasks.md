@@ -2,6 +2,7 @@
 title: Tasks In Visual Studio Code
 date: "2022-06-05"
 description: "Working with tasks in Visual Studio Code"
+mainPage: true
 ---
 
 Workspace or folder specific `tasks` are configured from the `tasks.json` file in the `.vscode` folder for a `workspace`.

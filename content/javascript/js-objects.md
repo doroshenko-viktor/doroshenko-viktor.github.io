@@ -2,6 +2,7 @@
 title: JavaScript Object
 date: "2022-03-22"
 description: "Working with JS Object"
+mainPage: true
 ---
 
 `Object` is a basic structure in `js`. Almost all data structures, except some primitives like

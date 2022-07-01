@@ -2,6 +2,7 @@
 title: JavaScript Event Loop
 date: "2022-06-18"
 description: "In depth overview of JS event loop"
+mainPage: true
 ---
 
 `JavaScript` is a generally single threaded programming language. It is possible to achieve some level 

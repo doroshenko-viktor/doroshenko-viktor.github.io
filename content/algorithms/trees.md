@@ -2,6 +2,7 @@
 title: Trees
 date: "2022-05-29"
 description: "Tree data structure"
+mainPage: true
 ---
 
 `Trees` are a special kind of `graphs` with some restrictions applied. Trees should have a starting `root`. 
@@ -39,3 +40,12 @@ of the whole tree. This will be the longest path to follow in the tree.
 
 The tree is `balanced` if any two sibling subtrees have a difference in their height no more than one level. In other case
 tree is considered `unbalanced`.
+
+## Next
+
+https://medium.com/basecs/busying-oneself-with-b-trees-78bbf10522e7
+https://medium.com/basecs/painting-nodes-black-with-red-black-trees-60eacb2be9a5
+https://medium.com/basecs/the-little-avl-tree-that-could-86a3cae410c7
+https://medium.com/basecs/trying-to-understand-tries-3ec6bede0014
+https://medium.com/basecs/leaf-it-up-to-binary-trees-11001aaf746d
+

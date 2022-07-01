@@ -2,6 +2,7 @@
 title: Machine Learning 101
 date: "2022-06-06"
 description: "Introduction to Machine Learning"
+mainPage: true
 ---
 
 ## AI VS Deep Learning VS Machine Learning

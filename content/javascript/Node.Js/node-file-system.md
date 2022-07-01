@@ -4,14 +4,6 @@ date: "2022-04-24"
 description: "Working with file system in Node.JS"
 ---
 
-- [FS Module](#fs-module)
-  - [Opening Files](#opening-files)
-  - [Creating Files](#creating-files)
-  - [Removing Files](#removing-files)
-  - [Files Metadata](#files-metadata)
-- [Stream API](#stream-api)
-- [Plan](#plan)
-
 ## FS Module
 
 `fs` is a `node.js` module providing access to the file system.

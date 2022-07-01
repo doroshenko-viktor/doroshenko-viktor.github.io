@@ -2,6 +2,7 @@
 title: JavaScript/TypeScript Project Setup
 date: "2022-03-20"
 description: "Setting up basic projects with ESLint, Prettier and Jest"
+mainPage: true
 ---
 
 ## Initializing Project

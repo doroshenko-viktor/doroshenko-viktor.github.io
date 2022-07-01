@@ -2,6 +2,7 @@
 title: JS - Iterables And Collections
 date: "2022-03-12"
 description: "Working with Javascript iterables and collections"
+mainPage: true
 ---
 
 ## Iterables

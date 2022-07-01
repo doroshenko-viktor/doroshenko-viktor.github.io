@@ -2,6 +2,7 @@
 title: Graphs
 date: "2022-03-31"
 description: "Theory of graphs"
+mainPage: true
 ---
 
 `Graph` is a data structure, which models set of connections or edges. These connections generally may be not

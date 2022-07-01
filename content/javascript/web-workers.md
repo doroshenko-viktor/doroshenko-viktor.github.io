@@ -2,6 +2,7 @@
 title: JavaScript Web Workers
 date: "2022-06-03"
 description: "JS concurrency model"
+mainPage: true
 ---
 
 `Web worker` is a separate JS thread, working in parallel with the main thread and communicating with

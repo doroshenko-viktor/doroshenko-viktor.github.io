@@ -2,6 +2,7 @@
 title: Creating C# CLI App
 date: "2022-03-27"
 description: "Simple example of C# CLI application with Microsoft.Extensions.CommandLineUtils, MediatR and Serilog"
+mainPage: true
 ---
 
 ## Initial Setup

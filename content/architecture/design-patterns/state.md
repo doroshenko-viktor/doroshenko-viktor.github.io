@@ -2,6 +2,7 @@
 title: State Pattern
 date: "2022-05-13"
 description: "State design pattern overview and application"
+mainPage: true
 ---
 
 `State` object oriented design pattern is useful, when object should frequently change it's behavior

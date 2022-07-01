@@ -2,6 +2,7 @@
 title: DDD Services Differences
 date: "2022-05-25"
 description: "Domain Driven Design Domain, Application and Infrastructure services"
+mainPage: true
 ---
 
 ## Domain Services

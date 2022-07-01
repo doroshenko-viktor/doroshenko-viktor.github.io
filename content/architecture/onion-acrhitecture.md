@@ -2,6 +2,7 @@
 title: Onion Architecture
 date: "2022-05-26"
 description: "Description of layered onion acrchitecture"
+mainPage: true
 ---
 
 ## Description

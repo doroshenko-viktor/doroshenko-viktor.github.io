@@ -2,6 +2,7 @@
 title: Efficient Serialization Of Large Object Into JSON
 date: "2022-06-14"
 description: "Serialization and deserialization of large object into JSON using streams"
+mainPage: true
 ---
 
 When you need to serialize large objects there may occur problems with memory allocation, heavy
