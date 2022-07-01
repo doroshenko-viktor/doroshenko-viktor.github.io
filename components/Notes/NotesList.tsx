@@ -16,6 +16,7 @@ const NotesList: React.FC<Props> = ({ values }) => {
                         link={noteData.link}
                         title={noteData.title}
                         description={noteData.description}
+                        publicationDate={new Date(noteData.date)}
                     />
                 })
             }

@@ -12,14 +12,17 @@
   text-decoration: none;
 }
 
-@media (max-width: 1300px) {
+@media (min-width: 1000) and (max-width: 1300px) {
+}
+
+@media (max-width: 1301px) {
   .categories {
     flex-direction: column;
     align-items: stretch;
   }
 }
 
-@media (min-width: 3000px) {
+@media (min-width: 2561px) {
   .categories {
     width: 800px;
     margin-left: auto;

@@ -20,6 +20,7 @@ import rehypeStringify from "rehype-stringify";
 interface NoteDescriptionVerbose extends DescribedBlogAsset {
   date: Date;
   link: string;
+  main: boolean;
 }
 
 export const getNoteContent = async (
@@ -136,7 +137,7 @@ export const getLastNotesDetails = async (
     const publicNotes: NoteDescriptionVerbose[] = [];
 
     for await (const { name, path, relPath } of files) {
-      if (assetsService.isPrivateAsset(name) && !assetsService.isNote(name)) {
+      if (!shouldBePublished(name)) {
         continue;
       }
 
@@ -148,9 +149,10 @@ export const getLastNotesDetails = async (
         description: parsed.data.description,
         date: new Date(parsed.data.date),
         link: assetsService.getNoteLink(relPath),
+        main: parsed.data.mainPage,
       };
 
-      if (!isNoteDescriptionValid(note)) {
+      if (!isNoteDescriptionValid(note) || !note.main) {
         continue;
       }
 
@@ -158,6 +160,10 @@ export const getLastNotesDetails = async (
     }
 
     return publicNotes;
+
+    function shouldBePublished(name: string) {
+      return assetsService.isNote(name) && !assetsService.isPrivateAsset(name);
+    }
   }
 
   function isNoteDescriptionValid(note: NoteDescriptionVerbose) {
