@@ -12,7 +12,7 @@ export const SectionCategories: React.FC<Props> = ({ children }) => {
         setMenuOpened(!menuOpened);
     };
 
-    let categoriesClasses = styles.categories;
+    let categoriesClasses = styles.sectionCategories;
 
     if (!menuOpened) {
         categoriesClasses = `${styles.sectionCategories} hidden`;

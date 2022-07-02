@@ -42,7 +42,6 @@ const Folders: React.FC<Props> = ({ notes, categories }: Props) => {
                         title: "Return Back",
                         action: () => { router.back() },
                     }]} />
-                    <br />
                     <Categories values={categories} />
                 </SectionCategories>
             }
