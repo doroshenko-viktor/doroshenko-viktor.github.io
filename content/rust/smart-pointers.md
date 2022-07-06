@@ -422,6 +422,40 @@ fn main() {
 }
 ```
 
+## std::borrow::Cow
+
+The type `Cow` is a smart pointer providing clone-on-write functionality: it can enclose and provide immutable access to borrowed data, and clone the data lazily when mutation or ownership is required. The type is designed to work with general borrowed data via the `Borrow` trait.
+
+Cow implements `Deref`, which means that you can call non-mutating methods directly on the data it encloses. If mutation is desired, `to_mut` will obtain a mutable reference to an owned value, cloning if necessary.
+
+```rust
+use std::borrow::Cow;
+
+fn abs_all(input: &mut Cow<[i32]>) {
+    for i in 0..input.len() {
+        let v = input[i];
+        if v < 0 {
+            // Clones into a vector if not already owned.
+            input.to_mut()[i] = -v;
+        }
+    }
+}
+
+// No clone occurs because `input` doesn't need to be mutated.
+let slice = [0, 1, 2];
+let mut input = Cow::from(&slice[..]);
+abs_all(&mut input);
+
+// Clone occurs because `input` needs to be mutated.
+let slice = [-1, 0, 1];
+let mut input = Cow::from(&slice[..]);
+abs_all(&mut input);
+
+// No clone occurs because `input` is already owned.
+let mut input = Cow::from(vec![-1, 0, 1]);
+abs_all(&mut input);
+```
+
 ## References
 
 [Reference Cycles](https://doc.rust-lang.org/stable/book/ch15-06-reference-cycles.html)
