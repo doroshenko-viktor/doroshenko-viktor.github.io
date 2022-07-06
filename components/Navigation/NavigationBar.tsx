@@ -12,7 +12,7 @@ export class LinkNavigationItem implements NavigationItem {
     getElement(): ReactNode {
         return (
             <Link href={this.path}>
-                <a className={styles.navitem}>{this.title}</a>
+                <a className={styles.navitemContent}>{this.title}</a>
             </Link>
         );
     }
@@ -23,7 +23,7 @@ export class ActionNavigationItem implements NavigationItem {
 
     getElement(): ReactNode {
         return (
-            <button className={styles.navitem} onClick={this.action}>
+            <button className={styles.navitemContent} onClick={this.action}>
                 {this.title}
             </button>
         );
@@ -38,9 +38,10 @@ const NavigationBar: React.FC<Props> = ({ items }) => {
     return (
         <ul className={styles.navbar}>
             {items.map((item, index) => {
-                return <span key={index}>
-                    <li >{item.getElement()}</li><span className={styles.separator}>|</span>
-                </span>;
+                return <li key={index} className={styles.navitem}>
+                    {item.getElement()}
+                    <span className={styles.separator}>|</span>
+                </li>;
             })}
         </ul >
     );

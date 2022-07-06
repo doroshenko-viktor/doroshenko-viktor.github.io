@@ -5,26 +5,26 @@
   justify-content: flex-start;
 }
 
-.navitem {
+.navitemContent {
+  transition: all 0.3s;
+  cursor: pointer;
+  text-decoration: none;
   font-family: var(--font-subheading);
   font-size: var(--font-size-1);
-  text-decoration: none;
-  border: 0;
-  background-color: transparent;
   color: var(--color-text);
-  cursor: pointer;
-  transition: all 0.3s;
+  background-color: transparent;
+  border: 0;
 }
 
-.navitem:hover {
+.navitemContent:hover {
   color: var(--color-accent-opposite);
   text-decoration: underline;
 }
 
-.separator:last-child {
+.navitem:last-child .separator {
   display: none;
 }
 
 .separator {
-  margin: 0 0.3rem 0 0.3rem;
+  margin: 0 0.3rem 0 1rem;
 }
