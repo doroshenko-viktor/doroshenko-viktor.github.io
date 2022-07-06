@@ -38,7 +38,9 @@ const NavigationBar: React.FC<Props> = ({ items }) => {
     return (
         <ul className={styles.navbar}>
             {items.map((item, index) => {
-                return <><li key={index}>{item.getElement()}</li><span className={styles.separator}>|</span></>;
+                return <span key={index}>
+                    <li >{item.getElement()}</li><span className={styles.separator}>|</span>
+                </span>;
             })}
         </ul >
     );
