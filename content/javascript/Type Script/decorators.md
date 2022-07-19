@@ -80,7 +80,7 @@ export function overwrite<T extends Object>(
 
   Object.defineProperty(target, objectKey, {
     get: () => "overwritten", // now accessing decorated field will always return `overwritten` value
-    set: () => {},
+    set: () => {}, // invoke set now will not make any change to the field
     enumerable: false,
     configurable: false,
   });
