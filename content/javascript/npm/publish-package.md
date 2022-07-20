@@ -1,6 +1,6 @@
 ---
 title: Publishing NPM Package With Typescript
-date: "2022-07-30"
+date: "2022-06-30"
 description: "Create and publish NPM package with Typescript"
 mainPage: true
 ---

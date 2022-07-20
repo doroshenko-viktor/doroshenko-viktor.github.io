@@ -32,10 +32,10 @@ const NoteListItem: React.FC<Props> = ({ link, title, description, publicationDa
 };
 
 function getFormattedDate(date: Date): string {
-    const day = date.getUTCDay();
-    const month = getMonthName(date.getUTCMonth());
-    const year = date.getUTCFullYear()
-    return `${day + 1} ${month} ${year}`;
+    const day = date.getDate();
+    const month = getMonthName(date.getMonth() + 1);
+    const year = date.getFullYear()
+    return `${day} ${month} ${year}`;
 }
 
 function getMonthName(monthNumber: number): string {
