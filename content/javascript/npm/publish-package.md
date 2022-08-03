@@ -192,3 +192,32 @@ npm publish
 ```
 
 Now the package should be successfully published into npm registry.
+
+## Publish On Github NPM Registry
+
+Create `Github` access token with following permissions:
+
+- `repo`
+- `write:packages`
+- `read:packages`
+
+Then authorize `npm` to access `Github` registry:
+
+```bash
+npm config set //npm.pkg.github.com/:_authToken <generated-token>
+```
+
+`Github` only allows to push packages within a context of user account, so field `name` in `package.json`
+should be assembled as follows:
+
+```json
+"name": "@<account-name>/<package-name>"
+```
+
+Then to use our uploaded package from custom scope, we should specify source in `.npmrc` file:
+
+```.npmrc
+@<account-name>:registry=https://npm.pkg.github.com/
+```
+
+Now installing packages from `@<account-name>` they will be downloaded from customized source.
