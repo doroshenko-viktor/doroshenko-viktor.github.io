@@ -216,7 +216,7 @@ should be assembled as follows:
 
 Then to use our uploaded package from custom scope, we should specify source in `.npmrc` file:
 
-```.npmrc
+```txt
 @<account-name>:registry=https://npm.pkg.github.com/
 ```
 
