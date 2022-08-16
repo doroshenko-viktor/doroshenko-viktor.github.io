@@ -1,6 +1,6 @@
 ---
 title: JavaScript Type Conversions
-date: "2022-06-03"
+date: "2022-08-03"
 description: "JS Implicit Type Conversions"
 ---
 
