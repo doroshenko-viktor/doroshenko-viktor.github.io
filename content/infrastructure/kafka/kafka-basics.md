@@ -25,3 +25,28 @@ maintain list of topics and event messages.
 
 Each `topic` may have many `producers` and many `consumers`. Topics may be replicated across multiple brokers.
 Event are not deleted after consumer consumption.
+
+## Install On MacOs
+
+To run `Kafka` you need to have `Java Runtime Environment`.
+
+```bash
+brew cask install java
+brew install kafka
+```
+
+First need to run `Zookeeper`:
+
+```bash
+zookeeper-server-start /usr/local/etc/kafka/zookeeper.properties
+```
+
+Then start `Kafka`:
+
+```bash
+kafka-server-start /usr/local/etc/kafka/server.properties
+```
+
+## References
+
+- https://medium.com/@Ankitthakur/apache-kafka-installation-on-mac-using-homebrew-a367cdefd273

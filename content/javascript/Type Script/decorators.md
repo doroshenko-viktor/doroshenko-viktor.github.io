@@ -133,3 +133,7 @@ function decoratorFactory(value: any) {
   };
 }
 ```
+
+## References
+
+- https://www.typescriptlang.org/docs/handbook/decorators.html#introduction

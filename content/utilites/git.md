@@ -63,6 +63,8 @@ git clone --filter=blob:none --sparse <repo-url>
 git sparse-checkout add <folder-path>
 ```
 
+## Fetch
+
 ## Committing
 
 ### Commit Options
@@ -139,6 +141,27 @@ git checkout -
 
 To reset uncommitted changes you can use: `git checkout -- <file-name>` to reset specific file
 and `git checkout .` to reset all uncommitted changes.
+
+To reset commits, which has not yet been pushed:
+
+```bash
+git reset <option> HEAD~<nothing or number of commits to reset>
+```
+
+`option` may be:
+
+- `mixed` - this is default. It removes commit and removes it's changes from staged, but preserves them
+  in the working tree
+- `soft` - remove the specified number of commits, and keep them as staged in the index
+- `hard` - completely remove changes of some number of commits
+
+To reset committed and already pushed changes:
+
+```bash
+git revert <commit-hash> --no-edit
+```
+
+`--no-edit` - does not force to change commit message
 
 ## Merge Branches
 

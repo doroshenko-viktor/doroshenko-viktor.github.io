@@ -1,5 +1,5 @@
 ---
-title: Efficient Serialization Of Large Object Into JSON
+title: Efficient Serialization Of Large Object Into JSON In C#
 date: "2022-06-14"
 description: "Serialization and deserialization of large object into JSON using streams"
 mainPage: true

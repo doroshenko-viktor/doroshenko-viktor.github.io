@@ -6,6 +6,14 @@ description: "Rust package management examples"
 
 ## Cargo
 
+### Generate Documentation
+
+`Cargo` is able to generate documentation from all the doc comments in crate. To do that run:
+
+```bash
+cargo doc --open
+```
+
 ## Profiles
 
 `release profiles` are predefined and customizable profiles with different configurations that allow a programmer to have more control over various options for compiling code.
