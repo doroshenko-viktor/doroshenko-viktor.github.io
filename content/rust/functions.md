@@ -35,7 +35,7 @@ accept either functions or closures.
 
 ## Closures
 
-To return closure from a function it must be wrappet into some smart pointer, because it does not
+To return closure from a function it must be wrapped into some smart pointer, because it does not
 clear in the compile time, how much space a closure will take.
 
 ```rust
