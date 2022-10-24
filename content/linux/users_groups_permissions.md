@@ -1,10 +1,8 @@
 ---
-title: Linux: Rights And Permissions
+title: Linux Rights And Permissions
 date: "2022-10-22"
 description: "Permissions, users and groups in Linux"
 ---
-
-# Linux Rights System
 
 ## Permission Groups
 
