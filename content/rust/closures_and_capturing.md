@@ -1,5 +1,5 @@
 ---
-title: Rust Basics
+title: Closures And Capturing
 date: "2022-10-17"
 description: "Rust closures and scope capturing"
 ---
