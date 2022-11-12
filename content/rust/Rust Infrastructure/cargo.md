@@ -34,6 +34,29 @@ opt-level = 3
 
 The `opt-level` setting controls the number of optimizations Rust will apply to your code, with a range of 0 to 3. 
 
+## Build And Release
+
+To build Rust code use following command:
+
+```bash
+cargo build <options>
+```
+
+Here are some of the useful options, which could be used with build command:
+
+- `--lib` build package's library code
+- `--bins` build package's executable binaries. Also it is possible to specify particular 
+  binaries with `--bin <name>` option
+- `--examples` build all examples
+- `--target <name>` build for specified target architecture
+- `--release` build in release mode with all optimisations
+- `--target-dit` specify directory to put build outputs
+- `--verbose` log all details during build process
+- `--quite` don't log any details during build process
+- `--message-format` specifies format of outputting build logs
+- `--jobs` specifies amount of parallel processes of build
+- ``
+
 ## Publishing
 
 To publish modules into `crates.io` need at first to register on it with `github` account.
@@ -67,3 +90,8 @@ do the opposite.
 
 There is no limitation for publishing new version though. To do that required to change `version` 
 in `Cargo.toml` file.
+
+
+## References
+
+- [cargo build documentation](https://doc.rust-lang.org/cargo/commands/cargo-build.html)
