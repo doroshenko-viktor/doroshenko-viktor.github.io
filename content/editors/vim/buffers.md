@@ -1,6 +1,6 @@
 ---
 title: Vim Buffers
-date: "2022-11-22:12:03.284Z"
+date: "2022-11-22T22:12:03.284Z"
 description: "Vim buffers overview and usefult tips"
 ---
 
