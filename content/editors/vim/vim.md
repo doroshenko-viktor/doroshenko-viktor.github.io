@@ -45,10 +45,26 @@ description: "Basic Vim usage cheatsheet"
 - `Ctrl + d` - move forward 1/2 a screen
 - `Ctrl + u` - move back 1/2 a screen
 
+## Some Essential Commands
+
+**Working With Files:**
+
+- `:edit <filename>` or `:e <filename>` opens file in new buffer for edit and will make this buffer active.
+- `:badd <filename>` or `:bad <filename>` opens file in a new buffer in the backgrount.
+- `:split <filename>` open file in new buffer and split window horisontally.
+- `:vsplit <filename>` open file in new buffer and split window vertically.
+
 ## File Explorer
 
 **Create Directory:** `d`
 **Create File:** `%`
+
+## Split Windows
+
+- `Ctrl w>` - enlarge vertically
+- `Ctrl w<` - make smaller vertically
+- `Ctrl w+` - enlarge horisontally
+- `Ctrl w-` - make window smaller horisontally
 
 ## Additional Commands
 
