@@ -55,9 +55,9 @@ If there are multiple windows or panes opened and you need to close them all, pr
 
 - `<Prefix>+"` - split screen horizontally;
 - `<Prefix>+%` - split screen vertically;
+- `<Prefix>+z` - maximize current pane
 - `<Prefix>+<Arrow Key>` - allows to switch panes;
 - `<Prefix>` - while holding and using arrow keys allows to resize pane;
-- `Ctrl+d` - close pane;
 - `<Prefix>+o` - swap panes;
 - `<Prefix>+q` - show pane numbers;
 - `<Prefix>+x` - kill pane;
