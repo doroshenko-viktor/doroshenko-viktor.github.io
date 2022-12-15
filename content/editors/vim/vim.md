@@ -63,14 +63,22 @@ description: "Basic Vim usage cheatsheet"
 
 - `Ctrl w>` - enlarge vertically
 - `Ctrl w<` - make smaller vertically
-- `Ctrl w+` - enlarge horisontally
-- `Ctrl w-` - make window smaller horisontally
+- `Ctrl w+` - enlarge horizontally
+- `Ctrl w-` - make window smaller horizontally
+- `Ctrl wJ` - move current window to be on the bottom
+- `Ctrl wH` - move current window to be on the left
+- `Ctrl wK` - move current window to be on the top
+- `Ctrl wL` - move current window to be on the right
 
 ## Additional Commands
 
 ### Help
 
 `:help rtp` - Vim runtime path. Shows directories of Vim config files used.
+
+## Useful Commands
+
+`:checkhealth`
 
 ## Neovim
 
