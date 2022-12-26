@@ -75,6 +75,11 @@ Run `minikube`:
 minikube start
 ```
 
+Now you can check cluster status with:
+
+```bash
+kubectl cluster-info
+```
 
 ## References
 
