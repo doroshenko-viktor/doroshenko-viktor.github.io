@@ -81,6 +81,24 @@ Now you can check cluster status with:
 kubectl cluster-info
 ```
 
+### Kubernetes GUI Dashboard
+
+Run:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v<tag>/aio/deploy/recommended.yaml
+```
+
+where `<tag>` is a required version to install.
+
+### Additional
+
+`Kubernetes` does not work correctly on systems with `swap` enabled. To disable it:
+
+```bash
+sudo swapoff -a
+```
+
 ## References
 
 - [https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
