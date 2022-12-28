@@ -35,3 +35,27 @@ Now run `startx` command to start a window server. If everything installed corre
 Following steps, displayed by `i3`, should be created configuration file in `~/.config/i3/config`.
 
 To start GUI automatically on login, you may add `startx` to the `~/.bashrc` or similar.
+
+## Firewall
+
+Install `ufw`:
+
+```bash
+sudo apt isntall ufw
+```
+
+Ensure that `/etc/default/ufw` contains:
+
+```txt
+IPV6=yes
+IPV4=yes
+```
+
+Than enable firewall:
+
+```bash
+sudo ufw allow 22/ssh
+sudo ufw enable
+```
+
+

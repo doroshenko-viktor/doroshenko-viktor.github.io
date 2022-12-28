@@ -36,7 +36,7 @@ subjects:
     namespace: kubernetes-dashboard
 ```
 
-And apply them with `kubectl apply`
+And apply them with `kubectl apply -f <path_to_config>`
 
 Following command will create access token:
 
@@ -51,3 +51,12 @@ kubectl proxy
 ```
 
 Dashboard address is `http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/`
+
+
+Or alternatively make port forwarding:
+
+```bash
+kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard 8080:443 --address 0.0.0.0
+```
+
+And now dashboard will be accessible by `https://<cluster-ip>:8080`
