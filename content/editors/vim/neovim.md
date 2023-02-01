@@ -43,9 +43,18 @@ end)
 
 To install packages run `:PackerSync`
 
+## Language Servers
+
+To list all capabilities of specified language server:
+
+```lua
+:lua print(vim.inspect(vim.lsp.buf_get_clients()[1].resolved_capabilities))
+```
+
 
 
 ## References
 
 [Setting up Python for Neovim](https://github.com/deoplete-plugins/deoplete-jedi/wiki/Setting-up-Python-for-Neovim)
 [How to get a build of Neovim with python3 support for windows?](https://stackoverflow.com/questions/40900829/how-to-get-a-build-of-neovim-with-python3-support-for-windows)
+
