@@ -7,6 +7,45 @@ description: "NeoVim basic setup"
 
 ## Neovim
 
+### Installation
+
+To install `neovim` from source first install the dependencies:
+
+```bash
+sudo apt install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
+```
+
+Clone the `Neovim` repository:
+
+```bash
+git clone https://github.com/neovim/neovim.git
+```
+
+Go to the `Neovim` directory:
+
+```bash
+cd neovim
+```
+
+Build and install `Neovim`:
+
+```bash
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+sudo make install
+```
+
+This will build and install `Neovim` with debugging symbols. If you don't want debugging symbols, use make 
+`CMAKE_BUILD_TYPE=Release` instead.
+
+Verify the installation by checking the version number:
+
+```bash
+nvim --version
+```
+
+This should output the version number of `Neovim` that was installed.
+
+
 `Neovim` config location: `~/.local/share/nvim`
 
 ## Setting Up NeoVim With Python
