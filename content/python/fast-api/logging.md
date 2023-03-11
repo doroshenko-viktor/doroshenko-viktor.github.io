@@ -1,3 +1,8 @@
+---
+title: Logging in FastAPI
+date: "2023-03-08"
+description: "Configuring logging in FastAPI"
+---
 Configuration of basic logging in `FastAPI`:
 
 ```python
