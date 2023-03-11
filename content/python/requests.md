@@ -1,4 +1,11 @@
-The requests module makes it easy to make GET requests in Python. Here is an example of how to make a GET request to a website using the requests.get() function:
+---
+title: Python - Requests
+date: "2023-02-05"
+description: "Python `requests` library"
+---
+
+The requests module makes it easy to make `HTTP` requests in Python. Here is an example of how to make a GET request to a 
+website using the `requests.get()` function:
 
 Copy code
 import requests
