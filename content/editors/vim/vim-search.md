@@ -16,7 +16,7 @@ When the result is found you can use `n` to move to the next result or `N` to mo
 
 The pattern for replace command is as follows:
 
-```txt
+```
 :[range]s/{pattern}/{string}/[flags] [count]
 ```
 
