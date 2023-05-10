@@ -128,6 +128,16 @@ tmux source-file ~/.tmux.conf
   bind % split-window -h -c "#{pane_current_path}"
   ```
 
+## Customization
+
+Install `tmux package manager`:
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+
+
 ## References
 
 - [Tmux Github repository](https://github.com/tmux/tmux)
