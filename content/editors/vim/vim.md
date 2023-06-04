@@ -61,14 +61,14 @@ description: "Basic Vim usage cheatsheet"
 
 ## Split Windows
 
-- `Ctrl w>` - enlarge vertically
-- `Ctrl w<` - make smaller vertically
-- `Ctrl w+` - enlarge horizontally
-- `Ctrl w-` - make window smaller horizontally
-- `Ctrl wJ` - move current window to be on the bottom
-- `Ctrl wH` - move current window to be on the left
-- `Ctrl wK` - move current window to be on the top
-- `Ctrl wL` - move current window to be on the right
+- `Ctrl-w>` - enlarge vertically
+- `Ctrl-w<` - make smaller vertically
+- `Ctrl-w+` - enlarge horizontally
+- `Ctrl-w-` - make window smaller horizontally
+- `Ctrl-wJ` - move current window to be on the bottom
+- `Ctrl-wH` - move current window to be on the left
+- `Ctrl-wK` - move current window to be on the top
+- `Ctrl-wL` - move current window to be on the right
 
 ## Additional Commands
 
