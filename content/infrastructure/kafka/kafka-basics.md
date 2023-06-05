@@ -116,6 +116,11 @@ To check it's status run:
 sudo systemctl status kafka
 ```
 
+## Running On VM:
+
+For `Kafka` to be accessible from outside of the VM, need to configure `advertised.listeners` to be public domain or IP address
+in file `server.properties`
+
 ## Basic Terminology
 
 - `Kafka broker`  —  one or more servers running Kafka nodes. Single `Kafka Cluster` is made of `brokers`.
