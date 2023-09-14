@@ -1,5 +1,5 @@
 ---
-title: Setup Debian Linux From 0
+title: Setup Debian Initial Configuration
 date: "2022-12-17"
 description: "Step by step setup for clean Debian Linux installation"
 ---
@@ -58,4 +58,28 @@ sudo ufw allow 22/ssh
 sudo ufw enable
 ```
 
+## Grub Configuration
 
+To reduce time while `Grub` menu is open on startup open `Grub` configuration file:
+
+```bash
+vim /etc/default/grub
+```
+
+And change the line `GRUB_TIMEOUT` to the number of seconds you need.
+
+After that run:
+
+```bash
+sudo update-grub
+```
+
+## Parallels
+
+Installing Debian as VM in Parallels there will be a problem installing parallels tools. 
+To solve it need to remount Parallels drive:
+
+```bash
+sudo mount -oro,exec,remount /media/cdrom
+sudo /media/cdrom/install # then run installer
+```
