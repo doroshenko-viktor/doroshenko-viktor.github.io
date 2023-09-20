@@ -90,6 +90,13 @@ To list all capabilities of specified language server:
 :lua print(vim.inspect(vim.lsp.buf_get_clients()[1].resolved_capabilities))
 ```
 
+## Logs
+
+To check where `LSP` logs are located:
+
+```
+:lua print(vim.lsp.get_log_path())
+```
 
 
 ## References
