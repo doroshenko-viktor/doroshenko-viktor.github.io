@@ -1,0 +1,64 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Using Rust Axum With Sqlx</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/b65b5b41f2379875.css" as="style"/><link rel="stylesheet" href="/_next/static/css/b65b5b41f2379875.css" data-n-g=""/><link rel="preload" href="/_next/static/css/0d9654b911e08999.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0d9654b911e08999.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/211-ca3cd870e26e881a.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-bc6552c3ae1e3718.js" defer=""></script><script src="/_next/static/T_7nD6xFKIzBl_G_AkBxn/_buildManifest.js" defer=""></script><script src="/_next/static/T_7nD6xFKIzBl_G_AkBxn/_ssgManifest.js" defer=""></script><script src="/_next/static/T_7nD6xFKIzBl_G_AkBxn/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><ul class="NavigationBar_navbar__CBMoV"><li class="NavigationBar_navitem__LKB5F"><a class="NavigationBar_navitemContent__jEyWq" href="/">Home</a><span class="NavigationBar_separator__qvEVD">|</span></li><li class="NavigationBar_navitem__LKB5F"><button class="NavigationBar_navitemContent__jEyWq">Back</button><span class="NavigationBar_separator__qvEVD">|</span></li></ul><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Using Rust Axum With Sqlx</h1><article class="NoteFormattedContent_note__8cHeE">
+<h2>State</h2>
+<h3>FromRef</h3>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">use</span> axum::{
+    extract::{State, FromRef},
+    routing::get,
+    Router,
+};
+
+<span class="hljs-comment">// Our top level state that contains an `HttpClient` and a `Database`</span>
+<span class="hljs-comment">//</span>
+<span class="hljs-comment">// `#[derive(FromRef)]` makes them sub states so they can be extracted</span>
+<span class="hljs-comment">// independently</span>
+<span class="hljs-meta">#[derive(Clone, FromRef)]</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">AppState</span> {
+    client: HttpClient,
+    database: Database,
+}
+
+<span class="hljs-meta">#[derive(Clone)]</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">HttpClient</span> {}
+
+<span class="hljs-meta">#[derive(Clone)]</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Database</span> {}
+
+<span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">state</span> = AppState {
+    client: HttpClient {},
+    database: Database {},
+};
+
+<span class="hljs-keyword">let</span> <span class="hljs-keyword"></span><span class="hljs-variable">app</span> = Router::<span class="hljs-title function_ invoke__">new</span>()
+    .<span class="hljs-title function_ invoke__">route</span>(<span class="hljs-string">"/"</span>, <span class="hljs-title function_ invoke__">get</span>(handler))
+    .<span class="hljs-title function_ invoke__">with_state</span>(state);
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">handler</span>(
+    <span class="hljs-comment">// We can extract both `State&#x3C;HttpClient>` and `State&#x3C;Database>`</span>
+    <span class="hljs-title function_ invoke__">State</span>(client): State&#x3C;HttpClient>,
+    <span class="hljs-title function_ invoke__">State</span>(database): State&#x3C;Database>,
+) {}
+</code></pre>
+<h2>Migrations</h2>
+<p>Install <code>sqlx cli</code>:</p>
+<pre><code class="hljs language-bash">cargo install sqlx-cli
+</code></pre>
+<p>
+  This command accepts some additional arguments, which define features related to different database engines, ssl e.t.c.
+  To check what you may need use <a href="https://lib.rs/crates/sqlx-cli">this doc</a>
+</p>
+<p>
+  To connect to the database cli requires to specify connection string. This may be done with <code>--database-url</code> argument
+  and also using <code>.env</code> file with <code>DATABASE_URL</code> value. For example:
+</p>
+<pre><code class="hljs language-txt">DATABASE_URL=postgres://postgres@localhost/my_database
+</code></pre>
+<p>To initialize database run: <code>sqlx database create</code>, to remove created database <code>sqlx database drop</code></p>
+<p>
+  Create migration file: <code>sqlx migrate add &#x3C;name></code>. By default this creates not reversible migration. I you need this migration
+  to be reversible add <code>-r</code> argument to the previous command. <em>Note: all migrations should be of the same type.</em>
+  Fill created files with <code>sql</code> code.
+  To apply created migration run: <code>sqlx migrate run</code>. To revert migration run <code>sqlx migrate revert</code>
+</p>
+<h2>Offline mode for <code>query!()</code></h2>
+<p>// todo:</p>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["rust","axum","using-axum"],"note":{"title":"Using Rust Axum With Sqlx","date":"2022-03-03","content":"\n\u003ch2\u003eState\u003c/h2\u003e\n\u003ch3\u003eFromRef\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-rust\"\u003e\u003cspan class=\"hljs-keyword\"\u003euse\u003c/span\u003e axum::{\n    extract::{State, FromRef},\n    routing::get,\n    Router,\n};\n\n\u003cspan class=\"hljs-comment\"\u003e// Our top level state that contains an `HttpClient` and a `Database`\u003c/span\u003e\n\u003cspan class=\"hljs-comment\"\u003e//\u003c/span\u003e\n\u003cspan class=\"hljs-comment\"\u003e// `#[derive(FromRef)]` makes them sub states so they can be extracted\u003c/span\u003e\n\u003cspan class=\"hljs-comment\"\u003e// independently\u003c/span\u003e\n\u003cspan class=\"hljs-meta\"\u003e#[derive(Clone, FromRef)]\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eAppState\u003c/span\u003e {\n    client: HttpClient,\n    database: Database,\n}\n\n\u003cspan class=\"hljs-meta\"\u003e#[derive(Clone)]\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eHttpClient\u003c/span\u003e {}\n\n\u003cspan class=\"hljs-meta\"\u003e#[derive(Clone)]\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003estruct\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eDatabase\u003c/span\u003e {}\n\n\u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003estate\u003c/span\u003e = AppState {\n    client: HttpClient {},\n    database: Database {},\n};\n\n\u003cspan class=\"hljs-keyword\"\u003elet\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003e\u003c/span\u003e\u003cspan class=\"hljs-variable\"\u003eapp\u003c/span\u003e = Router::\u003cspan class=\"hljs-title function_ invoke__\"\u003enew\u003c/span\u003e()\n    .\u003cspan class=\"hljs-title function_ invoke__\"\u003eroute\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"/\"\u003c/span\u003e, \u003cspan class=\"hljs-title function_ invoke__\"\u003eget\u003c/span\u003e(handler))\n    .\u003cspan class=\"hljs-title function_ invoke__\"\u003ewith_state\u003c/span\u003e(state);\n\n\u003cspan class=\"hljs-keyword\"\u003easync\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efn\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ehandler\u003c/span\u003e(\n    \u003cspan class=\"hljs-comment\"\u003e// We can extract both `State\u0026#x3C;HttpClient\u003e` and `State\u0026#x3C;Database\u003e`\u003c/span\u003e\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eState\u003c/span\u003e(client): State\u0026#x3C;HttpClient\u003e,\n    \u003cspan class=\"hljs-title function_ invoke__\"\u003eState\u003c/span\u003e(database): State\u0026#x3C;Database\u003e,\n) {}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eMigrations\u003c/h2\u003e\n\u003cp\u003eInstall \u003ccode\u003esqlx cli\u003c/code\u003e:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003ecargo install sqlx-cli\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\n  This command accepts some additional arguments, which define features related to different database engines, ssl e.t.c.\n  To check what you may need use \u003ca href=\"https://lib.rs/crates/sqlx-cli\"\u003ethis doc\u003c/a\u003e\n\u003c/p\u003e\n\u003cp\u003e\n  To connect to the database cli requires to specify connection string. This may be done with \u003ccode\u003e--database-url\u003c/code\u003e argument\n  and also using \u003ccode\u003e.env\u003c/code\u003e file with \u003ccode\u003eDATABASE_URL\u003c/code\u003e value. For example:\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-txt\"\u003eDATABASE_URL=postgres://postgres@localhost/my_database\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eTo initialize database run: \u003ccode\u003esqlx database create\u003c/code\u003e, to remove created database \u003ccode\u003esqlx database drop\u003c/code\u003e\u003c/p\u003e\n\u003cp\u003e\n  Create migration file: \u003ccode\u003esqlx migrate add \u0026#x3C;name\u003e\u003c/code\u003e. By default this creates not reversible migration. I you need this migration\n  to be reversible add \u003ccode\u003e-r\u003c/code\u003e argument to the previous command. \u003cem\u003eNote: all migrations should be of the same type.\u003c/em\u003e\n  Fill created files with \u003ccode\u003esql\u003c/code\u003e code.\n  To apply created migration run: \u003ccode\u003esqlx migrate run\u003c/code\u003e. To revert migration run \u003ccode\u003esqlx migrate revert\u003c/code\u003e\n\u003c/p\u003e\n\u003ch2\u003eOffline mode for \u003ccode\u003equery!()\u003c/code\u003e\u003c/h2\u003e\n\u003cp\u003e// todo:\u003c/p\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["rust","axum","using-axum"]},"buildId":"T_7nD6xFKIzBl_G_AkBxn","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
