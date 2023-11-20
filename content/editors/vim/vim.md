@@ -45,3 +45,17 @@ description: "Basic Vim usage cheatsheet"
 - `Ctrl + d` - move forward 1/2 a screen
 - `Ctrl + u` - move back 1/2 a screen
 
+## File Explorer
+
+**Create Directory:** `d`
+**Create File:** `%`
+
+## Additional Commands
+
+### Help
+
+`:help rtp` - Vim runtime path. Shows directories of Vim config files used.
+
+## Neovim
+
+`Neovim` config location: `~/.local/share/nvim`
