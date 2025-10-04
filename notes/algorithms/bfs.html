@@ -1,0 +1,108 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Breadth-First Search</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/b65b5b41f2379875.css" as="style"/><link rel="stylesheet" href="/_next/static/css/b65b5b41f2379875.css" data-n-g=""/><link rel="preload" href="/_next/static/css/0d9654b911e08999.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0d9654b911e08999.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/211-ca3cd870e26e881a.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-bc6552c3ae1e3718.js" defer=""></script><script src="/_next/static/TLVs-fHNJx4QzHIHhPfMV/_buildManifest.js" defer=""></script><script src="/_next/static/TLVs-fHNJx4QzHIHhPfMV/_ssgManifest.js" defer=""></script><script src="/_next/static/TLVs-fHNJx4QzHIHhPfMV/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><ul class="NavigationBar_navbar__CBMoV"><li class="NavigationBar_navitem__LKB5F"><a class="NavigationBar_navitemContent__jEyWq" href="/">Home</a><span class="NavigationBar_separator__qvEVD">|</span></li><li class="NavigationBar_navitem__LKB5F"><button class="NavigationBar_navitemContent__jEyWq">Back</button><span class="NavigationBar_separator__qvEVD">|</span></li></ul><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Breadth-First Search</h1><article class="NoteFormattedContent_note__8cHeE">
+<h2>Breadth-First Search (BFS) on Trees</h2>
+<p>Breadth-First Search (BFS) is a fundamental algorithm used to traverse or search through tree and graph data structures. In trees, <code>BFS</code> explores nodes level by level, starting from the root and moving down to each subsequent level. This makes it ideal for scenarios where we want to process nodes in order of their depth.</p>
+<hr>
+<h2>Why BFS is Needed</h2>
+<p>BFS is particularly useful in situations such as:</p>
+<ul>
+  <li><strong>Finding the shortest path</strong> in an unweighted tree or graph.</li>
+  <li><strong>Level-order traversal</strong> of a tree.</li>
+  <li><strong>Checking connectivity</strong> or presence of a node.</li>
+  <li><strong>Solving problems</strong> where we need information from nodes closest to the root first.</li>
+</ul>
+<p>Unlike <code>Depth-First Search (DFS)</code>, which goes deep into one branch before exploring others, <code>BFS</code> guarantees that we process all nodes at depth<code>d</code>before moving to depth<code>d+1</code>.</p>
+<hr>
+<h2>How BFS Works</h2>
+<ol>
+  <li><strong>Start at the root node.</strong></li>
+  <li><strong>Initialize a queue</strong> and enqueue the root node.</li>
+  <li><strong>While the queue is not empty</strong>:
+    <ul>
+      <li>Dequeue the front node.</li>
+      <li>Process the node (e.g., print its value).</li>
+      <li>Enqueue all of its children.</li>
+    </ul>
+  </li>
+  <li><strong>Repeat</strong> until all nodes are processed.</li>
+</ol>
+<p>The key idea is using a <strong>queue</strong> to maintain the order of nodes to be processed.</p>
+<hr>
+<h2>Python Implementation</h2>
+<p>Here’s a simple implementation of BFS for a binary tree:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">TreeNode</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, val</span>):
+        self.val = val
+        self.left = <span class="hljs-literal">None</span>
+        self.right = <span class="hljs-literal">None</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">bfs</span>(<span class="hljs-params">root</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root:
+        <span class="hljs-keyword">return</span>
+
+    queue = deque([root])
+
+    <span class="hljs-keyword">while</span> queue:
+        node = queue.popleft()
+        <span class="hljs-built_in">print</span>(node.val, end=<span class="hljs-string">" "</span>)
+
+        <span class="hljs-keyword">if</span> node.left:
+            queue.append(node.left)
+        <span class="hljs-keyword">if</span> node.right:
+            queue.append(node.right)
+
+<span class="hljs-comment"># Example usage</span>
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:
+    <span class="hljs-comment"># Construct the tree</span>
+    <span class="hljs-comment">#       1</span>
+    <span class="hljs-comment">#      / \</span>
+    <span class="hljs-comment">#     2   3</span>
+    <span class="hljs-comment">#    / \   \</span>
+    <span class="hljs-comment">#   4   5   6</span>
+    root = TreeNode(<span class="hljs-number">1</span>)
+    root.left = TreeNode(<span class="hljs-number">2</span>)
+    root.right = TreeNode(<span class="hljs-number">3</span>)
+    root.left.left = TreeNode(<span class="hljs-number">4</span>)
+    root.left.right = TreeNode(<span class="hljs-number">5</span>)
+    root.right.right = TreeNode(<span class="hljs-number">6</span>)
+
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">"BFS traversal of the tree:"</span>)
+    bfs(root)
+</code></pre>
+<h2>BFS for Level-Order Traversal</h2>
+<p>Sometimes we want <code>BFS</code> not just for traversal but to separate nodes by level. Here’s an example:</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">bfs_level_order</span>(<span class="hljs-params">root</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root:
+        <span class="hljs-keyword">return</span> []
+
+    result = []
+    queue = deque([root])
+
+    <span class="hljs-keyword">while</span> queue:
+        level_size = <span class="hljs-built_in">len</span>(queue)
+        level = []
+        <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(level_size):
+            node = queue.popleft()
+            level.append(node.val)
+
+            <span class="hljs-keyword">if</span> node.left:
+                queue.append(node.left)
+            <span class="hljs-keyword">if</span> node.right:
+                queue.append(node.right)
+        result.append(level)
+
+    <span class="hljs-keyword">return</span> result
+
+<span class="hljs-comment"># Example usage</span>
+levels = bfs_level_order(root)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"Level-order traversal:"</span>)
+<span class="hljs-built_in">print</span>(levels)
+
+</code></pre>
+<h2>Summary</h2>
+<p><code>BFS</code> explores nodes level by level using a queue.</p>
+<p>It's ideal for shortest path problems, level-order traversal, and proximity-based searches.</p>
+<p>Python’s <code>collections.deque</code> makes implementing the <code>BFS</code> queue efficient.</p>
+<p><code>BFS</code> guarantees that nodes are visited in order of their distance from the root, unlike <code>DFS</code> which can go deep into one branch first.</p>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["algorithms","bfs"],"note":{"title":"Breadth-First Search","date":"2025-10-03","content":"\n\u003ch2\u003eBreadth-First Search (BFS) on Trees\u003c/h2\u003e\n\u003cp\u003eBreadth-First Search (BFS) is a fundamental algorithm used to traverse or search through tree and graph data structures. In trees, \u003ccode\u003eBFS\u003c/code\u003e explores nodes level by level, starting from the root and moving down to each subsequent level. This makes it ideal for scenarios where we want to process nodes in order of their depth.\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003eWhy BFS is Needed\u003c/h2\u003e\n\u003cp\u003eBFS is particularly useful in situations such as:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eFinding the shortest path\u003c/strong\u003e in an unweighted tree or graph.\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eLevel-order traversal\u003c/strong\u003e of a tree.\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eChecking connectivity\u003c/strong\u003e or presence of a node.\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eSolving problems\u003c/strong\u003e where we need information from nodes closest to the root first.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eUnlike \u003ccode\u003eDepth-First Search (DFS)\u003c/code\u003e, which goes deep into one branch before exploring others, \u003ccode\u003eBFS\u003c/code\u003e guarantees that we process all nodes at depth\u003ccode\u003ed\u003c/code\u003ebefore moving to depth\u003ccode\u003ed+1\u003c/code\u003e.\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003eHow BFS Works\u003c/h2\u003e\n\u003col\u003e\n  \u003cli\u003e\u003cstrong\u003eStart at the root node.\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eInitialize a queue\u003c/strong\u003e and enqueue the root node.\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eWhile the queue is not empty\u003c/strong\u003e:\n    \u003cul\u003e\n      \u003cli\u003eDequeue the front node.\u003c/li\u003e\n      \u003cli\u003eProcess the node (e.g., print its value).\u003c/li\u003e\n      \u003cli\u003eEnqueue all of its children.\u003c/li\u003e\n    \u003c/ul\u003e\n  \u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eRepeat\u003c/strong\u003e until all nodes are processed.\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003eThe key idea is using a \u003cstrong\u003equeue\u003c/strong\u003e to maintain the order of nodes to be processed.\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003ePython Implementation\u003c/h2\u003e\n\u003cp\u003eHere’s a simple implementation of BFS for a binary tree:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e deque\n\n\u003cspan class=\"hljs-keyword\"\u003eclass\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eTreeNode\u003c/span\u003e:\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003e__init__\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself, val\u003c/span\u003e):\n        self.val = val\n        self.left = \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n        self.right = \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ebfs\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e\n\n    queue = deque([root])\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e queue:\n        node = queue.popleft()\n        \u003cspan class=\"hljs-built_in\"\u003eprint\u003c/span\u003e(node.val, end=\u003cspan class=\"hljs-string\"\u003e\" \"\u003c/span\u003e)\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.left:\n            queue.append(node.left)\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.right:\n            queue.append(node.right)\n\n\u003cspan class=\"hljs-comment\"\u003e# Example usage\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e __name__ == \u003cspan class=\"hljs-string\"\u003e\"__main__\"\u003c/span\u003e:\n    \u003cspan class=\"hljs-comment\"\u003e# Construct the tree\u003c/span\u003e\n    \u003cspan class=\"hljs-comment\"\u003e#       1\u003c/span\u003e\n    \u003cspan class=\"hljs-comment\"\u003e#      / \\\u003c/span\u003e\n    \u003cspan class=\"hljs-comment\"\u003e#     2   3\u003c/span\u003e\n    \u003cspan class=\"hljs-comment\"\u003e#    / \\   \\\u003c/span\u003e\n    \u003cspan class=\"hljs-comment\"\u003e#   4   5   6\u003c/span\u003e\n    root = TreeNode(\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n    root.left = TreeNode(\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e)\n    root.right = TreeNode(\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e)\n    root.left.left = TreeNode(\u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e)\n    root.left.right = TreeNode(\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e)\n    root.right.right = TreeNode(\u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-built_in\"\u003eprint\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"BFS traversal of the tree:\"\u003c/span\u003e)\n    bfs(root)\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eBFS for Level-Order Traversal\u003c/h2\u003e\n\u003cp\u003eSometimes we want \u003ccode\u003eBFS\u003c/code\u003e not just for traversal but to separate nodes by level. Here’s an example:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ebfs_level_order\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e []\n\n    result = []\n    queue = deque([root])\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e queue:\n        level_size = \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(queue)\n        level = []\n        \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e _ \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(level_size):\n            node = queue.popleft()\n            level.append(node.val)\n\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.left:\n                queue.append(node.left)\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.right:\n                queue.append(node.right)\n        result.append(level)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\n\u003cspan class=\"hljs-comment\"\u003e# Example usage\u003c/span\u003e\nlevels = bfs_level_order(root)\n\u003cspan class=\"hljs-built_in\"\u003eprint\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"Level-order traversal:\"\u003c/span\u003e)\n\u003cspan class=\"hljs-built_in\"\u003eprint\u003c/span\u003e(levels)\n\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eSummary\u003c/h2\u003e\n\u003cp\u003e\u003ccode\u003eBFS\u003c/code\u003e explores nodes level by level using a queue.\u003c/p\u003e\n\u003cp\u003eIt's ideal for shortest path problems, level-order traversal, and proximity-based searches.\u003c/p\u003e\n\u003cp\u003ePython’s \u003ccode\u003ecollections.deque\u003c/code\u003e makes implementing the \u003ccode\u003eBFS\u003c/code\u003e queue efficient.\u003c/p\u003e\n\u003cp\u003e\u003ccode\u003eBFS\u003c/code\u003e guarantees that nodes are visited in order of their distance from the root, unlike \u003ccode\u003eDFS\u003c/code\u003e which can go deep into one branch first.\u003c/p\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["algorithms","bfs"]},"buildId":"TLVs-fHNJx4QzHIHhPfMV","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
