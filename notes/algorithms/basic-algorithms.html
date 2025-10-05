@@ -1,0 +1,84 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Basic algorithms</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/b65b5b41f2379875.css" as="style"/><link rel="stylesheet" href="/_next/static/css/b65b5b41f2379875.css" data-n-g=""/><link rel="preload" href="/_next/static/css/0d9654b911e08999.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0d9654b911e08999.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/211-ca3cd870e26e881a.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-bc6552c3ae1e3718.js" defer=""></script><script src="/_next/static/IjqNhIRqaAJaH2DY5dkbz/_buildManifest.js" defer=""></script><script src="/_next/static/IjqNhIRqaAJaH2DY5dkbz/_ssgManifest.js" defer=""></script><script src="/_next/static/IjqNhIRqaAJaH2DY5dkbz/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><ul class="NavigationBar_navbar__CBMoV"><li class="NavigationBar_navitem__LKB5F"><a class="NavigationBar_navitemContent__jEyWq" href="/">Home</a><span class="NavigationBar_separator__qvEVD">|</span></li><li class="NavigationBar_navitem__LKB5F"><button class="NavigationBar_navitemContent__jEyWq">Back</button><span class="NavigationBar_separator__qvEVD">|</span></li></ul><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Basic algorithms</h1><article class="NoteFormattedContent_note__8cHeE">
+<h2>Advanced Algorithmic Strategies for Technical Interviews</h2>
+<p>Successfully passing technical interviews often requires mastering specific algorithmic patterns that ensure optimal time complexity. A strong foundation in these core strategies is essential for turning complex problems into efficient code.</p>
+<h3>1. The Two Pointers Algorithm</h3>
+<p>This technique is a linear scan that optimizes algorithms involving sequences (arrays, strings, linked lists) by tracking two positions simultaneously. It is most often used to avoid nested loops and optimize time complexity to <strong>$O(n)$</strong>.</p>
+<table>
+  <thead>
+    <tr>
+      <th align="left">Approach</th>
+      <th align="left">Mechanism and Efficiency</th>
+      <th align="left">Key Insight</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="left"><strong>Opposite Direction</strong></td>
+      <td align="left">Pointers start at opposite ends and move toward each other. Since each pointer makes only one pass, the total time complexity remains <strong>$O(n)$</strong>.</td>
+      <td align="left">Exploits sorted data (Two Sum II) or checks symmetrical properties (Palindromes).</td>
+    </tr>
+    <tr>
+      <td align="left"><strong>Different Speeds (Fast/Slow)</strong></td>
+      <td align="left">The slow pointer moves 1x speed, while the fast pointer moves 2x speed. The distance between them increases linearly.</td>
+      <td align="left"><strong>Cycle Detection (Floyd's Algorithm):</strong> If a cycle exists, the fast pointer is guaranteed to eventually <em>catch</em> the slow pointer within the loop.</td>
+    </tr>
+  </tbody>
+</table>
+<h3>2. Hash Tables and Sets</h3>
+<p>Hash tables (dictionaries in Python) are the primary tool for optimizing time complexity by sacrificing space. They are used when search speed is critical in unsorted data.</p>
+<ul>
+  <li><strong>Mechanism (The $O(1)$ Secret):</strong> Hash tables map a key to a specific memory location (index) using a <em>hash function</em>. This allows retrieval of a value (or a check for existence) in <strong>$O(1)$</strong> (constant time) on average, regardless of the data size.</li>
+  <li><strong>Space-Time Trade-off:</strong> By allocating $O(n)$ extra space (to store the table), you reduce the time complexity from $O(n^2)$ to <strong>$O(n)$</strong>.</li>
+  <li><strong>Key Insight:</strong> The solution for many problems (like Two Sum) is to look for the <strong>complement</strong> (<code>target - current\_value</code>). A hash map allows you to check for this complement instantly.</li>
+</ul>
+<h3>3. Tree Traversal (DFS vs. BFS)</h3>
+<p>Two main approaches are used for traversing tree structures, each optimizing for a different kind of search:</p>
+<table>
+  <thead>
+    <tr>
+      <th align="left">Method</th>
+      <th align="left">Data Structure</th>
+      <th align="left">Principle</th>
+      <th align="left">When to Use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="left"><strong>DFS (Depth-First Search)</strong></td>
+      <td align="left">Recursion (Implicit Stack)</td>
+      <td align="left">Explores one branch completely ("goes deep") before backtracking. The depth is $1 + \max(\text{depth}<em>{\text{left}}, \text{depth}</em>{\text{right}})$.</td>
+      <td align="left">Finding the maximum depth, checking symmetry, preorder/inorder/postorder traversal.</td>
+    </tr>
+    <tr>
+      <td align="left"><strong>BFS (Breadth-First Search)</strong></td>
+      <td align="left">Queue (FIFO)</td>
+      <td align="left">Explores all nodes level by level, moving outward from the root.</td>
+      <td align="left">Level Order Traversal, finding the <strong>shortest path</strong> (as BFS naturally explores nodes closer to the source first).</td>
+    </tr>
+  </tbody>
+</table>
+<h3>4. The Stack for Order Enforcement</h3>
+<p>The Stack is an Abstract Data Type defined by the <strong>LIFO (Last-In, First-Out)</strong> principle, making it perfect for problems requiring nested symmetry or correct ordering.</p>
+<ul>
+  <li><strong>Core Application (Valid Parentheses):</strong> The stack enforces that the most recently opened element must be the first one closed.</li>
+  <li><strong>Strategy:</strong>
+    <ol>
+      <li><strong>Push:</strong> On an opening element (<code>(</code>, <code>{</code>, <code>[</code>), push the corresponding opening character onto the stack.</li>
+      <li><strong>Pop and Match:</strong> On a closing element, immediately pop the stack and check that the popped opening character exactly matches the current closing character (often done using a hash map for fast pair lookup).</li>
+    </ol>
+  </li>
+  <li><strong>Failure Conditions:</strong> A string is invalid if: (1) The elements do not match, (2) the stack is empty when a closing element is found, or (3) the stack is <strong>not</strong> empty after processing the entire string (meaning an opening element was never closed).</li>
+</ul>
+<h3>5. Linked List Pointer Manipulation</h3>
+<p>While linked list traversal often uses the Two Pointers pattern, specific problems require mastering the <strong>three-pointer technique</strong> to modify the list structure in-place.</p>
+<ul>
+  <li><strong>Reversing a Linked List:</strong> The solution requires meticulous tracking of three pointers in every iteration:
+    <ol>
+      <li><strong>Preserve:</strong> Save the link to the next node (<code>next\_node = current.next</code>).</li>
+      <li><strong>Reverse:</strong> Reassign the current node's pointer (<code>current.next = previous</code>).</li>
+      <li><strong>Advance:</strong> Shift the <code>previous</code> and <code>current</code> pointers forward.</li>
+    </ol>
+  </li>
+  <li>This approach achieves an optimal <strong>$O(n)$</strong> time complexity with <strong>$O(1)$</strong> space complexity.</li>
+</ul>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["algorithms","basic-algorithms"],"note":{"title":"Basic algorithms","date":"2025-10-04","content":"\n\u003ch2\u003eAdvanced Algorithmic Strategies for Technical Interviews\u003c/h2\u003e\n\u003cp\u003eSuccessfully passing technical interviews often requires mastering specific algorithmic patterns that ensure optimal time complexity. A strong foundation in these core strategies is essential for turning complex problems into efficient code.\u003c/p\u003e\n\u003ch3\u003e1. The Two Pointers Algorithm\u003c/h3\u003e\n\u003cp\u003eThis technique is a linear scan that optimizes algorithms involving sequences (arrays, strings, linked lists) by tracking two positions simultaneously. It is most often used to avoid nested loops and optimize time complexity to \u003cstrong\u003e$O(n)$\u003c/strong\u003e.\u003c/p\u003e\n\u003ctable\u003e\n  \u003cthead\u003e\n    \u003ctr\u003e\n      \u003cth align=\"left\"\u003eApproach\u003c/th\u003e\n      \u003cth align=\"left\"\u003eMechanism and Efficiency\u003c/th\u003e\n      \u003cth align=\"left\"\u003eKey Insight\u003c/th\u003e\n    \u003c/tr\u003e\n  \u003c/thead\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd align=\"left\"\u003e\u003cstrong\u003eOpposite Direction\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd align=\"left\"\u003ePointers start at opposite ends and move toward each other. Since each pointer makes only one pass, the total time complexity remains \u003cstrong\u003e$O(n)$\u003c/strong\u003e.\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eExploits sorted data (Two Sum II) or checks symmetrical properties (Palindromes).\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd align=\"left\"\u003e\u003cstrong\u003eDifferent Speeds (Fast/Slow)\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eThe slow pointer moves 1x speed, while the fast pointer moves 2x speed. The distance between them increases linearly.\u003c/td\u003e\n      \u003ctd align=\"left\"\u003e\u003cstrong\u003eCycle Detection (Floyd's Algorithm):\u003c/strong\u003e If a cycle exists, the fast pointer is guaranteed to eventually \u003cem\u003ecatch\u003c/em\u003e the slow pointer within the loop.\u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n\u003ch3\u003e2. Hash Tables and Sets\u003c/h3\u003e\n\u003cp\u003eHash tables (dictionaries in Python) are the primary tool for optimizing time complexity by sacrificing space. They are used when search speed is critical in unsorted data.\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eMechanism (The $O(1)$ Secret):\u003c/strong\u003e Hash tables map a key to a specific memory location (index) using a \u003cem\u003ehash function\u003c/em\u003e. This allows retrieval of a value (or a check for existence) in \u003cstrong\u003e$O(1)$\u003c/strong\u003e (constant time) on average, regardless of the data size.\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eSpace-Time Trade-off:\u003c/strong\u003e By allocating $O(n)$ extra space (to store the table), you reduce the time complexity from $O(n^2)$ to \u003cstrong\u003e$O(n)$\u003c/strong\u003e.\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e The solution for many problems (like Two Sum) is to look for the \u003cstrong\u003ecomplement\u003c/strong\u003e (\u003ccode\u003etarget - current\\_value\u003c/code\u003e). A hash map allows you to check for this complement instantly.\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003e3. Tree Traversal (DFS vs. BFS)\u003c/h3\u003e\n\u003cp\u003eTwo main approaches are used for traversing tree structures, each optimizing for a different kind of search:\u003c/p\u003e\n\u003ctable\u003e\n  \u003cthead\u003e\n    \u003ctr\u003e\n      \u003cth align=\"left\"\u003eMethod\u003c/th\u003e\n      \u003cth align=\"left\"\u003eData Structure\u003c/th\u003e\n      \u003cth align=\"left\"\u003ePrinciple\u003c/th\u003e\n      \u003cth align=\"left\"\u003eWhen to Use\u003c/th\u003e\n    \u003c/tr\u003e\n  \u003c/thead\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd align=\"left\"\u003e\u003cstrong\u003eDFS (Depth-First Search)\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eRecursion (Implicit Stack)\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eExplores one branch completely (\"goes deep\") before backtracking. The depth is $1 + \\max(\\text{depth}\u003cem\u003e{\\text{left}}, \\text{depth}\u003c/em\u003e{\\text{right}})$.\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eFinding the maximum depth, checking symmetry, preorder/inorder/postorder traversal.\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd align=\"left\"\u003e\u003cstrong\u003eBFS (Breadth-First Search)\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eQueue (FIFO)\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eExplores all nodes level by level, moving outward from the root.\u003c/td\u003e\n      \u003ctd align=\"left\"\u003eLevel Order Traversal, finding the \u003cstrong\u003eshortest path\u003c/strong\u003e (as BFS naturally explores nodes closer to the source first).\u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n\u003ch3\u003e4. The Stack for Order Enforcement\u003c/h3\u003e\n\u003cp\u003eThe Stack is an Abstract Data Type defined by the \u003cstrong\u003eLIFO (Last-In, First-Out)\u003c/strong\u003e principle, making it perfect for problems requiring nested symmetry or correct ordering.\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eCore Application (Valid Parentheses):\u003c/strong\u003e The stack enforces that the most recently opened element must be the first one closed.\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eStrategy:\u003c/strong\u003e\n    \u003col\u003e\n      \u003cli\u003e\u003cstrong\u003ePush:\u003c/strong\u003e On an opening element (\u003ccode\u003e(\u003c/code\u003e, \u003ccode\u003e{\u003c/code\u003e, \u003ccode\u003e[\u003c/code\u003e), push the corresponding opening character onto the stack.\u003c/li\u003e\n      \u003cli\u003e\u003cstrong\u003ePop and Match:\u003c/strong\u003e On a closing element, immediately pop the stack and check that the popped opening character exactly matches the current closing character (often done using a hash map for fast pair lookup).\u003c/li\u003e\n    \u003c/ol\u003e\n  \u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eFailure Conditions:\u003c/strong\u003e A string is invalid if: (1) The elements do not match, (2) the stack is empty when a closing element is found, or (3) the stack is \u003cstrong\u003enot\u003c/strong\u003e empty after processing the entire string (meaning an opening element was never closed).\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003e5. Linked List Pointer Manipulation\u003c/h3\u003e\n\u003cp\u003eWhile linked list traversal often uses the Two Pointers pattern, specific problems require mastering the \u003cstrong\u003ethree-pointer technique\u003c/strong\u003e to modify the list structure in-place.\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eReversing a Linked List:\u003c/strong\u003e The solution requires meticulous tracking of three pointers in every iteration:\n    \u003col\u003e\n      \u003cli\u003e\u003cstrong\u003ePreserve:\u003c/strong\u003e Save the link to the next node (\u003ccode\u003enext\\_node = current.next\u003c/code\u003e).\u003c/li\u003e\n      \u003cli\u003e\u003cstrong\u003eReverse:\u003c/strong\u003e Reassign the current node's pointer (\u003ccode\u003ecurrent.next = previous\u003c/code\u003e).\u003c/li\u003e\n      \u003cli\u003e\u003cstrong\u003eAdvance:\u003c/strong\u003e Shift the \u003ccode\u003eprevious\u003c/code\u003e and \u003ccode\u003ecurrent\u003c/code\u003e pointers forward.\u003c/li\u003e\n    \u003c/ol\u003e\n  \u003c/li\u003e\n  \u003cli\u003eThis approach achieves an optimal \u003cstrong\u003e$O(n)$\u003c/strong\u003e time complexity with \u003cstrong\u003e$O(1)$\u003c/strong\u003e space complexity.\u003c/li\u003e\n\u003c/ul\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["algorithms","basic-algorithms"]},"buildId":"IjqNhIRqaAJaH2DY5dkbz","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
