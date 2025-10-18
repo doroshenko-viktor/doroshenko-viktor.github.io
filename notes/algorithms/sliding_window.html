@@ -1,0 +1,794 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Sliding Window</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/b65b5b41f2379875.css" as="style"/><link rel="stylesheet" href="/_next/static/css/b65b5b41f2379875.css" data-n-g=""/><link rel="preload" href="/_next/static/css/0d9654b911e08999.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0d9654b911e08999.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/211-ca3cd870e26e881a.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-bc6552c3ae1e3718.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_buildManifest.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_ssgManifest.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><ul class="NavigationBar_navbar__CBMoV"><li class="NavigationBar_navitem__LKB5F"><a class="NavigationBar_navitemContent__jEyWq" href="/">Home</a><span class="NavigationBar_separator__qvEVD">|</span></li><li class="NavigationBar_navitem__LKB5F"><button class="NavigationBar_navitemContent__jEyWq">Back</button><span class="NavigationBar_separator__qvEVD">|</span></li></ul><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Sliding Window</h1><article class="NoteFormattedContent_note__8cHeE">
+<h2>What is Sliding Window?</h2>
+<p>Sliding window is an optimization technique for solving problems involving <strong>contiguous sequences</strong> (subarrays or substrings). Instead of recalculating everything for each potential solution, we "slide" a window across the data structure and adjust our calculation incrementally.</p>
+<h3>The Core Idea</h3>
+<p><strong>Without Sliding Window (Naive):</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Find max sum of k consecutive elements</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">maxSum_Naive</span>(<span class="hljs-params">arr, k</span>):
+    max_sum = <span class="hljs-built_in">float</span>(<span class="hljs-string">'-inf'</span>)
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(arr) - k + <span class="hljs-number">1</span>):
+        current_sum = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(i, i + k):
+            current_sum += arr[j]
+        max_sum = <span class="hljs-built_in">max</span>(max_sum, current_sum)
+
+    <span class="hljs-keyword">return</span> max_sum
+
+<span class="hljs-comment"># Time: O(n * k) - recalculate sum for each window</span>
+</code></pre>
+<p><strong>With Sliding Window (Optimized):</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Find max sum of k consecutive elements</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">maxSum_SlidingWindow</span>(<span class="hljs-params">arr, k</span>):
+    window_sum = <span class="hljs-built_in">sum</span>(arr[:k])
+    max_sum = window_sum
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(k, <span class="hljs-built_in">len</span>(arr)):
+        window_sum = window_sum - arr[i-k] + arr[i]
+        max_sum = <span class="hljs-built_in">max</span>(max_sum, window_sum)
+
+    <span class="hljs-keyword">return</span> max_sum
+
+<span class="hljs-comment"># Time: O(n) - reuse previous calculation</span>
+</code></pre>
+<p><strong>Key Insight:</strong> Instead of recalculating the entire window, we remove the element leaving the window and add the new element entering it.</p>
+<hr>
+<h2>Why Use Sliding Window?</h2>
+<h3>Performance Improvement</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Time Complexity</th>
+      <th>Example (n=10000, k=100)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Naive (nested loops)</td>
+      <td>O(n × k)</td>
+      <td>~1,000,000 operations</td>
+    </tr>
+    <tr>
+      <td>Sliding Window</td>
+      <td>O(n)</td>
+      <td>~10,000 operations</td>
+    </tr>
+  </tbody>
+</table>
+<h3>When to Use</h3>
+<p>✅ <strong>Use Sliding Window when:</strong></p>
+<ul>
+  <li>Problem involves <strong>contiguous</strong> subarrays/substrings</li>
+  <li>Looking for longest/shortest/count with a condition</li>
+  <li>Keywords: "substring", "subarray", "consecutive", "window", "in a row"</li>
+  <li>You can determine validity from current window alone</li>
+</ul>
+<p>❌ <strong>Don't use Sliding Window when:</strong></p>
+<ul>
+  <li>Elements can be picked from anywhere (not contiguous)</li>
+  <li>"Subsequence" problems (can skip elements)</li>
+  <li>Need global information beyond current window</li>
+  <li>Requires sorting or complex preprocessing</li>
+</ul>
+<hr>
+<h2>The Mental Model</h2>
+<h3>Visualization</h3>
+<p>Imagine a physical window sliding across an array:</p>
+<pre><code class="hljs language-ini">Array: <span class="hljs-section">[1, 4, 2, 10, 23, 3, 1, 0, 20]</span>
+Window <span class="hljs-attr">size</span> = <span class="hljs-number">3</span>
+
+Position 1:  <span class="hljs-section">[1, 4, 2]</span>, 10, 23, 3, 1, 0, 20
+             └─────┘
+
+Position 2:  1, <span class="hljs-section">[4, 2, 10]</span>, 23, 3, 1, 0, 20
+                └───────┘
+                Remove 1, Add 10
+
+Position 3:  1, 4, <span class="hljs-section">[2, 10, 23]</span>, 3, 1, 0, 20
+                   └────────┘
+                   Remove 4, Add 23
+</code></pre>
+<h3>The Pointer Dance</h3>
+<pre><code class="hljs language-sql">Fixed <span class="hljs-keyword">Window</span>:
+  <span class="hljs-keyword">right</span> pointer moves → <span class="hljs-keyword">left</span> pointer follows <span class="hljs-keyword">at</span> fixed distance
+
+Variable <span class="hljs-keyword">Window</span>:
+  <span class="hljs-keyword">right</span> pointer always moves forward (expand)
+  <span class="hljs-keyword">left</span> pointer moves forward <span class="hljs-keyword">when</span> needed (shrink)
+</code></pre>
+<hr>
+<h2>Two Categories</h2>
+<h3>Category 1: Fixed-Size Window</h3>
+<p><strong>Characteristics:</strong></p>
+<ul>
+  <li>Window size K is given</li>
+  <li>Simply slide the window and compute</li>
+  <li>Usually easier</li>
+</ul>
+<p><strong>Template:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">fixed_window</span>(<span class="hljs-params">arr, k</span>):
+    <span class="hljs-comment"># Step 1: Calculate first window</span>
+    window_state = calculate_initial(arr[:k])
+    result = window_state
+
+    <span class="hljs-comment"># Step 2: Slide window</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(k, <span class="hljs-built_in">len</span>(arr)):
+        <span class="hljs-comment"># Remove left element, add right element</span>
+        window_state = adjust(window_state, remove=arr[i-k], add=arr[i])
+        result = update_result(result, window_state)
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<h3>Category 2: Variable-Size Window</h3>
+<p><strong>Characteristics:</strong></p>
+<ul>
+  <li>Window size changes dynamically</li>
+  <li>Find optimal window size</li>
+  <li>Uses two pointers (left and right)</li>
+  <li>More complex but very powerful</li>
+</ul>
+<p><strong>Template:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">variable_window</span>(<span class="hljs-params">arr</span>):
+    left = <span class="hljs-number">0</span>
+    window_state = initialize()
+    result = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(arr)):
+        <span class="hljs-comment"># Expand: add arr[right]</span>
+        add_to_window(arr[right])
+
+        <span class="hljs-comment"># Shrink: while invalid</span>
+        <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> is_valid(window_state):
+            remove_from_window(arr[left])
+            left += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Update result</span>
+        result = update(result, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<hr>
+<h2>Fixed-Size Window Problems</h2>
+<h3>Problem 1: Maximum Sum Subarray of Size K</h3>
+<p>
+  <strong>Problem:</strong>
+  Given an array and integer k, find the maximum sum of any k consecutive elements.
+</p>
+<pre><code class="hljs language-ini">Input: <span class="hljs-attr">arr</span> = [<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>], k = <span class="hljs-number">3</span>
+Output: 9
+Explanation: <span class="hljs-section">[5, 1, 3]</span> has sum 9
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">maxSumSubarray</span>(<span class="hljs-params">arr, k</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(arr) &#x3C; k:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    <span class="hljs-comment"># Calculate first window</span>
+    window_sum = <span class="hljs-built_in">sum</span>(arr[:k])
+    max_sum = window_sum
+
+    <span class="hljs-comment"># Slide window</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(k, <span class="hljs-built_in">len</span>(arr)):
+        <span class="hljs-comment"># Remove leftmost, add rightmost</span>
+        window_sum = window_sum - arr[i-k] + arr[i]
+        max_sum = <span class="hljs-built_in">max</span>(max_sum, window_sum)
+
+    <span class="hljs-keyword">return</span> max_sum
+</code></pre>
+<p><strong>Trace:</strong></p>
+<pre><code class="hljs language-ini"><span class="hljs-attr">arr</span> = [<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>], k = <span class="hljs-number">3</span>
+
+Window 1: <span class="hljs-section">[2, 1, 5]</span> → <span class="hljs-attr">sum</span> = <span class="hljs-number">8</span>
+Window 2: <span class="hljs-section">[1, 5, 1]</span> → <span class="hljs-attr">sum</span> = <span class="hljs-number">7</span>  (<span class="hljs-number">8</span> - <span class="hljs-number">2</span> + <span class="hljs-number">1</span>)
+Window 3: <span class="hljs-section">[5, 1, 3]</span> → <span class="hljs-attr">sum</span> = <span class="hljs-number">9</span>  (<span class="hljs-number">7</span> - <span class="hljs-number">1</span> + <span class="hljs-number">3</span>) ✓ max
+Window 4: <span class="hljs-section">[1, 3, 2]</span> → <span class="hljs-attr">sum</span> = <span class="hljs-number">6</span>  (<span class="hljs-number">9</span> - <span class="hljs-number">5</span> + <span class="hljs-number">2</span>)
+
+Result: 9
+</code></pre>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(1)</p>
+<hr>
+<h3>Problem 2: First Negative Number in Every Window</h3>
+<p>
+  <strong>Problem:</strong>
+  For each window of size k, find the first negative number.
+</p>
+<pre><code class="hljs language-ini">Input: <span class="hljs-attr">arr</span> = [<span class="hljs-number">12</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">7</span>, <span class="hljs-number">8</span>, -<span class="hljs-number">15</span>, <span class="hljs-number">30</span>, <span class="hljs-number">16</span>, <span class="hljs-number">28</span>], k = <span class="hljs-number">3</span>
+Output: <span class="hljs-section">[-1, -1, -7, -15, -15, 0]</span>
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">firstNegativeInWindow</span>(<span class="hljs-params">arr, k</span>):
+    result = []
+    negatives = deque()  <span class="hljs-comment"># stores indices of negative numbers</span>
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(arr)):
+        <span class="hljs-comment"># Add negative numbers to deque</span>
+        <span class="hljs-keyword">if</span> arr[i] &#x3C; <span class="hljs-number">0</span>:
+            negatives.append(i)
+
+        <span class="hljs-comment"># Remove elements outside current window</span>
+        <span class="hljs-keyword">while</span> negatives <span class="hljs-keyword">and</span> negatives[<span class="hljs-number">0</span>] &#x3C; i - k + <span class="hljs-number">1</span>:
+            negatives.popleft()
+
+        <span class="hljs-comment"># If window is complete (i >= k-1)</span>
+        <span class="hljs-keyword">if</span> i >= k - <span class="hljs-number">1</span>:
+            <span class="hljs-keyword">if</span> negatives:
+                result.append(arr[negatives[<span class="hljs-number">0</span>]])
+            <span class="hljs-keyword">else</span>:
+                result.append(<span class="hljs-number">0</span>)
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<p><strong>Key Insight:</strong> Use a deque to track negative numbers and remove those outside the window.</p>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(k)</p>
+<hr>
+<h3>Problem 3: Count Anagrams in String</h3>
+<p>
+  <strong>Problem:</strong>
+  Count how many anagrams of a pattern exist as substrings in text.
+</p>
+<pre><code class="hljs language-vbnet"><span class="hljs-symbol">Input:</span> <span class="hljs-keyword">text</span> = <span class="hljs-string">"forxxorfxdofr"</span>, pattern = <span class="hljs-string">"for"</span>
+<span class="hljs-symbol">Output:</span> <span class="hljs-number">3</span>
+<span class="hljs-symbol">Explanation:</span> <span class="hljs-string">"for"</span>, <span class="hljs-string">"orf"</span>, <span class="hljs-string">"ofr"</span> are anagrams <span class="hljs-keyword">of</span> <span class="hljs-string">"for"</span>
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">countAnagrams</span>(<span class="hljs-params">text, pattern</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(pattern) > <span class="hljs-built_in">len</span>(text):
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    pattern_count = Counter(pattern)
+    window_count = Counter()
+    k = <span class="hljs-built_in">len</span>(pattern)
+    count = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(text)):
+        <span class="hljs-comment"># Add character to window</span>
+        window_count[text[i]] += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Remove character outside window</span>
+        <span class="hljs-keyword">if</span> i >= k:
+            left_char = text[i - k]
+            window_count[left_char] -= <span class="hljs-number">1</span>
+            <span class="hljs-keyword">if</span> window_count[left_char] == <span class="hljs-number">0</span>:
+                <span class="hljs-keyword">del</span> window_count[left_char]
+
+        <span class="hljs-comment"># Check if current window is anagram</span>
+        <span class="hljs-keyword">if</span> i >= k - <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> window_count == pattern_count:
+            count += <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> count
+</code></pre>
+<p><strong>Key Insight:</strong> Two Counters are equal if they have the same characters with the same frequencies.</p>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(1) - at most 26 characters for lowercase English</p>
+<hr>
+<h3>Problem 4: Maximum of All Subarrays of Size K</h3>
+<p>
+  <strong>Problem:</strong>
+  Find the maximum element in each window of size k.
+</p>
+<pre><code class="hljs language-ini">Input: <span class="hljs-attr">arr</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>], k = <span class="hljs-number">3</span>
+Output: <span class="hljs-section">[3, 3, 5, 5, 6, 7]</span>
+</code></pre>
+<p><strong>Solution (Using Deque - Monotonic Queue):</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">maxSlidingWindow</span>(<span class="hljs-params">arr, k</span>):
+    result = []
+    dq = deque()  <span class="hljs-comment"># stores indices, maintains decreasing order</span>
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(arr)):
+        <span class="hljs-comment"># Remove elements outside window</span>
+        <span class="hljs-keyword">while</span> dq <span class="hljs-keyword">and</span> dq[<span class="hljs-number">0</span>] &#x3C; i - k + <span class="hljs-number">1</span>:
+            dq.popleft()
+
+        <span class="hljs-comment"># Remove smaller elements (they'll never be max)</span>
+        <span class="hljs-keyword">while</span> dq <span class="hljs-keyword">and</span> arr[dq[-<span class="hljs-number">1</span>]] &#x3C; arr[i]:
+            dq.pop()
+
+        dq.append(i)
+
+        <span class="hljs-comment"># Add to result when window is complete</span>
+        <span class="hljs-keyword">if</span> i >= k - <span class="hljs-number">1</span>:
+            result.append(arr[dq[<span class="hljs-number">0</span>]])
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<p><strong>Key Insight:</strong> Maintain a deque in decreasing order - the front always has the maximum.</p>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(k)</p>
+<hr>
+<h2>Variable-Size Window Problems</h2>
+<h3>Problem 5: Longest Substring Without Repeating Characters</h3>
+<p>
+  <strong>Problem:</strong>
+  Find the length of the longest substring without repeating characters.
+</p>
+<pre><code class="hljs language-vbnet"><span class="hljs-symbol">Input:</span> s = <span class="hljs-string">"abcabcbb"</span>
+<span class="hljs-symbol">Output:</span> <span class="hljs-number">3</span>
+<span class="hljs-symbol">Explanation:</span> <span class="hljs-string">"abc"</span> <span class="hljs-built_in">is</span> the longest substring
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">lengthOfLongestSubstring</span>(<span class="hljs-params">s</span>):
+    char_set = <span class="hljs-built_in">set</span>()
+    left = <span class="hljs-number">0</span>
+    max_length = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):
+        <span class="hljs-comment"># Shrink window while duplicate exists</span>
+        <span class="hljs-keyword">while</span> s[right] <span class="hljs-keyword">in</span> char_set:
+            char_set.remove(s[left])
+            left += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Add current character</span>
+        char_set.add(s[right])
+        max_length = <span class="hljs-built_in">max</span>(max_length, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<p><strong>Detailed Trace:</strong></p>
+<pre><code class="hljs language-sql">s <span class="hljs-operator">=</span> "abcabcbb"
+
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">0</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'a'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'a'</span>}, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">0</span>, length<span class="hljs-operator">=</span><span class="hljs-number">1</span>
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">1</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'b'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'a'</span>,<span class="hljs-string">'b'</span>}, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">0</span>, length<span class="hljs-operator">=</span><span class="hljs-number">2</span>
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">2</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'c'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'a'</span>,<span class="hljs-string">'b'</span>,<span class="hljs-string">'c'</span>}, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">0</span>, length<span class="hljs-operator">=</span><span class="hljs-number">3</span>
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">3</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'a'</span>:
+  <span class="hljs-string">'a'</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span><span class="hljs-operator">!</span> Remove <span class="hljs-string">'a'</span>, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">1</span>, <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'b'</span>,<span class="hljs-string">'c'</span>}
+  <span class="hljs-keyword">Add</span> <span class="hljs-string">'a'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'b'</span>,<span class="hljs-string">'c'</span>,<span class="hljs-string">'a'</span>}, length<span class="hljs-operator">=</span><span class="hljs-number">3</span>
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">4</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'b'</span>:
+  <span class="hljs-string">'b'</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span><span class="hljs-operator">!</span> Remove <span class="hljs-string">'b'</span>, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">2</span>, <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'c'</span>,<span class="hljs-string">'a'</span>}
+  <span class="hljs-keyword">Add</span> <span class="hljs-string">'b'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'c'</span>,<span class="hljs-string">'a'</span>,<span class="hljs-string">'b'</span>}, length<span class="hljs-operator">=</span><span class="hljs-number">3</span>
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">5</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'c'</span>:
+  <span class="hljs-string">'c'</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span><span class="hljs-operator">!</span> Remove <span class="hljs-string">'c'</span>, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">3</span>, <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'a'</span>,<span class="hljs-string">'b'</span>}
+  <span class="hljs-keyword">Add</span> <span class="hljs-string">'c'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'a'</span>,<span class="hljs-string">'b'</span>,<span class="hljs-string">'c'</span>}, length<span class="hljs-operator">=</span><span class="hljs-number">3</span>
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">6</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'b'</span>:
+  <span class="hljs-string">'b'</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span><span class="hljs-operator">!</span> Remove <span class="hljs-string">'a'</span>, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">4</span>, <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'b'</span>,<span class="hljs-string">'c'</span>}
+  <span class="hljs-string">'b'</span> still <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span><span class="hljs-operator">!</span> Remove <span class="hljs-string">'b'</span>, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">5</span>, <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'c'</span>}
+  <span class="hljs-keyword">Add</span> <span class="hljs-string">'b'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'c'</span>,<span class="hljs-string">'b'</span>}, length<span class="hljs-operator">=</span><span class="hljs-number">2</span>
+<span class="hljs-keyword">right</span><span class="hljs-operator">=</span><span class="hljs-number">7</span>, <span class="hljs-type">char</span><span class="hljs-operator">=</span><span class="hljs-string">'b'</span>:
+  <span class="hljs-string">'b'</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span><span class="hljs-operator">!</span> Remove <span class="hljs-string">'c'</span>, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">6</span>, <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'b'</span>}
+  <span class="hljs-string">'b'</span> still <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span><span class="hljs-operator">!</span> Remove <span class="hljs-string">'b'</span>, <span class="hljs-keyword">left</span><span class="hljs-operator">=</span><span class="hljs-number">7</span>, <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{}
+  <span class="hljs-keyword">Add</span> <span class="hljs-string">'b'</span>: <span class="hljs-keyword">set</span><span class="hljs-operator">=</span>{<span class="hljs-string">'b'</span>}, length<span class="hljs-operator">=</span><span class="hljs-number">1</span>
+
+Max length <span class="hljs-operator">=</span> <span class="hljs-number">3</span>
+</code></pre>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(min(n, m)) where m is charset size</p>
+<hr>
+<h3>Problem 6: Longest Substring with At Most K Distinct Characters</h3>
+<p>
+  <strong>Problem:</strong>
+  Find the length of the longest substring with at most k distinct characters.
+</p>
+<pre><code class="hljs language-vbnet"><span class="hljs-symbol">Input:</span> s = <span class="hljs-string">"eceba"</span>, k = <span class="hljs-number">2</span>
+<span class="hljs-symbol">Output:</span> <span class="hljs-number">3</span>
+<span class="hljs-symbol">Explanation:</span> <span class="hljs-string">"ece"</span> has <span class="hljs-number">2</span> <span class="hljs-keyword">distinct</span> characters
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">lengthOfLongestSubstringKDistinct</span>(<span class="hljs-params">s, k</span>):
+    <span class="hljs-keyword">if</span> k == <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    char_count = {}
+    left = <span class="hljs-number">0</span>
+    max_length = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):
+        <span class="hljs-comment"># Expand: add s[right]</span>
+        char_count[s[right]] = char_count.get(s[right], <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Shrink: while too many distinct characters</span>
+        <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(char_count) > k:
+            char_count[s[left]] -= <span class="hljs-number">1</span>
+            <span class="hljs-keyword">if</span> char_count[s[left]] == <span class="hljs-number">0</span>:
+                <span class="hljs-keyword">del</span> char_count[s[left]]
+            left += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Update max length</span>
+        max_length = <span class="hljs-built_in">max</span>(max_length, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<p><strong>Key Insight:</strong> Track character counts, shrink when distinct count exceeds k.</p>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(k)</p>
+<hr>
+<h3>Problem 7: Minimum Window Substring</h3>
+<p>
+  <strong>Problem:</strong>
+  Find the minimum window in s that contains all characters of t.
+</p>
+<pre><code class="hljs language-vbnet"><span class="hljs-symbol">Input:</span> s = <span class="hljs-string">"ADOBECODEBANC"</span>, t = <span class="hljs-string">"ABC"</span>
+<span class="hljs-symbol">Output:</span> <span class="hljs-string">"BANC"</span>
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">minWindow</span>(<span class="hljs-params">s, t</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> s <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> t <span class="hljs-keyword">or</span> <span class="hljs-built_in">len</span>(s) &#x3C; <span class="hljs-built_in">len</span>(t):
+        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>
+
+    need = Counter(t)
+    have = {}
+
+    left = <span class="hljs-number">0</span>
+    min_len = <span class="hljs-built_in">float</span>(<span class="hljs-string">'inf'</span>)
+    min_start = <span class="hljs-number">0</span>
+    matched = <span class="hljs-number">0</span>  <span class="hljs-comment"># number of character types fully matched</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):
+        char = s[right]
+        have[char] = have.get(char, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># If this character's requirement is satisfied</span>
+        <span class="hljs-keyword">if</span> char <span class="hljs-keyword">in</span> need <span class="hljs-keyword">and</span> have[char] == need[char]:
+            matched += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Try to shrink window while valid</span>
+        <span class="hljs-keyword">while</span> matched == <span class="hljs-built_in">len</span>(need):
+            <span class="hljs-comment"># Update minimum</span>
+            <span class="hljs-keyword">if</span> right - left + <span class="hljs-number">1</span> &#x3C; min_len:
+                min_len = right - left + <span class="hljs-number">1</span>
+                min_start = left
+
+            <span class="hljs-comment"># Shrink from left</span>
+            left_char = s[left]
+            have[left_char] -= <span class="hljs-number">1</span>
+            <span class="hljs-keyword">if</span> left_char <span class="hljs-keyword">in</span> need <span class="hljs-keyword">and</span> have[left_char] &#x3C; need[left_char]:
+                matched -= <span class="hljs-number">1</span>
+
+            left += <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">""</span> <span class="hljs-keyword">if</span> min_len == <span class="hljs-built_in">float</span>(<span class="hljs-string">'inf'</span>) <span class="hljs-keyword">else</span> s[min_start:min_start + min_len]
+</code></pre>
+<p><strong>Detailed Trace:</strong></p>
+<pre><code class="hljs language-ini"><span class="hljs-attr">s</span> = <span class="hljs-string">"ADOBECODEBANC"</span>, t = <span class="hljs-string">"ABC"</span>
+<span class="hljs-attr">need</span> = {<span class="hljs-string">'A'</span>: <span class="hljs-number">1</span>, <span class="hljs-string">'B'</span>: <span class="hljs-number">1</span>, <span class="hljs-string">'C'</span>: <span class="hljs-number">1</span>}
+
+Expand to "ADOBEC":
+  <span class="hljs-attr">have</span> = {<span class="hljs-string">'A'</span>:<span class="hljs-number">1</span>, <span class="hljs-string">'D'</span>:<span class="hljs-number">1</span>, <span class="hljs-string">'O'</span>:<span class="hljs-number">2</span>, <span class="hljs-string">'B'</span>:<span class="hljs-number">1</span>, <span class="hljs-string">'E'</span>:<span class="hljs-number">1</span>, <span class="hljs-string">'C'</span>:<span class="hljs-number">1</span>}
+  <span class="hljs-attr">matched</span> = <span class="hljs-number">3</span> ✓ (all requirements met)
+  <span class="hljs-attr">min_window</span> = <span class="hljs-string">"ADOBEC"</span> (length <span class="hljs-number">6</span>)
+
+Shrink:
+  Remove 'A': <span class="hljs-attr">matched</span> = <span class="hljs-number">2</span> (lost A requirement)
+
+Continue expanding...
+Eventually find "BANC" (length 4) ✓
+</code></pre>
+<p><strong>Key Insight:</strong> Use <code>matched</code> counter to quickly check if window is valid.</p>
+<p><strong>Time:</strong> O(n + m), <strong>Space:</strong> O(1) - at most 52 English letters</p>
+<hr>
+<h3>Problem 8: Longest Repeating Character Replacement</h3>
+<p>
+  <strong>Problem:</strong>
+  Find the longest substring with same character after replacing at most k characters.
+</p>
+<pre><code class="hljs language-sql">Input: s <span class="hljs-operator">=</span> "AABABBA", k <span class="hljs-operator">=</span> <span class="hljs-number">1</span>
+Output: <span class="hljs-number">4</span>
+Explanation: Replace <span class="hljs-keyword">one</span> <span class="hljs-string">'A'</span> <span class="hljs-keyword">in</span> "AABA" <span class="hljs-keyword">to</span> <span class="hljs-keyword">get</span> "AAAA"
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">characterReplacement</span>(<span class="hljs-params">s, k</span>):
+    char_count = {}
+    left = <span class="hljs-number">0</span>
+    max_length = <span class="hljs-number">0</span>
+    max_freq = <span class="hljs-number">0</span>  <span class="hljs-comment"># frequency of most common char in window</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):
+        <span class="hljs-comment"># Add character to window</span>
+        char_count[s[right]] = char_count.get(s[right], <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+        max_freq = <span class="hljs-built_in">max</span>(max_freq, char_count[s[right]])
+
+        <span class="hljs-comment"># Window size - most frequent char > k replacements</span>
+        <span class="hljs-comment"># This means we need more than k replacements to make all chars same</span>
+        <span class="hljs-keyword">while</span> (right - left + <span class="hljs-number">1</span>) - max_freq > k:
+            char_count[s[left]] -= <span class="hljs-number">1</span>
+            left += <span class="hljs-number">1</span>
+            <span class="hljs-comment"># Note: we don't update max_freq here (optimization)</span>
+
+        max_length = <span class="hljs-built_in">max</span>(max_length, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<p><strong>Key Insight:</strong></p>
+<ul>
+  <li>Window is valid if: <code>window_size - max_frequency &#x3C;= k</code></li>
+  <li>We can replace the non-most-frequent characters</li>
+</ul>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(1) - at most 26 letters</p>
+<hr>
+<h3>Problem 9: Permutation in String</h3>
+<p>
+  <strong>Problem:</strong>
+  Check if s2 contains a permutation of s1.
+</p>
+<pre><code class="hljs language-vbnet"><span class="hljs-symbol">Input:</span> s1 = <span class="hljs-string">"ab"</span>, s2 = <span class="hljs-string">"eidbaooo"</span>
+<span class="hljs-symbol">Output:</span> <span class="hljs-literal">true</span>
+<span class="hljs-symbol">Explanation:</span> s2 contains <span class="hljs-string">"ba"</span> which <span class="hljs-built_in">is</span> a permutation <span class="hljs-keyword">of</span> <span class="hljs-string">"ab"</span>
+</code></pre>
+<p><strong>Solution:</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">checkInclusion</span>(<span class="hljs-params">s1, s2</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(s1) > <span class="hljs-built_in">len</span>(s2):
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+    s1_count = Counter(s1)
+    window_count = Counter(s2[:<span class="hljs-built_in">len</span>(s1)])
+
+    <span class="hljs-keyword">if</span> s1_count == window_count:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s1), <span class="hljs-built_in">len</span>(s2)):
+        <span class="hljs-comment"># Add new character</span>
+        window_count[s2[i]] += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Remove old character</span>
+        left_char = s2[i - <span class="hljs-built_in">len</span>(s1)]
+        window_count[left_char] -= <span class="hljs-number">1</span>
+        <span class="hljs-keyword">if</span> window_count[left_char] == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">del</span> window_count[left_char]
+
+        <span class="hljs-comment"># Check if window matches</span>
+        <span class="hljs-keyword">if</span> s1_count == window_count:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+</code></pre>
+<p><strong>Key Insight:</strong> This is actually a fixed-size window problem! Window size = len(s1).</p>
+<p><strong>Time:</strong> O(n), <strong>Space:</strong> O(1)</p>
+<hr>
+<h2>Advanced Patterns</h2>
+<h3>Pattern 1: Sliding Window + Two Pointers</h3>
+<p><strong>Problem: Container With Most Water</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">maxArea</span>(<span class="hljs-params">height</span>):
+    <span class="hljs-string">"""
+    Not a typical sliding window, but uses two-pointer technique.
+    Find two lines that form the largest container.
+    """</span>
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(height) - <span class="hljs-number">1</span>
+    max_water = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C; right:
+        width = right - left
+        h = <span class="hljs-built_in">min</span>(height[left], height[right])
+        max_water = <span class="hljs-built_in">max</span>(max_water, width * h)
+
+        <span class="hljs-comment"># Move pointer with smaller height</span>
+        <span class="hljs-keyword">if</span> height[left] &#x3C; height[right]:
+            left += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">else</span>:
+            right -= <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> max_water
+</code></pre>
+<hr>
+<h3>Pattern 2: At Most K → Exactly K</h3>
+<p><strong>Trick:</strong> <code>exactly(K) = atMost(K) - atMost(K-1)</code></p>
+<p><strong>Problem: Subarrays with K Different Integers</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">subarraysWithKDistinct</span>(<span class="hljs-params">nums, k</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">atMostK</span>(<span class="hljs-params">k</span>):
+        count = {}
+        left = <span class="hljs-number">0</span>
+        result = <span class="hljs-number">0</span>
+
+        <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(nums)):
+            count[nums[right]] = count.get(nums[right], <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+
+            <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(count) > k:
+                count[nums[left]] -= <span class="hljs-number">1</span>
+                <span class="hljs-keyword">if</span> count[nums[left]] == <span class="hljs-number">0</span>:
+                    <span class="hljs-keyword">del</span> count[nums[left]]
+                left += <span class="hljs-number">1</span>
+
+            <span class="hljs-comment"># All subarrays ending at right</span>
+            result += right - left + <span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">return</span> result
+
+    <span class="hljs-keyword">return</span> atMostK(k) - atMostK(k - <span class="hljs-number">1</span>)
+</code></pre>
+<p><strong>Key Insight:</strong> For each position, <code>right - left + 1</code> subarrays end at that position.</p>
+<hr>
+<h3>Pattern 3: Sliding Window with Constraints</h3>
+<p><strong>Problem: Max Consecutive Ones III</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">longestOnes</span>(<span class="hljs-params">nums, k</span>):
+    <span class="hljs-string">"""
+    Find longest subarray of 1s after flipping at most k zeros.
+    """</span>
+    left = <span class="hljs-number">0</span>
+    zeros = <span class="hljs-number">0</span>
+    max_length = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(nums)):
+        <span class="hljs-keyword">if</span> nums[right] == <span class="hljs-number">0</span>:
+            zeros += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Shrink if too many zeros</span>
+        <span class="hljs-keyword">while</span> zeros > k:
+            <span class="hljs-keyword">if</span> nums[left] == <span class="hljs-number">0</span>:
+                zeros -= <span class="hljs-number">1</span>
+            left += <span class="hljs-number">1</span>
+
+        max_length = <span class="hljs-built_in">max</span>(max_length, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<hr>
+<h3>Pattern 4: Sliding Window with Product</h3>
+<p><strong>Problem: Subarray Product Less Than K</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">numSubarrayProductLessThanK</span>(<span class="hljs-params">nums, k</span>):
+    <span class="hljs-string">"""
+    Count subarrays where product &#x3C; k.
+    """</span>
+    <span class="hljs-keyword">if</span> k &#x3C;= <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    product = <span class="hljs-number">1</span>
+    left = <span class="hljs-number">0</span>
+    count = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(nums)):
+        product *= nums[right]
+
+        <span class="hljs-comment"># Shrink while product >= k</span>
+        <span class="hljs-keyword">while</span> product >= k:
+            product //= nums[left]
+            left += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Add all subarrays ending at right</span>
+        count += right - left + <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> count
+</code></pre>
+<p><strong>Key Insight:</strong> When window [left, right] is valid, it contributes <code>right - left + 1</code> subarrays.</p>
+<hr>
+<h2>Pattern Recognition</h2>
+<h3>Decision Tree</h3>
+<pre><code class="hljs language-sql">Does the problem involve contiguous elements?
+  └─ <span class="hljs-keyword">NO</span> → <span class="hljs-keyword">Not</span> sliding <span class="hljs-keyword">window</span> (try hash map, two pointers, etc.)
+  └─ YES → Continue
+
+<span class="hljs-keyword">Is</span> the <span class="hljs-keyword">window</span> size fixed?
+  └─ YES → Fixed<span class="hljs-operator">-</span>size sliding <span class="hljs-keyword">window</span>
+      ├─ Initialize <span class="hljs-keyword">first</span> <span class="hljs-keyword">window</span>
+      ├─ Slide: remove <span class="hljs-keyword">left</span>, <span class="hljs-keyword">add</span> <span class="hljs-keyword">right</span>
+      └─ Track <span class="hljs-keyword">result</span>
+
+  └─ <span class="hljs-keyword">NO</span> → Variable<span class="hljs-operator">-</span>size sliding <span class="hljs-keyword">window</span>
+      <span class="hljs-keyword">Are</span> you looking <span class="hljs-keyword">for</span> longest<span class="hljs-operator">/</span>maximum?
+        └─ YES → Expand <span class="hljs-keyword">right</span>, shrink <span class="hljs-keyword">left</span> <span class="hljs-keyword">when</span> invalid
+            ├─ <span class="hljs-keyword">Update</span> <span class="hljs-keyword">result</span> <span class="hljs-keyword">when</span> VALID
+
+      <span class="hljs-keyword">Are</span> you looking <span class="hljs-keyword">for</span> shortest<span class="hljs-operator">/</span>minimum?
+        └─ YES → Expand <span class="hljs-keyword">right</span>, shrink <span class="hljs-keyword">left</span> while valid
+            ├─ <span class="hljs-keyword">Update</span> <span class="hljs-keyword">result</span> while SHRINKING
+
+      <span class="hljs-keyword">Are</span> you counting subarrays?
+        └─ YES → <span class="hljs-keyword">For</span> <span class="hljs-keyword">each</span> <span class="hljs-keyword">right</span>, <span class="hljs-keyword">add</span> (<span class="hljs-keyword">right</span> <span class="hljs-operator">-</span> <span class="hljs-keyword">left</span> <span class="hljs-operator">+</span> <span class="hljs-number">1</span>)
+            ├─ Consider "at most K" trick
+</code></pre>
+<h3>Keywords to Look For</h3>
+<p><strong>Strong Indicators:</strong></p>
+<ul>
+  <li>"substring" (always contiguous)</li>
+  <li>"subarray" (contiguous, unlike subsequence)</li>
+  <li>"consecutive elements"</li>
+  <li>"window of size K"</li>
+  <li>"at most K" / "at least K"</li>
+  <li>"longest/shortest contiguous"</li>
+</ul>
+<p><strong>Weak/Misleading:</strong></p>
+<ul>
+  <li>"subsequence" (NOT contiguous → not sliding window)</li>
+  <li>"any elements" (not necessarily contiguous)</li>
+  <li>"find all pairs" (might be two pointers, not sliding window)</li>
+</ul>
+<hr>
+<h2>Common Mistakes</h2>
+<h3>Mistake 1: Using Sliding Window for Non-Contiguous Problems</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># WRONG: Finding two elements that sum to target</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">twoSum</span>(<span class="hljs-params">nums, target</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>  <span class="hljs-comment"># ❌ This is two pointers, not sliding window</span>
+    <span class="hljs-comment"># Elements don't need to be contiguous!</span>
+</code></pre>
+<h3>Mistake 2: Not Handling Window Initialization</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># WRONG: Off-by-one errors</span>
+<span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(arr)):
+    <span class="hljs-comment"># Add arr[right]</span>
+    <span class="hljs-keyword">if</span> right > k:  <span class="hljs-comment"># ❌ Should be right >= k</span>
+        <span class="hljs-comment"># Remove arr[right - k]</span>
+</code></pre>
+<h3>Mistake 3: Updating Result at Wrong Time</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># For LONGEST problems:</span>
+<span class="hljs-keyword">while</span> invalid:
+    shrink()
+result = <span class="hljs-built_in">max</span>(result, size)  <span class="hljs-comment"># ✓ Update when VALID</span>
+
+<span class="hljs-comment"># For SHORTEST problems:</span>
+<span class="hljs-keyword">while</span> valid:
+    result = <span class="hljs-built_in">min</span>(result, size)  <span class="hljs-comment"># ✓ Update while SHRINKING</span>
+    shrink()
+</code></pre>
+<h3>Mistake 4: Not Cleaning Up Data Structures</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># WRONG: Memory leak</span>
+char_count[s[left]] -= <span class="hljs-number">1</span>
+left += <span class="hljs-number">1</span>
+
+<span class="hljs-comment"># RIGHT: Remove when count becomes 0</span>
+char_count[s[left]] -= <span class="hljs-number">1</span>
+<span class="hljs-keyword">if</span> char_count[s[left]] == <span class="hljs-number">0</span>:
+    <span class="hljs-keyword">del</span> char_count[s[left]]
+left += <span class="hljs-number">1</span>
+</code></pre>
+<h3>Mistake 5: Confusing Window Size Calculation</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Window from left to right (inclusive)</span>
+window_size = right - left + <span class="hljs-number">1</span>  <span class="hljs-comment"># ✓ Correct</span>
+
+window_size = right - left  <span class="hljs-comment"># ❌ Off by one</span>
+</code></pre>
+<hr>
+<h2>Practice Problems</h2>
+<h3>Easy</h3>
+<ol>
+  <li><strong>Maximum Average Subarray I</strong> - Fixed window, find max average of k elements</li>
+  <li><strong>Minimum Size Subarray Sum</strong> - Variable window, shortest subarray with sum ≥ target</li>
+  <li><strong>Contains Duplicate II</strong> - Check if duplicate exists within k distance</li>
+</ol>
+<h3>Medium</h3>
+<ol start="4">
+  <li><strong>Longest Substring Without Repeating Characters</strong> - Variable window, no repeating chars</li>
+  <li><strong>Longest Repeating Character Replacement</strong> - Variable window, at most k replacements</li>
+  <li><strong>Permutation in String</strong> - Fixed window, check if s2 contains permutation of s1</li>
+  <li><strong>Find All Anagrams in a String</strong> - Fixed window, find all anagram start indices</li>
+  <li><strong>Max Consecutive Ones III</strong> - Variable window, flip at most k zeros</li>
+  <li><strong>Fruit Into Baskets</strong> - Variable window, at most 2 types</li>
+  <li><strong>Longest Substring with At Most K Distinct Characters</strong> - Variable window</li>
+</ol>
+<h3>Hard</h3>
+<ol start="11">
+  <li><strong>Minimum Window Substring</strong> - Variable window, shortest window containing all chars of t</li>
+  <li><strong>Sliding Window Maximum</strong> - Fixed window with deque, find max in each window</li>
+  <li><strong>Subarrays with K Different Integers</strong> - Count subarrays with exactly k distinct</li>
+  <li><strong>Longest Substring with At Most Two Distinct Characters</strong> - Similar to #10 but k=2</li>
+</ol>
+<hr>
+<h2>Summary</h2>
+<h3>Key Takeaways</h3>
+<ol>
+  <li><strong>Sliding window = optimization for contiguous sequences</strong></li>
+  <li><strong>Two types: Fixed-size (simpler) vs Variable-size (more powerful)</strong></li>
+  <li><strong>Variable window uses two pointers: right expands, left shrinks</strong></li>
+  <li><strong>Track window state with hash map/set/counters</strong></li>
+  <li><strong>Update result at the right time (valid for longest, shrinking for shortest)</strong></li>
+</ol>
+<h3>Time/Space Complexity</h3>
+<ul>
+  <li><strong>Time:</strong> O(n) - each element visited at most twice (once by right, once by left)</li>
+  <li><strong>Space:</strong> O(k) - where k is window size or unique elements</li>
+</ul>
+<h3>When to Use</h3>
+<p>✅ Contiguous subarrays/substrings<br>✅ Longest/shortest/count with condition<br>✅ Keywords: substring, subarray, consecutive, window<br>✅ Can determine validity from current window alone</p>
+<p>❌ Subsequences (can skip elements)<br>❌ Elements from anywhere<br>❌ Requires global state beyond window<br>❌ Needs sorting first</p>
+<h3>The Universal Template</h3>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">sliding_window</span>(<span class="hljs-params">arr</span>):
+    left = <span class="hljs-number">0</span>
+    window_state = {}  <span class="hljs-comment"># hash map, set, counter, sum</span>
+    result = <span class="hljs-number">0</span>  <span class="hljs-comment"># or float('inf') for minimum</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(arr)):
+        <span class="hljs-comment"># 1. Expand: add arr[right]</span>
+        update_window(arr[right])
+
+        <span class="hljs-comment"># 2. Shrink: while invalid</span>
+        <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> is_valid():
+            remove_from_window(arr[left])
+            left += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># 3. Update result</span>
+        result = update(result, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["algorithms","sliding_window"],"note":{"title":"Sliding Window","date":"2025-10-15","content":"\n\u003ch2\u003eWhat is Sliding Window?\u003c/h2\u003e\n\u003cp\u003eSliding window is an optimization technique for solving problems involving \u003cstrong\u003econtiguous sequences\u003c/strong\u003e (subarrays or substrings). Instead of recalculating everything for each potential solution, we \"slide\" a window across the data structure and adjust our calculation incrementally.\u003c/p\u003e\n\u003ch3\u003eThe Core Idea\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eWithout Sliding Window (Naive):\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-comment\"\u003e# Find max sum of k consecutive elements\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxSum_Naive\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr, k\u003c/span\u003e):\n    max_sum = \u003cspan class=\"hljs-built_in\"\u003efloat\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'-inf'\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr) - k + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e):\n        current_sum = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e j \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(i, i + k):\n            current_sum += arr[j]\n        max_sum = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_sum, current_sum)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_sum\n\n\u003cspan class=\"hljs-comment\"\u003e# Time: O(n * k) - recalculate sum for each window\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eWith Sliding Window (Optimized):\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-comment\"\u003e# Find max sum of k consecutive elements\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxSum_SlidingWindow\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr, k\u003c/span\u003e):\n    window_sum = \u003cspan class=\"hljs-built_in\"\u003esum\u003c/span\u003e(arr[:k])\n    max_sum = window_sum\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(k, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n        window_sum = window_sum - arr[i-k] + arr[i]\n        max_sum = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_sum, window_sum)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_sum\n\n\u003cspan class=\"hljs-comment\"\u003e# Time: O(n) - reuse previous calculation\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e Instead of recalculating the entire window, we remove the element leaving the window and add the new element entering it.\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003eWhy Use Sliding Window?\u003c/h2\u003e\n\u003ch3\u003ePerformance Improvement\u003c/h3\u003e\n\u003ctable\u003e\n  \u003cthead\u003e\n    \u003ctr\u003e\n      \u003cth\u003eApproach\u003c/th\u003e\n      \u003cth\u003eTime Complexity\u003c/th\u003e\n      \u003cth\u003eExample (n=10000, k=100)\u003c/th\u003e\n    \u003c/tr\u003e\n  \u003c/thead\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd\u003eNaive (nested loops)\u003c/td\u003e\n      \u003ctd\u003eO(n × k)\u003c/td\u003e\n      \u003ctd\u003e~1,000,000 operations\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd\u003eSliding Window\u003c/td\u003e\n      \u003ctd\u003eO(n)\u003c/td\u003e\n      \u003ctd\u003e~10,000 operations\u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cp\u003e✅ \u003cstrong\u003eUse Sliding Window when:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eProblem involves \u003cstrong\u003econtiguous\u003c/strong\u003e subarrays/substrings\u003c/li\u003e\n  \u003cli\u003eLooking for longest/shortest/count with a condition\u003c/li\u003e\n  \u003cli\u003eKeywords: \"substring\", \"subarray\", \"consecutive\", \"window\", \"in a row\"\u003c/li\u003e\n  \u003cli\u003eYou can determine validity from current window alone\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e❌ \u003cstrong\u003eDon't use Sliding Window when:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eElements can be picked from anywhere (not contiguous)\u003c/li\u003e\n  \u003cli\u003e\"Subsequence\" problems (can skip elements)\u003c/li\u003e\n  \u003cli\u003eNeed global information beyond current window\u003c/li\u003e\n  \u003cli\u003eRequires sorting or complex preprocessing\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003eThe Mental Model\u003c/h2\u003e\n\u003ch3\u003eVisualization\u003c/h3\u003e\n\u003cp\u003eImagine a physical window sliding across an array:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-ini\"\u003eArray: \u003cspan class=\"hljs-section\"\u003e[1, 4, 2, 10, 23, 3, 1, 0, 20]\u003c/span\u003e\nWindow \u003cspan class=\"hljs-attr\"\u003esize\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\nPosition 1:  \u003cspan class=\"hljs-section\"\u003e[1, 4, 2]\u003c/span\u003e, 10, 23, 3, 1, 0, 20\n             └─────┘\n\nPosition 2:  1, \u003cspan class=\"hljs-section\"\u003e[4, 2, 10]\u003c/span\u003e, 23, 3, 1, 0, 20\n                └───────┘\n                Remove 1, Add 10\n\nPosition 3:  1, 4, \u003cspan class=\"hljs-section\"\u003e[2, 10, 23]\u003c/span\u003e, 3, 1, 0, 20\n                   └────────┘\n                   Remove 4, Add 23\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eThe Pointer Dance\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003eFixed \u003cspan class=\"hljs-keyword\"\u003eWindow\u003c/span\u003e:\n  \u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e pointer moves → \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e pointer follows \u003cspan class=\"hljs-keyword\"\u003eat\u003c/span\u003e fixed distance\n\nVariable \u003cspan class=\"hljs-keyword\"\u003eWindow\u003c/span\u003e:\n  \u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e pointer always moves forward (expand)\n  \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e pointer moves forward \u003cspan class=\"hljs-keyword\"\u003ewhen\u003c/span\u003e needed (shrink)\n\u003c/code\u003e\u003c/pre\u003e\n\u003chr\u003e\n\u003ch2\u003eTwo Categories\u003c/h2\u003e\n\u003ch3\u003eCategory 1: Fixed-Size Window\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eCharacteristics:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eWindow size K is given\u003c/li\u003e\n  \u003cli\u003eSimply slide the window and compute\u003c/li\u003e\n  \u003cli\u003eUsually easier\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eTemplate:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efixed_window\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr, k\u003c/span\u003e):\n    \u003cspan class=\"hljs-comment\"\u003e# Step 1: Calculate first window\u003c/span\u003e\n    window_state = calculate_initial(arr[:k])\n    result = window_state\n\n    \u003cspan class=\"hljs-comment\"\u003e# Step 2: Slide window\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(k, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n        \u003cspan class=\"hljs-comment\"\u003e# Remove left element, add right element\u003c/span\u003e\n        window_state = adjust(window_state, remove=arr[i-k], add=arr[i])\n        result = update_result(result, window_state)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eCategory 2: Variable-Size Window\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eCharacteristics:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eWindow size changes dynamically\u003c/li\u003e\n  \u003cli\u003eFind optimal window size\u003c/li\u003e\n  \u003cli\u003eUses two pointers (left and right)\u003c/li\u003e\n  \u003cli\u003eMore complex but very powerful\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eTemplate:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003evariable_window\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr\u003c/span\u003e):\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    window_state = initialize()\n    result = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n        \u003cspan class=\"hljs-comment\"\u003e# Expand: add arr[right]\u003c/span\u003e\n        add_to_window(arr[right])\n\n        \u003cspan class=\"hljs-comment\"\u003e# Shrink: while invalid\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e is_valid(window_state):\n            remove_from_window(arr[left])\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Update result\u003c/span\u003e\n        result = update(result, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003chr\u003e\n\u003ch2\u003eFixed-Size Window Problems\u003c/h2\u003e\n\u003ch3\u003eProblem 1: Maximum Sum Subarray of Size K\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Given an array and integer k, find the maximum sum of any k consecutive elements.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-ini\"\u003eInput: \u003cspan class=\"hljs-attr\"\u003earr\u003c/span\u003e = [\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e], k = \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\nOutput: 9\nExplanation: \u003cspan class=\"hljs-section\"\u003e[5, 1, 3]\u003c/span\u003e has sum 9\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxSumSubarray\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr, k\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr) \u0026#x3C; k:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Calculate first window\u003c/span\u003e\n    window_sum = \u003cspan class=\"hljs-built_in\"\u003esum\u003c/span\u003e(arr[:k])\n    max_sum = window_sum\n\n    \u003cspan class=\"hljs-comment\"\u003e# Slide window\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(k, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n        \u003cspan class=\"hljs-comment\"\u003e# Remove leftmost, add rightmost\u003c/span\u003e\n        window_sum = window_sum - arr[i-k] + arr[i]\n        max_sum = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_sum, window_sum)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_sum\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eTrace:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-ini\"\u003e\u003cspan class=\"hljs-attr\"\u003earr\u003c/span\u003e = [\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e], k = \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\nWindow 1: \u003cspan class=\"hljs-section\"\u003e[2, 1, 5]\u003c/span\u003e → \u003cspan class=\"hljs-attr\"\u003esum\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e\nWindow 2: \u003cspan class=\"hljs-section\"\u003e[1, 5, 1]\u003c/span\u003e → \u003cspan class=\"hljs-attr\"\u003esum\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e  (\u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e - \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\nWindow 3: \u003cspan class=\"hljs-section\"\u003e[5, 1, 3]\u003c/span\u003e → \u003cspan class=\"hljs-attr\"\u003esum\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e9\u003c/span\u003e  (\u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e + \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e) ✓ max\nWindow 4: \u003cspan class=\"hljs-section\"\u003e[1, 3, 2]\u003c/span\u003e → \u003cspan class=\"hljs-attr\"\u003esum\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e  (\u003cspan class=\"hljs-number\"\u003e9\u003c/span\u003e - \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e + \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e)\n\nResult: 9\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(1)\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003eProblem 2: First Negative Number in Every Window\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  For each window of size k, find the first negative number.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-ini\"\u003eInput: \u003cspan class=\"hljs-attr\"\u003earr\u003c/span\u003e = [\u003cspan class=\"hljs-number\"\u003e12\u003c/span\u003e, -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, -\u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e, -\u003cspan class=\"hljs-number\"\u003e15\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e30\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e16\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e28\u003c/span\u003e], k = \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\nOutput: \u003cspan class=\"hljs-section\"\u003e[-1, -1, -7, -15, -15, 0]\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e deque\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efirstNegativeInWindow\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr, k\u003c/span\u003e):\n    result = []\n    negatives = deque()  \u003cspan class=\"hljs-comment\"\u003e# stores indices of negative numbers\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n        \u003cspan class=\"hljs-comment\"\u003e# Add negative numbers to deque\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e arr[i] \u0026#x3C; \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n            negatives.append(i)\n\n        \u003cspan class=\"hljs-comment\"\u003e# Remove elements outside current window\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e negatives \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e negatives[\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e] \u0026#x3C; i - k + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e:\n            negatives.popleft()\n\n        \u003cspan class=\"hljs-comment\"\u003e# If window is complete (i \u003e= k-1)\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e i \u003e= k - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e:\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e negatives:\n                result.append(arr[negatives[\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e]])\n            \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n                result.append(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e Use a deque to track negative numbers and remove those outside the window.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(k)\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003eProblem 3: Count Anagrams in String\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Count how many anagrams of a pattern exist as substrings in text.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-vbnet\"\u003e\u003cspan class=\"hljs-symbol\"\u003eInput:\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003etext\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\"forxxorfxdofr\"\u003c/span\u003e, pattern = \u003cspan class=\"hljs-string\"\u003e\"for\"\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eOutput:\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eExplanation:\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"for\"\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e\"orf\"\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e\"ofr\"\u003c/span\u003e are anagrams \u003cspan class=\"hljs-keyword\"\u003eof\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"for\"\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e Counter\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ecountAnagrams\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003etext, pattern\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(pattern) \u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(text):\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    pattern_count = Counter(pattern)\n    window_count = Counter()\n    k = \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(pattern)\n    count = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(text)):\n        \u003cspan class=\"hljs-comment\"\u003e# Add character to window\u003c/span\u003e\n        window_count[text[i]] += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Remove character outside window\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e i \u003e= k:\n            left_char = text[i - k]\n            window_count[left_char] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e window_count[left_char] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n                \u003cspan class=\"hljs-keyword\"\u003edel\u003c/span\u003e window_count[left_char]\n\n        \u003cspan class=\"hljs-comment\"\u003e# Check if current window is anagram\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e i \u003e= k - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e window_count == pattern_count:\n            count += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e count\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e Two Counters are equal if they have the same characters with the same frequencies.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(1) - at most 26 characters for lowercase English\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003eProblem 4: Maximum of All Subarrays of Size K\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Find the maximum element in each window of size k.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-ini\"\u003eInput: \u003cspan class=\"hljs-attr\"\u003earr\u003c/span\u003e = [\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, -\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e], k = \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\nOutput: \u003cspan class=\"hljs-section\"\u003e[3, 3, 5, 5, 6, 7]\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution (Using Deque - Monotonic Queue):\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e deque\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxSlidingWindow\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr, k\u003c/span\u003e):\n    result = []\n    dq = deque()  \u003cspan class=\"hljs-comment\"\u003e# stores indices, maintains decreasing order\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n        \u003cspan class=\"hljs-comment\"\u003e# Remove elements outside window\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e dq \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e dq[\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e] \u0026#x3C; i - k + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e:\n            dq.popleft()\n\n        \u003cspan class=\"hljs-comment\"\u003e# Remove smaller elements (they'll never be max)\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e dq \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e arr[dq[-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]] \u0026#x3C; arr[i]:\n            dq.pop()\n\n        dq.append(i)\n\n        \u003cspan class=\"hljs-comment\"\u003e# Add to result when window is complete\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e i \u003e= k - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e:\n            result.append(arr[dq[\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e]])\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e Maintain a deque in decreasing order - the front always has the maximum.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(k)\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003eVariable-Size Window Problems\u003c/h2\u003e\n\u003ch3\u003eProblem 5: Longest Substring Without Repeating Characters\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Find the length of the longest substring without repeating characters.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-vbnet\"\u003e\u003cspan class=\"hljs-symbol\"\u003eInput:\u003c/span\u003e s = \u003cspan class=\"hljs-string\"\u003e\"abcabcbb\"\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eOutput:\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eExplanation:\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"abc\"\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003eis\u003c/span\u003e the longest substring\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003elengthOfLongestSubstring\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es\u003c/span\u003e):\n    char_set = \u003cspan class=\"hljs-built_in\"\u003eset\u003c/span\u003e()\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s)):\n        \u003cspan class=\"hljs-comment\"\u003e# Shrink window while duplicate exists\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e s[right] \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e char_set:\n            char_set.remove(s[left])\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Add current character\u003c/span\u003e\n        char_set.add(s[right])\n        max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eDetailed Trace:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003es \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \"abcabcbb\"\n\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e}, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e}, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e}, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e:\n  \u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e!\u003c/span\u003e Remove \u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e}\n  \u003cspan class=\"hljs-keyword\"\u003eAdd\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e}, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e:\n  \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e!\u003c/span\u003e Remove \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e}\n  \u003cspan class=\"hljs-keyword\"\u003eAdd\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e}, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e:\n  \u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e!\u003c/span\u003e Remove \u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e}\n  \u003cspan class=\"hljs-keyword\"\u003eAdd\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e}, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e:\n  \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e!\u003c/span\u003e Remove \u003cspan class=\"hljs-string\"\u003e'a'\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e}\n  \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e still \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e!\u003c/span\u003e Remove \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e}\n  \u003cspan class=\"hljs-keyword\"\u003eAdd\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e,\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e}, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e, \u003cspan class=\"hljs-type\"\u003echar\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e:\n  \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e!\u003c/span\u003e Remove \u003cspan class=\"hljs-string\"\u003e'c'\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e}\n  \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e still \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e!\u003c/span\u003e Remove \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{}\n  \u003cspan class=\"hljs-keyword\"\u003eAdd\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e: \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e{\u003cspan class=\"hljs-string\"\u003e'b'\u003c/span\u003e}, length\u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\nMax length \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(min(n, m)) where m is charset size\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003eProblem 6: Longest Substring with At Most K Distinct Characters\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Find the length of the longest substring with at most k distinct characters.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-vbnet\"\u003e\u003cspan class=\"hljs-symbol\"\u003eInput:\u003c/span\u003e s = \u003cspan class=\"hljs-string\"\u003e\"eceba\"\u003c/span\u003e, k = \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eOutput:\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eExplanation:\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"ece\"\u003c/span\u003e has \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003edistinct\u003c/span\u003e characters\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003elengthOfLongestSubstringKDistinct\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es, k\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e k == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    char_count = {}\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s)):\n        \u003cspan class=\"hljs-comment\"\u003e# Expand: add s[right]\u003c/span\u003e\n        char_count[s[right]] = char_count.get(s[right], \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Shrink: while too many distinct characters\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(char_count) \u003e k:\n            char_count[s[left]] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e char_count[s[left]] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n                \u003cspan class=\"hljs-keyword\"\u003edel\u003c/span\u003e char_count[s[left]]\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Update max length\u003c/span\u003e\n        max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e Track character counts, shrink when distinct count exceeds k.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(k)\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003eProblem 7: Minimum Window Substring\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Find the minimum window in s that contains all characters of t.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-vbnet\"\u003e\u003cspan class=\"hljs-symbol\"\u003eInput:\u003c/span\u003e s = \u003cspan class=\"hljs-string\"\u003e\"ADOBECODEBANC\"\u003c/span\u003e, t = \u003cspan class=\"hljs-string\"\u003e\"ABC\"\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eOutput:\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"BANC\"\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e Counter\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eminWindow\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es, t\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e s \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e t \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s) \u0026#x3C; \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(t):\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"\"\u003c/span\u003e\n\n    need = Counter(t)\n    have = {}\n\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    min_len = \u003cspan class=\"hljs-built_in\"\u003efloat\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'inf'\u003c/span\u003e)\n    min_start = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    matched = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# number of character types fully matched\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s)):\n        char = s[right]\n        have[char] = have.get(char, \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# If this character's requirement is satisfied\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e need \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e have[char] == need[char]:\n            matched += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Try to shrink window while valid\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e matched == \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(need):\n            \u003cspan class=\"hljs-comment\"\u003e# Update minimum\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u0026#x3C; min_len:\n                min_len = right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n                min_start = left\n\n            \u003cspan class=\"hljs-comment\"\u003e# Shrink from left\u003c/span\u003e\n            left_char = s[left]\n            have[left_char] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e left_char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e need \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e have[left_char] \u0026#x3C; need[left_char]:\n                matched -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"\"\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e min_len == \u003cspan class=\"hljs-built_in\"\u003efloat\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'inf'\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e s[min_start:min_start + min_len]\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eDetailed Trace:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-ini\"\u003e\u003cspan class=\"hljs-attr\"\u003es\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\"ADOBECODEBANC\"\u003c/span\u003e, t = \u003cspan class=\"hljs-string\"\u003e\"ABC\"\u003c/span\u003e\n\u003cspan class=\"hljs-attr\"\u003eneed\u003c/span\u003e = {\u003cspan class=\"hljs-string\"\u003e'A'\u003c/span\u003e: \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'B'\u003c/span\u003e: \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'C'\u003c/span\u003e: \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e}\n\nExpand to \"ADOBEC\":\n  \u003cspan class=\"hljs-attr\"\u003ehave\u003c/span\u003e = {\u003cspan class=\"hljs-string\"\u003e'A'\u003c/span\u003e:\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'D'\u003c/span\u003e:\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'O'\u003c/span\u003e:\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'B'\u003c/span\u003e:\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'E'\u003c/span\u003e:\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'C'\u003c/span\u003e:\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e}\n  \u003cspan class=\"hljs-attr\"\u003ematched\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e ✓ (all requirements met)\n  \u003cspan class=\"hljs-attr\"\u003emin_window\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\"ADOBEC\"\u003c/span\u003e (length \u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e)\n\nShrink:\n  Remove 'A': \u003cspan class=\"hljs-attr\"\u003ematched\u003c/span\u003e = \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e (lost A requirement)\n\nContinue expanding...\nEventually find \"BANC\" (length 4) ✓\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e Use \u003ccode\u003ematched\u003c/code\u003e counter to quickly check if window is valid.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n + m), \u003cstrong\u003eSpace:\u003c/strong\u003e O(1) - at most 52 English letters\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003eProblem 8: Longest Repeating Character Replacement\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Find the longest substring with same character after replacing at most k characters.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003eInput: s \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \"AABABBA\", k \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\nOutput: \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e\nExplanation: Replace \u003cspan class=\"hljs-keyword\"\u003eone\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'A'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \"AABA\" \u003cspan class=\"hljs-keyword\"\u003eto\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eget\u003c/span\u003e \"AAAA\"\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003echaracterReplacement\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es, k\u003c/span\u003e):\n    char_count = {}\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_freq = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# frequency of most common char in window\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s)):\n        \u003cspan class=\"hljs-comment\"\u003e# Add character to window\u003c/span\u003e\n        char_count[s[right]] = char_count.get(s[right], \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        max_freq = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_freq, char_count[s[right]])\n\n        \u003cspan class=\"hljs-comment\"\u003e# Window size - most frequent char \u003e k replacements\u003c/span\u003e\n        \u003cspan class=\"hljs-comment\"\u003e# This means we need more than k replacements to make all chars same\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e (right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e) - max_freq \u003e k:\n            char_count[s[left]] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-comment\"\u003e# Note: we don't update max_freq here (optimization)\u003c/span\u003e\n\n        max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eWindow is valid if: \u003ccode\u003ewindow_size - max_frequency \u0026#x3C;= k\u003c/code\u003e\u003c/li\u003e\n  \u003cli\u003eWe can replace the non-most-frequent characters\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(1) - at most 26 letters\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003eProblem 9: Permutation in String\u003c/h3\u003e\n\u003cp\u003e\n  \u003cstrong\u003eProblem:\u003c/strong\u003e\n  Check if s2 contains a permutation of s1.\n\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-vbnet\"\u003e\u003cspan class=\"hljs-symbol\"\u003eInput:\u003c/span\u003e s1 = \u003cspan class=\"hljs-string\"\u003e\"ab\"\u003c/span\u003e, s2 = \u003cspan class=\"hljs-string\"\u003e\"eidbaooo\"\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eOutput:\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003etrue\u003c/span\u003e\n\u003cspan class=\"hljs-symbol\"\u003eExplanation:\u003c/span\u003e s2 contains \u003cspan class=\"hljs-string\"\u003e\"ba\"\u003c/span\u003e which \u003cspan class=\"hljs-built_in\"\u003eis\u003c/span\u003e a permutation \u003cspan class=\"hljs-keyword\"\u003eof\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"ab\"\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eSolution:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e Counter\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003echeckInclusion\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es1, s2\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1) \u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s2):\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\n    s1_count = Counter(s1)\n    window_count = Counter(s2[:\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1)])\n\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e s1_count == window_count:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1), \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s2)):\n        \u003cspan class=\"hljs-comment\"\u003e# Add new character\u003c/span\u003e\n        window_count[s2[i]] += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Remove old character\u003c/span\u003e\n        left_char = s2[i - \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1)]\n        window_count[left_char] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e window_count[left_char] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n            \u003cspan class=\"hljs-keyword\"\u003edel\u003c/span\u003e window_count[left_char]\n\n        \u003cspan class=\"hljs-comment\"\u003e# Check if window matches\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e s1_count == window_count:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e This is actually a fixed-size window problem! Window size = len(s1).\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n), \u003cstrong\u003eSpace:\u003c/strong\u003e O(1)\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003eAdvanced Patterns\u003c/h2\u003e\n\u003ch3\u003ePattern 1: Sliding Window + Two Pointers\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eProblem: Container With Most Water\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxArea\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eheight\u003c/span\u003e):\n    \u003cspan class=\"hljs-string\"\u003e\"\"\"\n    Not a typical sliding window, but uses two-pointer technique.\n    Find two lines that form the largest container.\n    \"\"\"\u003c/span\u003e\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(height) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n    max_water = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right:\n        width = right - left\n        h = \u003cspan class=\"hljs-built_in\"\u003emin\u003c/span\u003e(height[left], height[right])\n        max_water = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_water, width * h)\n\n        \u003cspan class=\"hljs-comment\"\u003e# Move pointer with smaller height\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e height[left] \u0026#x3C; height[right]:\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            right -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_water\n\u003c/code\u003e\u003c/pre\u003e\n\u003chr\u003e\n\u003ch3\u003ePattern 2: At Most K → Exactly K\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eTrick:\u003c/strong\u003e \u003ccode\u003eexactly(K) = atMost(K) - atMost(K-1)\u003c/code\u003e\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eProblem: Subarrays with K Different Integers\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esubarraysWithKDistinct\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, k\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eatMostK\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003ek\u003c/span\u003e):\n        count = {}\n        left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n        result = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)):\n            count[nums[right]] = count.get(nums[right], \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n            \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(count) \u003e k:\n                count[nums[left]] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n                \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e count[nums[left]] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n                    \u003cspan class=\"hljs-keyword\"\u003edel\u003c/span\u003e count[nums[left]]\n                left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n            \u003cspan class=\"hljs-comment\"\u003e# All subarrays ending at right\u003c/span\u003e\n            result += right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e atMostK(k) - atMostK(k - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e For each position, \u003ccode\u003eright - left + 1\u003c/code\u003e subarrays end at that position.\u003c/p\u003e\n\u003chr\u003e\n\u003ch3\u003ePattern 3: Sliding Window with Constraints\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eProblem: Max Consecutive Ones III\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003elongestOnes\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, k\u003c/span\u003e):\n    \u003cspan class=\"hljs-string\"\u003e\"\"\"\n    Find longest subarray of 1s after flipping at most k zeros.\n    \"\"\"\u003c/span\u003e\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    zeros = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)):\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[right] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n            zeros += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Shrink if too many zeros\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e zeros \u003e k:\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[left] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n                zeros -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003chr\u003e\n\u003ch3\u003ePattern 4: Sliding Window with Product\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eProblem: Subarray Product Less Than K\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003enumSubarrayProductLessThanK\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, k\u003c/span\u003e):\n    \u003cspan class=\"hljs-string\"\u003e\"\"\"\n    Count subarrays where product \u0026#x3C; k.\n    \"\"\"\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e k \u0026#x3C;= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    product = \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    count = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)):\n        product *= nums[right]\n\n        \u003cspan class=\"hljs-comment\"\u003e# Shrink while product \u003e= k\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e product \u003e= k:\n            product //= nums[left]\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Add all subarrays ending at right\u003c/span\u003e\n        count += right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e count\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eKey Insight:\u003c/strong\u003e When window [left, right] is valid, it contributes \u003ccode\u003eright - left + 1\u003c/code\u003e subarrays.\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003ePattern Recognition\u003c/h2\u003e\n\u003ch3\u003eDecision Tree\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003eDoes the problem involve contiguous elements?\n  └─ \u003cspan class=\"hljs-keyword\"\u003eNO\u003c/span\u003e → \u003cspan class=\"hljs-keyword\"\u003eNot\u003c/span\u003e sliding \u003cspan class=\"hljs-keyword\"\u003ewindow\u003c/span\u003e (try hash map, two pointers, etc.)\n  └─ YES → Continue\n\n\u003cspan class=\"hljs-keyword\"\u003eIs\u003c/span\u003e the \u003cspan class=\"hljs-keyword\"\u003ewindow\u003c/span\u003e size fixed?\n  └─ YES → Fixed\u003cspan class=\"hljs-operator\"\u003e-\u003c/span\u003esize sliding \u003cspan class=\"hljs-keyword\"\u003ewindow\u003c/span\u003e\n      ├─ Initialize \u003cspan class=\"hljs-keyword\"\u003efirst\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ewindow\u003c/span\u003e\n      ├─ Slide: remove \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eadd\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e\n      └─ Track \u003cspan class=\"hljs-keyword\"\u003eresult\u003c/span\u003e\n\n  └─ \u003cspan class=\"hljs-keyword\"\u003eNO\u003c/span\u003e → Variable\u003cspan class=\"hljs-operator\"\u003e-\u003c/span\u003esize sliding \u003cspan class=\"hljs-keyword\"\u003ewindow\u003c/span\u003e\n      \u003cspan class=\"hljs-keyword\"\u003eAre\u003c/span\u003e you looking \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e longest\u003cspan class=\"hljs-operator\"\u003e/\u003c/span\u003emaximum?\n        └─ YES → Expand \u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e, shrink \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ewhen\u003c/span\u003e invalid\n            ├─ \u003cspan class=\"hljs-keyword\"\u003eUpdate\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eresult\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ewhen\u003c/span\u003e VALID\n\n      \u003cspan class=\"hljs-keyword\"\u003eAre\u003c/span\u003e you looking \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e shortest\u003cspan class=\"hljs-operator\"\u003e/\u003c/span\u003eminimum?\n        └─ YES → Expand \u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e, shrink \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e while valid\n            ├─ \u003cspan class=\"hljs-keyword\"\u003eUpdate\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eresult\u003c/span\u003e while SHRINKING\n\n      \u003cspan class=\"hljs-keyword\"\u003eAre\u003c/span\u003e you counting subarrays?\n        └─ YES → \u003cspan class=\"hljs-keyword\"\u003eFor\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eeach\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e, \u003cspan class=\"hljs-keyword\"\u003eadd\u003c/span\u003e (\u003cspan class=\"hljs-keyword\"\u003eright\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e-\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eleft\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e+\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n            ├─ Consider \"at most K\" trick\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKeywords to Look For\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eStrong Indicators:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\"substring\" (always contiguous)\u003c/li\u003e\n  \u003cli\u003e\"subarray\" (contiguous, unlike subsequence)\u003c/li\u003e\n  \u003cli\u003e\"consecutive elements\"\u003c/li\u003e\n  \u003cli\u003e\"window of size K\"\u003c/li\u003e\n  \u003cli\u003e\"at most K\" / \"at least K\"\u003c/li\u003e\n  \u003cli\u003e\"longest/shortest contiguous\"\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eWeak/Misleading:\u003c/strong\u003e\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\"subsequence\" (NOT contiguous → not sliding window)\u003c/li\u003e\n  \u003cli\u003e\"any elements\" (not necessarily contiguous)\u003c/li\u003e\n  \u003cli\u003e\"find all pairs\" (might be two pointers, not sliding window)\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003eCommon Mistakes\u003c/h2\u003e\n\u003ch3\u003eMistake 1: Using Sliding Window for Non-Contiguous Problems\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-comment\"\u003e# WRONG: Finding two elements that sum to target\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003etwoSum\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, target\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# ❌ This is two pointers, not sliding window\u003c/span\u003e\n    \u003cspan class=\"hljs-comment\"\u003e# Elements don't need to be contiguous!\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eMistake 2: Not Handling Window Initialization\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-comment\"\u003e# WRONG: Off-by-one errors\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n    \u003cspan class=\"hljs-comment\"\u003e# Add arr[right]\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e right \u003e k:  \u003cspan class=\"hljs-comment\"\u003e# ❌ Should be right \u003e= k\u003c/span\u003e\n        \u003cspan class=\"hljs-comment\"\u003e# Remove arr[right - k]\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eMistake 3: Updating Result at Wrong Time\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-comment\"\u003e# For LONGEST problems:\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e invalid:\n    shrink()\nresult = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(result, size)  \u003cspan class=\"hljs-comment\"\u003e# ✓ Update when VALID\u003c/span\u003e\n\n\u003cspan class=\"hljs-comment\"\u003e# For SHORTEST problems:\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e valid:\n    result = \u003cspan class=\"hljs-built_in\"\u003emin\u003c/span\u003e(result, size)  \u003cspan class=\"hljs-comment\"\u003e# ✓ Update while SHRINKING\u003c/span\u003e\n    shrink()\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eMistake 4: Not Cleaning Up Data Structures\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-comment\"\u003e# WRONG: Memory leak\u003c/span\u003e\nchar_count[s[left]] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\nleft += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n\u003cspan class=\"hljs-comment\"\u003e# RIGHT: Remove when count becomes 0\u003c/span\u003e\nchar_count[s[left]] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e char_count[s[left]] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n    \u003cspan class=\"hljs-keyword\"\u003edel\u003c/span\u003e char_count[s[left]]\nleft += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eMistake 5: Confusing Window Size Calculation\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-comment\"\u003e# Window from left to right (inclusive)\u003c/span\u003e\nwindow_size = right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# ✓ Correct\u003c/span\u003e\n\nwindow_size = right - left  \u003cspan class=\"hljs-comment\"\u003e# ❌ Off by one\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003chr\u003e\n\u003ch2\u003ePractice Problems\u003c/h2\u003e\n\u003ch3\u003eEasy\u003c/h3\u003e\n\u003col\u003e\n  \u003cli\u003e\u003cstrong\u003eMaximum Average Subarray I\u003c/strong\u003e - Fixed window, find max average of k elements\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eMinimum Size Subarray Sum\u003c/strong\u003e - Variable window, shortest subarray with sum ≥ target\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eContains Duplicate II\u003c/strong\u003e - Check if duplicate exists within k distance\u003c/li\u003e\n\u003c/ol\u003e\n\u003ch3\u003eMedium\u003c/h3\u003e\n\u003col start=\"4\"\u003e\n  \u003cli\u003e\u003cstrong\u003eLongest Substring Without Repeating Characters\u003c/strong\u003e - Variable window, no repeating chars\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eLongest Repeating Character Replacement\u003c/strong\u003e - Variable window, at most k replacements\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003ePermutation in String\u003c/strong\u003e - Fixed window, check if s2 contains permutation of s1\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eFind All Anagrams in a String\u003c/strong\u003e - Fixed window, find all anagram start indices\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eMax Consecutive Ones III\u003c/strong\u003e - Variable window, flip at most k zeros\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eFruit Into Baskets\u003c/strong\u003e - Variable window, at most 2 types\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eLongest Substring with At Most K Distinct Characters\u003c/strong\u003e - Variable window\u003c/li\u003e\n\u003c/ol\u003e\n\u003ch3\u003eHard\u003c/h3\u003e\n\u003col start=\"11\"\u003e\n  \u003cli\u003e\u003cstrong\u003eMinimum Window Substring\u003c/strong\u003e - Variable window, shortest window containing all chars of t\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eSliding Window Maximum\u003c/strong\u003e - Fixed window with deque, find max in each window\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eSubarrays with K Different Integers\u003c/strong\u003e - Count subarrays with exactly k distinct\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eLongest Substring with At Most Two Distinct Characters\u003c/strong\u003e - Similar to #10 but k=2\u003c/li\u003e\n\u003c/ol\u003e\n\u003chr\u003e\n\u003ch2\u003eSummary\u003c/h2\u003e\n\u003ch3\u003eKey Takeaways\u003c/h3\u003e\n\u003col\u003e\n  \u003cli\u003e\u003cstrong\u003eSliding window = optimization for contiguous sequences\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTwo types: Fixed-size (simpler) vs Variable-size (more powerful)\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eVariable window uses two pointers: right expands, left shrinks\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eTrack window state with hash map/set/counters\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eUpdate result at the right time (valid for longest, shrinking for shortest)\u003c/strong\u003e\u003c/li\u003e\n\u003c/ol\u003e\n\u003ch3\u003eTime/Space Complexity\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eTime:\u003c/strong\u003e O(n) - each element visited at most twice (once by right, once by left)\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eSpace:\u003c/strong\u003e O(k) - where k is window size or unique elements\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cp\u003e✅ Contiguous subarrays/substrings\u003cbr\u003e✅ Longest/shortest/count with condition\u003cbr\u003e✅ Keywords: substring, subarray, consecutive, window\u003cbr\u003e✅ Can determine validity from current window alone\u003c/p\u003e\n\u003cp\u003e❌ Subsequences (can skip elements)\u003cbr\u003e❌ Elements from anywhere\u003cbr\u003e❌ Requires global state beyond window\u003cbr\u003e❌ Needs sorting first\u003c/p\u003e\n\u003ch3\u003eThe Universal Template\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esliding_window\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003earr\u003c/span\u003e):\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    window_state = {}  \u003cspan class=\"hljs-comment\"\u003e# hash map, set, counter, sum\u003c/span\u003e\n    result = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# or float('inf') for minimum\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(arr)):\n        \u003cspan class=\"hljs-comment\"\u003e# 1. Expand: add arr[right]\u003c/span\u003e\n        update_window(arr[right])\n\n        \u003cspan class=\"hljs-comment\"\u003e# 2. Shrink: while invalid\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e is_valid():\n            remove_from_window(arr[left])\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# 3. Update result\u003c/span\u003e\n        result = update(result, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["algorithms","sliding_window"]},"buildId":"6V8_yxN3djhrhbRemYkax","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

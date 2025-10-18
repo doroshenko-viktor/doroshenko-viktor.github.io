@@ -1,0 +1,399 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Relational Database Normalization</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/b65b5b41f2379875.css" as="style"/><link rel="stylesheet" href="/_next/static/css/b65b5b41f2379875.css" data-n-g=""/><link rel="preload" href="/_next/static/css/0d9654b911e08999.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0d9654b911e08999.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/211-ca3cd870e26e881a.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-bc6552c3ae1e3718.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_buildManifest.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_ssgManifest.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><ul class="NavigationBar_navbar__CBMoV"><li class="NavigationBar_navitem__LKB5F"><a class="NavigationBar_navitemContent__jEyWq" href="/">Home</a><span class="NavigationBar_separator__qvEVD">|</span></li><li class="NavigationBar_navitem__LKB5F"><button class="NavigationBar_navitemContent__jEyWq">Back</button><span class="NavigationBar_separator__qvEVD">|</span></li></ul><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Relational Database Normalization</h1><article class="NoteFormattedContent_note__8cHeE">
+<p>Database normalization is a systematic approach to organizing data in a relational database to reduce redundancy and improve data integrity. By applying normalization principles, database designers create efficient, maintainable structures that minimize anomalies during data operations. This comprehensive guide explores the concept of normal forms, their practical applications, and real-world examples.</p>
+<h2>What is Database Normalization?</h2>
+<p>Normalization is the process of structuring a relational database according to a series of progressive normal forms. Each normal form represents a level of database organization, with higher normal forms indicating more refined structures. The primary goals of normalization include:</p>
+<ul>
+  <li><strong>Eliminating redundant data</strong> to save storage space and reduce inconsistencies</li>
+  <li><strong>Ensuring data dependencies make sense</strong> by organizing related data appropriately</li>
+  <li><strong>Preventing update, insertion, and deletion anomalies</strong> that can corrupt data integrity</li>
+  <li><strong>Making database maintenance easier</strong> through logical, consistent structures</li>
+</ul>
+<h2>Understanding Functional Dependencies</h2>
+<p>Before diving into normal forms, it's essential to understand functional dependencies, which form the foundation of normalization theory.</p>
+<p>A functional dependency exists when one attribute (or set of attributes) uniquely determines another attribute. We write this as A → B, meaning "A determines B" or "B is functionally dependent on A."</p>
+<p>For example, in a student database:</p>
+<ul>
+  <li>StudentID → StudentName (student ID uniquely determines student name)</li>
+  <li>CourseID → CourseName (course ID uniquely determines course name)</li>
+  <li>(StudentID, CourseID) → Grade (the combination determines the grade)</li>
+</ul>
+<h2>First Normal Form (1NF)</h2>
+<p>First Normal Form establishes the basic requirements for a table to be considered relational. A table is in 1NF if:</p>
+<ol>
+  <li>All columns contain atomic (indivisible) values</li>
+  <li>Each column contains values of a single type</li>
+  <li>Each column has a unique name</li>
+  <li>The order of rows and columns doesn't matter</li>
+  <li>Each row is unique (has a primary key)</li>
+</ol>
+<h3>Example: Achieving 1NF</h3>
+<p><strong>Non-1NF Table:</strong></p>
+<pre><code class="hljs language-arduino">Orders
+OrderID | CustomerName | Products
+<span class="hljs-number">1</span>       | John Smith   | Laptop, <span class="hljs-built_in">Mouse</span>, <span class="hljs-built_in">Keyboard</span>
+<span class="hljs-number">2</span>       | Jane Doe     | Monitor, HDMI Cable
+</code></pre>
+<p>The <code>Products</code> column contains multiple values, violating atomicity.</p>
+<p><strong>Converted to 1NF:</strong></p>
+<pre><code class="hljs language-arduino">Orders
+OrderID | CustomerName | Product
+<span class="hljs-number">1</span>       | John Smith   | Laptop
+<span class="hljs-number">1</span>       | John Smith   | <span class="hljs-built_in">Mouse</span>
+<span class="hljs-number">1</span>       | John Smith   | <span class="hljs-built_in">Keyboard</span>
+<span class="hljs-number">2</span>       | Jane Doe     | Monitor
+<span class="hljs-number">2</span>       | Jane Doe     | HDMI Cable
+</code></pre>
+<p>Now each cell contains a single atomic value, though this structure introduces redundancy that higher normal forms will address.</p>
+<h2>Second Normal Form (2NF)</h2>
+<p>A table is in Second Normal Form if:</p>
+<ol>
+  <li>It is in 1NF</li>
+  <li>All non-key attributes are fully functionally dependent on the entire primary key (no partial dependencies)</li>
+</ol>
+<p>Partial dependencies occur when a non-key attribute depends on only part of a composite primary key. 2NF primarily applies to tables with composite primary keys.</p>
+<h3>Example: Achieving 2NF</h3>
+<p><strong>1NF Table with Partial Dependencies:</strong></p>
+<pre><code class="hljs language-css">StudentCourses
+StudentID | CourseID | StudentName | CourseName | Grade
+<span class="hljs-number">101</span>       | CS101    | Alice Brown | Databases  | <span class="hljs-selector-tag">A</span>
+<span class="hljs-number">101</span>       | CS102    | Alice Brown | Algorithms | <span class="hljs-selector-tag">B</span>
+<span class="hljs-number">102</span>       | CS101    | Bob Smith   | Databases  | <span class="hljs-selector-tag">B</span>
+</code></pre>
+<p>Primary Key: (StudentID, CourseID)</p>
+<p>Problems:</p>
+<ul>
+  <li>StudentName depends only on StudentID (partial dependency)</li>
+  <li>CourseName depends only on CourseID (partial dependency)</li>
+</ul>
+<p><strong>Converted to 2NF:</strong></p>
+<pre><code class="hljs language-css">Students
+StudentID | StudentName
+<span class="hljs-number">101</span>       | Alice Brown
+<span class="hljs-number">102</span>       | Bob Smith
+
+Courses
+CourseID | CourseName
+CS101    | Databases
+CS102    | Algorithms
+
+Enrollments
+StudentID | CourseID | Grade
+<span class="hljs-number">101</span>       | CS101    | <span class="hljs-selector-tag">A</span>
+<span class="hljs-number">101</span>       | CS102    | <span class="hljs-selector-tag">B</span>
+<span class="hljs-number">102</span>       | CS101    | <span class="hljs-selector-tag">B</span>
+</code></pre>
+<p>Now all non-key attributes in each table are fully dependent on their respective primary keys.</p>
+<h2>Third Normal Form (3NF)</h2>
+<p>A table is in Third Normal Form if:</p>
+<ol>
+  <li>It is in 2NF</li>
+  <li>No transitive dependencies exist (non-key attributes don't depend on other non-key attributes)</li>
+</ol>
+<p>A transitive dependency occurs when A → B and B → C, which means A → C indirectly.</p>
+<h3>Example: Achieving 3NF</h3>
+<p><strong>2NF Table with Transitive Dependencies:</strong></p>
+<pre><code class="hljs language-css">Employees
+EmployeeID | EmployeeName | DepartmentID | DepartmentName | DepartmentLocation
+<span class="hljs-number">1</span>          | John Doe     | D01          | Sales          | Building <span class="hljs-selector-tag">A</span>
+<span class="hljs-number">2</span>          | Jane Smith   | D01          | Sales          | Building <span class="hljs-selector-tag">A</span>
+<span class="hljs-number">3</span>          | Bob Johnson  | D02          | IT             | Building <span class="hljs-selector-tag">B</span>
+</code></pre>
+<p>Primary Key: EmployeeID</p>
+<p>Problem: DepartmentName and DepartmentLocation depend on DepartmentID, not directly on EmployeeID (transitive dependency: EmployeeID → DepartmentID → DepartmentName/DepartmentLocation).</p>
+<p><strong>Converted to 3NF:</strong></p>
+<pre><code class="hljs language-css">Employees
+EmployeeID | EmployeeName | DepartmentID
+<span class="hljs-number">1</span>          | John Doe     | D01
+<span class="hljs-number">2</span>          | Jane Smith   | D01
+<span class="hljs-number">3</span>          | Bob Johnson  | D02
+
+Departments
+DepartmentID | DepartmentName | DepartmentLocation
+D01          | Sales          | Building <span class="hljs-selector-tag">A</span>
+D02          | IT             | Building <span class="hljs-selector-tag">B</span>
+</code></pre>
+<p>This eliminates redundancy and ensures each table focuses on a single entity.</p>
+<h2>Boyce-Codd Normal Form (BCNF)</h2>
+<p>Boyce-Codd Normal Form is a stricter version of 3NF. A table is in BCNF if:</p>
+<ol>
+  <li>It is in 3NF</li>
+  <li>For every functional dependency A → B, A must be a superkey (a set of attributes that uniquely identifies rows)</li>
+</ol>
+<p>BCNF addresses situations where a table is in 3NF but still has anomalies due to overlapping candidate keys.</p>
+<h3>Example: Achieving BCNF</h3>
+<p><strong>3NF Table Not in BCNF:</strong></p>
+<pre><code class="hljs">CourseInstructor
+StudentID | Course      | Instructor
+101       | Databases   | Dr. Smith
+101       | Algorithms  | Dr. Jones
+102       | Databases   | Dr. Smith
+</code></pre>
+<p>Assumptions:</p>
+<ul>
+  <li>Each student takes each course only once</li>
+  <li>Each course has only one instructor</li>
+  <li>An instructor teaches only one course, but a course might have multiple sections</li>
+</ul>
+<p>Primary Key: (StudentID, Course)</p>
+<p>Functional Dependencies:</p>
+<ul>
+  <li>(StudentID, Course) → Instructor</li>
+  <li>Instructor → Course (problematic: Instructor is not a superkey)</li>
+</ul>
+<p>The second dependency violates BCNF because Instructor is not a superkey.</p>
+<p><strong>Converted to BCNF:</strong></p>
+<pre><code class="hljs">StudentEnrollment
+StudentID | Instructor
+101       | Dr. Smith
+101       | Dr. Jones
+102       | Dr. Smith
+
+InstructorCourse
+Instructor | Course
+Dr. Smith  | Databases
+Dr. Jones  | Algorithms
+</code></pre>
+<p>Now all functional dependencies have superkeys on the left side.</p>
+<h2>Fourth Normal Form (4NF)</h2>
+<p>A table is in Fourth Normal Form if:</p>
+<ol>
+  <li>It is in BCNF</li>
+  <li>It has no multi-valued dependencies (MVDs)</li>
+</ol>
+<p>A multi-valued dependency exists when one attribute determines multiple independent sets of values. Written as A →→ B, meaning for each value of A, there's a set of values for B independent of other attributes.</p>
+<h3>Example: Achieving 4NF</h3>
+<p><strong>BCNF Table with Multi-Valued Dependencies:</strong></p>
+<pre><code class="hljs language-sql">EmployeeSkillsLanguages
+EmployeeID <span class="hljs-operator">|</span> Skill        <span class="hljs-operator">|</span> <span class="hljs-keyword">Language</span>
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> Java         <span class="hljs-operator">|</span> English
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> Java         <span class="hljs-operator">|</span> Spanish
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> Python       <span class="hljs-operator">|</span> English
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> Python       <span class="hljs-operator">|</span> Spanish
+<span class="hljs-number">2</span>          <span class="hljs-operator">|</span> JavaScript   <span class="hljs-operator">|</span> French
+</code></pre>
+<p>Employee 1 has skills {Java, Python} and speaks {English, Spanish}. These are independent - every combination appears.</p>
+<p>Multi-valued dependencies:</p>
+<ul>
+  <li>EmployeeID →→ Skill</li>
+  <li>EmployeeID →→ Language</li>
+</ul>
+<p><strong>Converted to 4NF:</strong></p>
+<pre><code class="hljs language-sql">EmployeeSkills
+EmployeeID <span class="hljs-operator">|</span> Skill
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> Java
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> Python
+<span class="hljs-number">2</span>          <span class="hljs-operator">|</span> JavaScript
+
+EmployeeLanguages
+EmployeeID <span class="hljs-operator">|</span> <span class="hljs-keyword">Language</span>
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> English
+<span class="hljs-number">1</span>          <span class="hljs-operator">|</span> Spanish
+<span class="hljs-number">2</span>          <span class="hljs-operator">|</span> French
+</code></pre>
+<p>This eliminates redundant combinations and keeps independent facts separate.</p>
+<h2>Fifth Normal Form (5NF)</h2>
+<p>A table is in Fifth Normal Form (also called Project-Join Normal Form) if:</p>
+<ol>
+  <li>It is in 4NF</li>
+  <li>It cannot be decomposed into smaller tables without loss of information</li>
+  <li>All join dependencies are implied by candidate keys</li>
+</ol>
+<p>5NF deals with cases where information can be reconstructed from smaller tables through joins.</p>
+<h3>Example: Achieving 5NF</h3>
+<p><strong>4NF Table with Join Dependencies:</strong></p>
+<pre><code class="hljs language-css">AgentCompanyProduct
+Agent      | Company    | Product
+Smith      | Acme Corp  | Widget <span class="hljs-selector-tag">A</span>
+Smith      | Acme Corp  | Widget <span class="hljs-selector-tag">B</span>
+Jones      | Acme Corp  | Widget <span class="hljs-selector-tag">A</span>
+Brown      | Tech Inc   | Widget <span class="hljs-selector-tag">B</span>
+</code></pre>
+<p>Rules:</p>
+<ul>
+  <li>If an agent represents a company, and that company sells a product, and the agent sells that product, then the agent sells that product for that company</li>
+</ul>
+<p><strong>Converted to 5NF:</strong></p>
+<pre><code class="hljs language-css">AgentCompany
+Agent      | Company
+Smith      | Acme Corp
+Jones      | Acme Corp
+Brown      | Tech Inc
+
+CompanyProduct
+Company    | Product
+Acme Corp  | Widget <span class="hljs-selector-tag">A</span>
+Acme Corp  | Widget <span class="hljs-selector-tag">B</span>
+Tech Inc   | Widget <span class="hljs-selector-tag">B</span>
+
+AgentProduct
+Agent      | Product
+Smith      | Widget <span class="hljs-selector-tag">A</span>
+Smith      | Widget <span class="hljs-selector-tag">B</span>
+Jones      | Widget <span class="hljs-selector-tag">A</span>
+Brown      | Widget <span class="hljs-selector-tag">B</span>
+</code></pre>
+<p>The original information can be reconstructed by joining these three tables, eliminating redundancy while preserving all relationships.</p>
+<h2>Practical Considerations</h2>
+<h3>When to Normalize</h3>
+<p>Normalization is generally beneficial for:</p>
+<ul>
+  <li><strong>Transaction-heavy systems (OLTP)</strong> where data integrity and update performance matter</li>
+  <li><strong>Systems with frequent data modifications</strong> to prevent anomalies</li>
+  <li><strong>Multi-user environments</strong> where consistency is critical</li>
+  <li><strong>Applications requiring strict data integrity</strong></li>
+</ul>
+<h3>When to Denormalize</h3>
+<p>Sometimes controlled denormalization is appropriate:</p>
+<ul>
+  <li><strong>Read-heavy analytical systems (OLAP)</strong> where query performance is paramount</li>
+  <li><strong>Reporting databases</strong> that aggregate data from normalized sources</li>
+  <li><strong>Systems with specific performance bottlenecks</strong> after profiling</li>
+  <li><strong>When join operations significantly impact performance</strong></li>
+</ul>
+<p>Denormalization should be:</p>
+<ul>
+  <li>Strategic and documented</li>
+  <li>Applied after establishing a normalized foundation</li>
+  <li>Accompanied by mechanisms to maintain consistency</li>
+  <li>Based on actual performance measurements, not assumptions</li>
+</ul>
+<h2>Common Normalization Mistakes</h2>
+<p><strong>Over-normalization</strong>: Creating too many small tables can hurt query performance and complicate database design. Normalize to 3NF or BCNF for most applications.</p>
+<p><strong>Under-normalization</strong>: Leaving redundant data causes update anomalies and wastes storage. Always achieve at least 3NF for transactional systems.</p>
+<p><strong>Premature denormalization</strong>: Optimizing before identifying actual bottlenecks leads to unnecessary complexity.</p>
+<p><strong>Ignoring business rules</strong>: Normalization must respect the actual relationships and constraints in your domain.</p>
+<h2>SQL Examples</h2>
+<h3>Creating Normalized Tables</h3>
+<pre><code class="hljs language-sql"><span class="hljs-comment">-- 3NF Example: E-commerce Database</span>
+
+<span class="hljs-comment">-- Customers table</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Customers (
+    CustomerID <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY</span> KEY AUTO_INCREMENT,
+    FirstName <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    LastName <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    Email <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    PhoneNumber <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>)
+);
+
+<span class="hljs-comment">-- Products table</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Products (
+    ProductID <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY</span> KEY AUTO_INCREMENT,
+    ProductName <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    CategoryID <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    Price <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">10</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    StockQuantity <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (CategoryID) <span class="hljs-keyword">REFERENCES</span> Categories(CategoryID)
+);
+
+<span class="hljs-comment">-- Categories table</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Categories (
+    CategoryID <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY</span> KEY AUTO_INCREMENT,
+    CategoryName <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    Description TEXT
+);
+
+<span class="hljs-comment">-- Orders table</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Orders (
+    OrderID <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY</span> KEY AUTO_INCREMENT,
+    CustomerID <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    OrderDate DATETIME <span class="hljs-keyword">DEFAULT</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span>,
+    ShippingAddressID <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    TotalAmount <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">10</span>, <span class="hljs-number">2</span>),
+    <span class="hljs-keyword">FOREIGN</span> KEY (CustomerID) <span class="hljs-keyword">REFERENCES</span> Customers(CustomerID),
+    <span class="hljs-keyword">FOREIGN</span> KEY (ShippingAddressID) <span class="hljs-keyword">REFERENCES</span> Addresses(AddressID)
+);
+
+<span class="hljs-comment">-- OrderItems table (intersection table)</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> OrderItems (
+    OrderItemID <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY</span> KEY AUTO_INCREMENT,
+    OrderID <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    ProductID <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    Quantity <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    UnitPrice <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">10</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (OrderID) <span class="hljs-keyword">REFERENCES</span> Orders(OrderID),
+    <span class="hljs-keyword">FOREIGN</span> KEY (ProductID) <span class="hljs-keyword">REFERENCES</span> Products(ProductID)
+);
+
+<span class="hljs-comment">-- Addresses table (separate to avoid redundancy)</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Addresses (
+    AddressID <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY</span> KEY AUTO_INCREMENT,
+    CustomerID <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    Street <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    City <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    State <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>),
+    PostalCode <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>),
+    Country <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    <span class="hljs-keyword">FOREIGN</span> KEY (CustomerID) <span class="hljs-keyword">REFERENCES</span> Customers(CustomerID)
+);
+</code></pre>
+<h3>Querying Normalized Data</h3>
+<pre><code class="hljs language-sql"><span class="hljs-comment">-- Retrieve order details with customer and product information</span>
+<span class="hljs-keyword">SELECT</span>
+    o.OrderID,
+    o.OrderDate,
+    c.FirstName,
+    c.LastName,
+    p.ProductName,
+    oi.Quantity,
+    oi.UnitPrice,
+    (oi.Quantity <span class="hljs-operator">*</span> oi.UnitPrice) <span class="hljs-keyword">AS</span> LineTotal
+<span class="hljs-keyword">FROM</span> Orders o
+<span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> Customers c <span class="hljs-keyword">ON</span> o.CustomerID <span class="hljs-operator">=</span> c.CustomerID
+<span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> OrderItems oi <span class="hljs-keyword">ON</span> o.OrderID <span class="hljs-operator">=</span> oi.OrderID
+<span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> Products p <span class="hljs-keyword">ON</span> oi.ProductID <span class="hljs-operator">=</span> p.ProductID
+<span class="hljs-keyword">WHERE</span> o.OrderID <span class="hljs-operator">=</span> <span class="hljs-number">1001</span>;
+
+<span class="hljs-comment">-- Find all products in a specific category with stock levels</span>
+<span class="hljs-keyword">SELECT</span>
+    p.ProductName,
+    p.Price,
+    p.StockQuantity,
+    cat.CategoryName
+<span class="hljs-keyword">FROM</span> Products p
+<span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> Categories cat <span class="hljs-keyword">ON</span> p.CategoryID <span class="hljs-operator">=</span> cat.CategoryID
+<span class="hljs-keyword">WHERE</span> cat.CategoryName <span class="hljs-operator">=</span> <span class="hljs-string">'Electronics'</span>
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> p.ProductName;
+</code></pre>
+<h2>Summary Table: Normal Forms Quick Reference</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Normal Form</th>
+      <th>Requirements</th>
+      <th>Eliminates</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1NF</strong></td>
+      <td>Atomic values, unique column names, primary key exists</td>
+      <td>Repeating groups, multi-valued attributes</td>
+    </tr>
+    <tr>
+      <td><strong>2NF</strong></td>
+      <td>1NF + No partial dependencies</td>
+      <td>Partial dependencies on composite keys</td>
+    </tr>
+    <tr>
+      <td><strong>3NF</strong></td>
+      <td>2NF + No transitive dependencies</td>
+      <td>Transitive dependencies</td>
+    </tr>
+    <tr>
+      <td><strong>BCNF</strong></td>
+      <td>3NF + Every determinant is a candidate key</td>
+      <td>Anomalies from overlapping candidate keys</td>
+    </tr>
+    <tr>
+      <td><strong>4NF</strong></td>
+      <td>BCNF + No multi-valued dependencies</td>
+      <td>Independent multi-valued facts</td>
+    </tr>
+    <tr>
+      <td><strong>5NF</strong></td>
+      <td>4NF + No join dependencies</td>
+      <td>Complex join dependencies</td>
+    </tr>
+  </tbody>
+</table>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["databases","normalization"],"note":{"title":"Relational Database Normalization","date":"2025-10-17","content":"\n\u003cp\u003eDatabase normalization is a systematic approach to organizing data in a relational database to reduce redundancy and improve data integrity. By applying normalization principles, database designers create efficient, maintainable structures that minimize anomalies during data operations. This comprehensive guide explores the concept of normal forms, their practical applications, and real-world examples.\u003c/p\u003e\n\u003ch2\u003eWhat is Database Normalization?\u003c/h2\u003e\n\u003cp\u003eNormalization is the process of structuring a relational database according to a series of progressive normal forms. Each normal form represents a level of database organization, with higher normal forms indicating more refined structures. The primary goals of normalization include:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eEliminating redundant data\u003c/strong\u003e to save storage space and reduce inconsistencies\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eEnsuring data dependencies make sense\u003c/strong\u003e by organizing related data appropriately\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003ePreventing update, insertion, and deletion anomalies\u003c/strong\u003e that can corrupt data integrity\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eMaking database maintenance easier\u003c/strong\u003e through logical, consistent structures\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch2\u003eUnderstanding Functional Dependencies\u003c/h2\u003e\n\u003cp\u003eBefore diving into normal forms, it's essential to understand functional dependencies, which form the foundation of normalization theory.\u003c/p\u003e\n\u003cp\u003eA functional dependency exists when one attribute (or set of attributes) uniquely determines another attribute. We write this as A → B, meaning \"A determines B\" or \"B is functionally dependent on A.\"\u003c/p\u003e\n\u003cp\u003eFor example, in a student database:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eStudentID → StudentName (student ID uniquely determines student name)\u003c/li\u003e\n  \u003cli\u003eCourseID → CourseName (course ID uniquely determines course name)\u003c/li\u003e\n  \u003cli\u003e(StudentID, CourseID) → Grade (the combination determines the grade)\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch2\u003eFirst Normal Form (1NF)\u003c/h2\u003e\n\u003cp\u003eFirst Normal Form establishes the basic requirements for a table to be considered relational. A table is in 1NF if:\u003c/p\u003e\n\u003col\u003e\n  \u003cli\u003eAll columns contain atomic (indivisible) values\u003c/li\u003e\n  \u003cli\u003eEach column contains values of a single type\u003c/li\u003e\n  \u003cli\u003eEach column has a unique name\u003c/li\u003e\n  \u003cli\u003eThe order of rows and columns doesn't matter\u003c/li\u003e\n  \u003cli\u003eEach row is unique (has a primary key)\u003c/li\u003e\n\u003c/ol\u003e\n\u003ch3\u003eExample: Achieving 1NF\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eNon-1NF Table:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-arduino\"\u003eOrders\nOrderID | CustomerName | Products\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e       | John Smith   | Laptop, \u003cspan class=\"hljs-built_in\"\u003eMouse\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003eKeyboard\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e       | Jane Doe     | Monitor, HDMI Cable\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThe \u003ccode\u003eProducts\u003c/code\u003e column contains multiple values, violating atomicity.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eConverted to 1NF:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-arduino\"\u003eOrders\nOrderID | CustomerName | Product\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e       | John Smith   | Laptop\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e       | John Smith   | \u003cspan class=\"hljs-built_in\"\u003eMouse\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e       | John Smith   | \u003cspan class=\"hljs-built_in\"\u003eKeyboard\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e       | Jane Doe     | Monitor\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e       | Jane Doe     | HDMI Cable\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eNow each cell contains a single atomic value, though this structure introduces redundancy that higher normal forms will address.\u003c/p\u003e\n\u003ch2\u003eSecond Normal Form (2NF)\u003c/h2\u003e\n\u003cp\u003eA table is in Second Normal Form if:\u003c/p\u003e\n\u003col\u003e\n  \u003cli\u003eIt is in 1NF\u003c/li\u003e\n  \u003cli\u003eAll non-key attributes are fully functionally dependent on the entire primary key (no partial dependencies)\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003ePartial dependencies occur when a non-key attribute depends on only part of a composite primary key. 2NF primarily applies to tables with composite primary keys.\u003c/p\u003e\n\u003ch3\u003eExample: Achieving 2NF\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003e1NF Table with Partial Dependencies:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-css\"\u003eStudentCourses\nStudentID | CourseID | StudentName | CourseName | Grade\n\u003cspan class=\"hljs-number\"\u003e101\u003c/span\u003e       | CS101    | Alice Brown | Databases  | \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e101\u003c/span\u003e       | CS102    | Alice Brown | Algorithms | \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e102\u003c/span\u003e       | CS101    | Bob Smith   | Databases  | \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003ePrimary Key: (StudentID, CourseID)\u003c/p\u003e\n\u003cp\u003eProblems:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eStudentName depends only on StudentID (partial dependency)\u003c/li\u003e\n  \u003cli\u003eCourseName depends only on CourseID (partial dependency)\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eConverted to 2NF:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-css\"\u003eStudents\nStudentID | StudentName\n\u003cspan class=\"hljs-number\"\u003e101\u003c/span\u003e       | Alice Brown\n\u003cspan class=\"hljs-number\"\u003e102\u003c/span\u003e       | Bob Smith\n\nCourses\nCourseID | CourseName\nCS101    | Databases\nCS102    | Algorithms\n\nEnrollments\nStudentID | CourseID | Grade\n\u003cspan class=\"hljs-number\"\u003e101\u003c/span\u003e       | CS101    | \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e101\u003c/span\u003e       | CS102    | \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e102\u003c/span\u003e       | CS101    | \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eNow all non-key attributes in each table are fully dependent on their respective primary keys.\u003c/p\u003e\n\u003ch2\u003eThird Normal Form (3NF)\u003c/h2\u003e\n\u003cp\u003eA table is in Third Normal Form if:\u003c/p\u003e\n\u003col\u003e\n  \u003cli\u003eIt is in 2NF\u003c/li\u003e\n  \u003cli\u003eNo transitive dependencies exist (non-key attributes don't depend on other non-key attributes)\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003eA transitive dependency occurs when A → B and B → C, which means A → C indirectly.\u003c/p\u003e\n\u003ch3\u003eExample: Achieving 3NF\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003e2NF Table with Transitive Dependencies:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-css\"\u003eEmployees\nEmployeeID | EmployeeName | DepartmentID | DepartmentName | DepartmentLocation\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          | John Doe     | D01          | Sales          | Building \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e          | Jane Smith   | D01          | Sales          | Building \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e          | Bob Johnson  | D02          | IT             | Building \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003ePrimary Key: EmployeeID\u003c/p\u003e\n\u003cp\u003eProblem: DepartmentName and DepartmentLocation depend on DepartmentID, not directly on EmployeeID (transitive dependency: EmployeeID → DepartmentID → DepartmentName/DepartmentLocation).\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eConverted to 3NF:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-css\"\u003eEmployees\nEmployeeID | EmployeeName | DepartmentID\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          | John Doe     | D01\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e          | Jane Smith   | D01\n\u003cspan class=\"hljs-number\"\u003e3\u003c/span\u003e          | Bob Johnson  | D02\n\nDepartments\nDepartmentID | DepartmentName | DepartmentLocation\nD01          | Sales          | Building \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\nD02          | IT             | Building \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThis eliminates redundancy and ensures each table focuses on a single entity.\u003c/p\u003e\n\u003ch2\u003eBoyce-Codd Normal Form (BCNF)\u003c/h2\u003e\n\u003cp\u003eBoyce-Codd Normal Form is a stricter version of 3NF. A table is in BCNF if:\u003c/p\u003e\n\u003col\u003e\n  \u003cli\u003eIt is in 3NF\u003c/li\u003e\n  \u003cli\u003eFor every functional dependency A → B, A must be a superkey (a set of attributes that uniquely identifies rows)\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003eBCNF addresses situations where a table is in 3NF but still has anomalies due to overlapping candidate keys.\u003c/p\u003e\n\u003ch3\u003eExample: Achieving BCNF\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003e3NF Table Not in BCNF:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs\"\u003eCourseInstructor\nStudentID | Course      | Instructor\n101       | Databases   | Dr. Smith\n101       | Algorithms  | Dr. Jones\n102       | Databases   | Dr. Smith\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eAssumptions:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eEach student takes each course only once\u003c/li\u003e\n  \u003cli\u003eEach course has only one instructor\u003c/li\u003e\n  \u003cli\u003eAn instructor teaches only one course, but a course might have multiple sections\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003ePrimary Key: (StudentID, Course)\u003c/p\u003e\n\u003cp\u003eFunctional Dependencies:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e(StudentID, Course) → Instructor\u003c/li\u003e\n  \u003cli\u003eInstructor → Course (problematic: Instructor is not a superkey)\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eThe second dependency violates BCNF because Instructor is not a superkey.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eConverted to BCNF:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs\"\u003eStudentEnrollment\nStudentID | Instructor\n101       | Dr. Smith\n101       | Dr. Jones\n102       | Dr. Smith\n\nInstructorCourse\nInstructor | Course\nDr. Smith  | Databases\nDr. Jones  | Algorithms\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eNow all functional dependencies have superkeys on the left side.\u003c/p\u003e\n\u003ch2\u003eFourth Normal Form (4NF)\u003c/h2\u003e\n\u003cp\u003eA table is in Fourth Normal Form if:\u003c/p\u003e\n\u003col\u003e\n  \u003cli\u003eIt is in BCNF\u003c/li\u003e\n  \u003cli\u003eIt has no multi-valued dependencies (MVDs)\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003eA multi-valued dependency exists when one attribute determines multiple independent sets of values. Written as A →→ B, meaning for each value of A, there's a set of values for B independent of other attributes.\u003c/p\u003e\n\u003ch3\u003eExample: Achieving 4NF\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eBCNF Table with Multi-Valued Dependencies:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003eEmployeeSkillsLanguages\nEmployeeID \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Skill        \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eLanguage\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Java         \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e English\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Java         \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Spanish\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Python       \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e English\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Python       \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Spanish\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e JavaScript   \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e French\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eEmployee 1 has skills {Java, Python} and speaks {English, Spanish}. These are independent - every combination appears.\u003c/p\u003e\n\u003cp\u003eMulti-valued dependencies:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eEmployeeID →→ Skill\u003c/li\u003e\n  \u003cli\u003eEmployeeID →→ Language\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eConverted to 4NF:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003eEmployeeSkills\nEmployeeID \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Skill\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Java\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Python\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e JavaScript\n\nEmployeeLanguages\nEmployeeID \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eLanguage\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e English\n\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e Spanish\n\u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e          \u003cspan class=\"hljs-operator\"\u003e|\u003c/span\u003e French\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThis eliminates redundant combinations and keeps independent facts separate.\u003c/p\u003e\n\u003ch2\u003eFifth Normal Form (5NF)\u003c/h2\u003e\n\u003cp\u003eA table is in Fifth Normal Form (also called Project-Join Normal Form) if:\u003c/p\u003e\n\u003col\u003e\n  \u003cli\u003eIt is in 4NF\u003c/li\u003e\n  \u003cli\u003eIt cannot be decomposed into smaller tables without loss of information\u003c/li\u003e\n  \u003cli\u003eAll join dependencies are implied by candidate keys\u003c/li\u003e\n\u003c/ol\u003e\n\u003cp\u003e5NF deals with cases where information can be reconstructed from smaller tables through joins.\u003c/p\u003e\n\u003ch3\u003eExample: Achieving 5NF\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003e4NF Table with Join Dependencies:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-css\"\u003eAgentCompanyProduct\nAgent      | Company    | Product\nSmith      | Acme Corp  | Widget \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\nSmith      | Acme Corp  | Widget \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\nJones      | Acme Corp  | Widget \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\nBrown      | Tech Inc   | Widget \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eRules:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eIf an agent represents a company, and that company sells a product, and the agent sells that product, then the agent sells that product for that company\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cstrong\u003eConverted to 5NF:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-css\"\u003eAgentCompany\nAgent      | Company\nSmith      | Acme Corp\nJones      | Acme Corp\nBrown      | Tech Inc\n\nCompanyProduct\nCompany    | Product\nAcme Corp  | Widget \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\nAcme Corp  | Widget \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\nTech Inc   | Widget \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\nAgentProduct\nAgent      | Product\nSmith      | Widget \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\nSmith      | Widget \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\nJones      | Widget \u003cspan class=\"hljs-selector-tag\"\u003eA\u003c/span\u003e\nBrown      | Widget \u003cspan class=\"hljs-selector-tag\"\u003eB\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThe original information can be reconstructed by joining these three tables, eliminating redundancy while preserving all relationships.\u003c/p\u003e\n\u003ch2\u003ePractical Considerations\u003c/h2\u003e\n\u003ch3\u003eWhen to Normalize\u003c/h3\u003e\n\u003cp\u003eNormalization is generally beneficial for:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eTransaction-heavy systems (OLTP)\u003c/strong\u003e where data integrity and update performance matter\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eSystems with frequent data modifications\u003c/strong\u003e to prevent anomalies\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eMulti-user environments\u003c/strong\u003e where consistency is critical\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eApplications requiring strict data integrity\u003c/strong\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eWhen to Denormalize\u003c/h3\u003e\n\u003cp\u003eSometimes controlled denormalization is appropriate:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eRead-heavy analytical systems (OLAP)\u003c/strong\u003e where query performance is paramount\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eReporting databases\u003c/strong\u003e that aggregate data from normalized sources\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eSystems with specific performance bottlenecks\u003c/strong\u003e after profiling\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eWhen join operations significantly impact performance\u003c/strong\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eDenormalization should be:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eStrategic and documented\u003c/li\u003e\n  \u003cli\u003eApplied after establishing a normalized foundation\u003c/li\u003e\n  \u003cli\u003eAccompanied by mechanisms to maintain consistency\u003c/li\u003e\n  \u003cli\u003eBased on actual performance measurements, not assumptions\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch2\u003eCommon Normalization Mistakes\u003c/h2\u003e\n\u003cp\u003e\u003cstrong\u003eOver-normalization\u003c/strong\u003e: Creating too many small tables can hurt query performance and complicate database design. Normalize to 3NF or BCNF for most applications.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eUnder-normalization\u003c/strong\u003e: Leaving redundant data causes update anomalies and wastes storage. Always achieve at least 3NF for transactional systems.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003ePremature denormalization\u003c/strong\u003e: Optimizing before identifying actual bottlenecks leads to unnecessary complexity.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eIgnoring business rules\u003c/strong\u003e: Normalization must respect the actual relationships and constraints in your domain.\u003c/p\u003e\n\u003ch2\u003eSQL Examples\u003c/h2\u003e\n\u003ch3\u003eCreating Normalized Tables\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-comment\"\u003e-- 3NF Example: E-commerce Database\u003c/span\u003e\n\n\u003cspan class=\"hljs-comment\"\u003e-- Customers table\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eCREATE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eTABLE\u003c/span\u003e Customers (\n    CustomerID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ePRIMARY\u003c/span\u003e KEY AUTO_INCREMENT,\n    FirstName \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e50\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    LastName \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e50\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    Email \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e100\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eUNIQUE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    PhoneNumber \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e20\u003c/span\u003e)\n);\n\n\u003cspan class=\"hljs-comment\"\u003e-- Products table\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eCREATE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eTABLE\u003c/span\u003e Products (\n    ProductID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ePRIMARY\u003c/span\u003e KEY AUTO_INCREMENT,\n    ProductName \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e100\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    CategoryID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    Price \u003cspan class=\"hljs-type\"\u003eDECIMAL\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    StockQuantity \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    \u003cspan class=\"hljs-keyword\"\u003eFOREIGN\u003c/span\u003e KEY (CategoryID) \u003cspan class=\"hljs-keyword\"\u003eREFERENCES\u003c/span\u003e Categories(CategoryID)\n);\n\n\u003cspan class=\"hljs-comment\"\u003e-- Categories table\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eCREATE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eTABLE\u003c/span\u003e Categories (\n    CategoryID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ePRIMARY\u003c/span\u003e KEY AUTO_INCREMENT,\n    CategoryName \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e50\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    Description TEXT\n);\n\n\u003cspan class=\"hljs-comment\"\u003e-- Orders table\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eCREATE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eTABLE\u003c/span\u003e Orders (\n    OrderID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ePRIMARY\u003c/span\u003e KEY AUTO_INCREMENT,\n    CustomerID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    OrderDate DATETIME \u003cspan class=\"hljs-keyword\"\u003eDEFAULT\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003eCURRENT_TIMESTAMP\u003c/span\u003e,\n    ShippingAddressID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    TotalAmount \u003cspan class=\"hljs-type\"\u003eDECIMAL\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e),\n    \u003cspan class=\"hljs-keyword\"\u003eFOREIGN\u003c/span\u003e KEY (CustomerID) \u003cspan class=\"hljs-keyword\"\u003eREFERENCES\u003c/span\u003e Customers(CustomerID),\n    \u003cspan class=\"hljs-keyword\"\u003eFOREIGN\u003c/span\u003e KEY (ShippingAddressID) \u003cspan class=\"hljs-keyword\"\u003eREFERENCES\u003c/span\u003e Addresses(AddressID)\n);\n\n\u003cspan class=\"hljs-comment\"\u003e-- OrderItems table (intersection table)\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eCREATE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eTABLE\u003c/span\u003e OrderItems (\n    OrderItemID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ePRIMARY\u003c/span\u003e KEY AUTO_INCREMENT,\n    OrderID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    ProductID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    Quantity \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    UnitPrice \u003cspan class=\"hljs-type\"\u003eDECIMAL\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    \u003cspan class=\"hljs-keyword\"\u003eFOREIGN\u003c/span\u003e KEY (OrderID) \u003cspan class=\"hljs-keyword\"\u003eREFERENCES\u003c/span\u003e Orders(OrderID),\n    \u003cspan class=\"hljs-keyword\"\u003eFOREIGN\u003c/span\u003e KEY (ProductID) \u003cspan class=\"hljs-keyword\"\u003eREFERENCES\u003c/span\u003e Products(ProductID)\n);\n\n\u003cspan class=\"hljs-comment\"\u003e-- Addresses table (separate to avoid redundancy)\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eCREATE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eTABLE\u003c/span\u003e Addresses (\n    AddressID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ePRIMARY\u003c/span\u003e KEY AUTO_INCREMENT,\n    CustomerID \u003cspan class=\"hljs-type\"\u003eINT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    Street \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e100\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    City \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e50\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    State \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e50\u003c/span\u003e),\n    PostalCode \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e20\u003c/span\u003e),\n    Country \u003cspan class=\"hljs-type\"\u003eVARCHAR\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e50\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eNOT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e,\n    \u003cspan class=\"hljs-keyword\"\u003eFOREIGN\u003c/span\u003e KEY (CustomerID) \u003cspan class=\"hljs-keyword\"\u003eREFERENCES\u003c/span\u003e Customers(CustomerID)\n);\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eQuerying Normalized Data\u003c/h3\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-comment\"\u003e-- Retrieve order details with customer and product information\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n    o.OrderID,\n    o.OrderDate,\n    c.FirstName,\n    c.LastName,\n    p.ProductName,\n    oi.Quantity,\n    oi.UnitPrice,\n    (oi.Quantity \u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e oi.UnitPrice) \u003cspan class=\"hljs-keyword\"\u003eAS\u003c/span\u003e LineTotal\n\u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e Orders o\n\u003cspan class=\"hljs-keyword\"\u003eINNER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eJOIN\u003c/span\u003e Customers c \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e o.CustomerID \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e c.CustomerID\n\u003cspan class=\"hljs-keyword\"\u003eINNER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eJOIN\u003c/span\u003e OrderItems oi \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e o.OrderID \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e oi.OrderID\n\u003cspan class=\"hljs-keyword\"\u003eINNER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eJOIN\u003c/span\u003e Products p \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e oi.ProductID \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e p.ProductID\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e o.OrderID \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e1001\u003c/span\u003e;\n\n\u003cspan class=\"hljs-comment\"\u003e-- Find all products in a specific category with stock levels\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n    p.ProductName,\n    p.Price,\n    p.StockQuantity,\n    cat.CategoryName\n\u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e Products p\n\u003cspan class=\"hljs-keyword\"\u003eINNER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eJOIN\u003c/span\u003e Categories cat \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e p.CategoryID \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e cat.CategoryID\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e cat.CategoryName \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'Electronics'\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eORDER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eBY\u003c/span\u003e p.ProductName;\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003eSummary Table: Normal Forms Quick Reference\u003c/h2\u003e\n\u003ctable\u003e\n  \u003cthead\u003e\n    \u003ctr\u003e\n      \u003cth\u003eNormal Form\u003c/th\u003e\n      \u003cth\u003eRequirements\u003c/th\u003e\n      \u003cth\u003eEliminates\u003c/th\u003e\n    \u003c/tr\u003e\n  \u003c/thead\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd\u003e\u003cstrong\u003e1NF\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd\u003eAtomic values, unique column names, primary key exists\u003c/td\u003e\n      \u003ctd\u003eRepeating groups, multi-valued attributes\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd\u003e\u003cstrong\u003e2NF\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd\u003e1NF + No partial dependencies\u003c/td\u003e\n      \u003ctd\u003ePartial dependencies on composite keys\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd\u003e\u003cstrong\u003e3NF\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd\u003e2NF + No transitive dependencies\u003c/td\u003e\n      \u003ctd\u003eTransitive dependencies\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd\u003e\u003cstrong\u003eBCNF\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd\u003e3NF + Every determinant is a candidate key\u003c/td\u003e\n      \u003ctd\u003eAnomalies from overlapping candidate keys\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd\u003e\u003cstrong\u003e4NF\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd\u003eBCNF + No multi-valued dependencies\u003c/td\u003e\n      \u003ctd\u003eIndependent multi-valued facts\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd\u003e\u003cstrong\u003e5NF\u003c/strong\u003e\u003c/td\u003e\n      \u003ctd\u003e4NF + No join dependencies\u003c/td\u003e\n      \u003ctd\u003eComplex join dependencies\u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["databases","normalization"]},"buildId":"6V8_yxN3djhrhbRemYkax","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

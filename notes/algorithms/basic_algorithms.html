@@ -1,0 +1,1050 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Basic algorithms</title><link rel="icon" href="/images/favicon.ico"/><meta name="next-head-count" content="4"/><link rel="preload" href="/_next/static/css/b65b5b41f2379875.css" as="style"/><link rel="stylesheet" href="/_next/static/css/b65b5b41f2379875.css" data-n-g=""/><link rel="preload" href="/_next/static/css/0d9654b911e08999.css" as="style"/><link rel="stylesheet" href="/_next/static/css/0d9654b911e08999.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-fc97f3f1282ce3ed.js" defer=""></script><script src="/_next/static/chunks/main-f4ae3437c92c1efc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-85d7488a393e293e.js" defer=""></script><script src="/_next/static/chunks/211-ca3cd870e26e881a.js" defer=""></script><script src="/_next/static/chunks/pages/notes/%5B...noteKey%5D-bc6552c3ae1e3718.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_buildManifest.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_ssgManifest.js" defer=""></script><script src="/_next/static/6V8_yxN3djhrhbRemYkax/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><section class="Layout_centeredSection__nmU9U"><ul class="NavigationBar_navbar__CBMoV"><li class="NavigationBar_navitem__LKB5F"><a class="NavigationBar_navitemContent__jEyWq" href="/">Home</a><span class="NavigationBar_separator__qvEVD">|</span></li><li class="NavigationBar_navitem__LKB5F"><button class="NavigationBar_navitemContent__jEyWq">Back</button><span class="NavigationBar_separator__qvEVD">|</span></li></ul><h1 class="NoteFormattedContent_noteTitle__Oi9sD">Basic algorithms</h1><article class="NoteFormattedContent_note__8cHeE">
+<h1>Complete LeetCode Patterns Guide</h1>
+<p>A comprehensive guide to all major algorithm patterns for technical interview preparation.</p>
+<hr>
+<h2>1. Two Pointers</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Sorted arrays</li>
+  <li>Finding pairs/triplets</li>
+  <li>Removing duplicates in-place</li>
+  <li>Palindrome checking</li>
+  <li>Linked list cycle detection</li>
+  <li>Finding middle element</li>
+</ul>
+<h3>Sub-Patterns</h3>
+<h4>A) Opposite Direction</h4>
+<p>Start from both ends, move toward center.</p>
+<p><strong>Example: Two Sum II (Sorted Array)</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">twoSum</span>(<span class="hljs-params">nums, target</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C; right:
+        current_sum = nums[left] + nums[right]
+
+        <span class="hljs-keyword">if</span> current_sum == target:
+            <span class="hljs-keyword">return</span> [left, right]
+        <span class="hljs-keyword">elif</span> current_sum &#x3C; target:
+            left += <span class="hljs-number">1</span>  <span class="hljs-comment"># need larger sum</span>
+        <span class="hljs-keyword">else</span>:
+            right -= <span class="hljs-number">1</span>  <span class="hljs-comment"># need smaller sum</span>
+
+    <span class="hljs-keyword">return</span> []
+</code></pre>
+<p><strong>Example: Valid Palindrome</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">isPalindrome</span>(<span class="hljs-params">s</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(s) - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C; right:
+        <span class="hljs-keyword">while</span> left &#x3C; right <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> s[left].isalnum():
+            left += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">while</span> left &#x3C; right <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> s[right].isalnum():
+            right -= <span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">if</span> s[left].lower() != s[right].lower():
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+        left += <span class="hljs-number">1</span>
+        right -= <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+</code></pre>
+<p><strong>Example: Container With Most Water</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">maxArea</span>(<span class="hljs-params">height</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(height) - <span class="hljs-number">1</span>
+    max_water = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C; right:
+        width = right - left
+        current_height = <span class="hljs-built_in">min</span>(height[left], height[right])
+        max_water = <span class="hljs-built_in">max</span>(max_water, width * current_height)
+
+        <span class="hljs-comment"># Move pointer with smaller height</span>
+        <span class="hljs-keyword">if</span> height[left] &#x3C; height[right]:
+            left += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">else</span>:
+            right -= <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> max_water
+</code></pre>
+<h4>B) Fast and Slow (Floyd's Algorithm)</h4>
+<p>Both pointers move in same direction at different speeds.</p>
+<p><strong>Example: Linked List Cycle Detection</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">hasCycle</span>(<span class="hljs-params">head</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> head:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+    slow = fast = head
+
+    <span class="hljs-keyword">while</span> fast <span class="hljs-keyword">and</span> fast.<span class="hljs-built_in">next</span>:
+        slow = slow.<span class="hljs-built_in">next</span>
+        fast = fast.<span class="hljs-built_in">next</span>.<span class="hljs-built_in">next</span>
+
+        <span class="hljs-keyword">if</span> slow == fast:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+</code></pre>
+<p><strong>Example: Find Middle of Linked List</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">middleNode</span>(<span class="hljs-params">head</span>):
+    slow = fast = head
+
+    <span class="hljs-keyword">while</span> fast <span class="hljs-keyword">and</span> fast.<span class="hljs-built_in">next</span>:
+        slow = slow.<span class="hljs-built_in">next</span>
+        fast = fast.<span class="hljs-built_in">next</span>.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-keyword">return</span> slow
+</code></pre>
+<h4>C) Same Direction with Gap</h4>
+<p>Maintain fixed distance between pointers.</p>
+<p><strong>Example: Remove Nth Node From End</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">removeNthFromEnd</span>(<span class="hljs-params">head, n</span>):
+    dummy = ListNode(<span class="hljs-number">0</span>)
+    dummy.<span class="hljs-built_in">next</span> = head
+    fast = slow = dummy
+
+    <span class="hljs-comment"># Move fast n+1 steps ahead</span>
+    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n + <span class="hljs-number">1</span>):
+        fast = fast.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-comment"># Move both until fast reaches end</span>
+    <span class="hljs-keyword">while</span> fast:
+        fast = fast.<span class="hljs-built_in">next</span>
+        slow = slow.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-comment"># Remove node</span>
+    slow.<span class="hljs-built_in">next</span> = slow.<span class="hljs-built_in">next</span>.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-keyword">return</span> dummy.<span class="hljs-built_in">next</span>
+</code></pre>
+<h4>D) Same Direction (Write Pointer)</h4>
+<p>One pointer scans, another writes.</p>
+<p><strong>Example: Remove Duplicates from Sorted Array</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">removeDuplicates</span>(<span class="hljs-params">nums</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> nums:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    write_pos = <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-built_in">len</span>(nums)):
+        <span class="hljs-keyword">if</span> nums[i] != nums[i-<span class="hljs-number">1</span>]:
+            nums[write_pos] = nums[i]
+            write_pos += <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> write_pos
+</code></pre>
+<p><strong>Example: Move Zeroes</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">moveZeroes</span>(<span class="hljs-params">nums</span>):
+    write_pos = <span class="hljs-number">0</span>
+
+    <span class="hljs-comment"># Move all non-zeros to front</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(nums)):
+        <span class="hljs-keyword">if</span> nums[i] != <span class="hljs-number">0</span>:
+            nums[write_pos] = nums[i]
+            write_pos += <span class="hljs-number">1</span>
+
+    <span class="hljs-comment"># Fill rest with zeros</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(write_pos, <span class="hljs-built_in">len</span>(nums)):
+        nums[i] = <span class="hljs-number">0</span>
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li><strong>Opposite direction</strong>: Works on sorted data, makes directional decisions</li>
+  <li><strong>Fast/slow</strong>: Detects cycles, finds middle elements</li>
+  <li><strong>Gap</strong>: Useful for "Nth from end" problems</li>
+  <li><strong>Write pointer</strong>: In-place array modifications</li>
+</ul>
+<hr>
+<h2>2. Hash Tables and Sets</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>"Does X exist?"</li>
+  <li>"Have I seen this before?"</li>
+  <li>Counting frequencies</li>
+  <li>Finding duplicates</li>
+  <li>Complement searches</li>
+  <li>Grouping/categorizing data</li>
+</ul>
+<h3>Mental Model</h3>
+<p>Trade space for speed - remember past elements for O(1) lookups.</p>
+<p><strong>Example: Two Sum (Unsorted)</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">twoSum</span>(<span class="hljs-params">nums, target</span>):
+    seen = {}  <span class="hljs-comment"># value -> index</span>
+
+    <span class="hljs-keyword">for</span> i, num <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(nums):
+        complement = target - num
+
+        <span class="hljs-keyword">if</span> complement <span class="hljs-keyword">in</span> seen:
+            <span class="hljs-keyword">return</span> [seen[complement], i]
+
+        seen[num] = i
+
+    <span class="hljs-keyword">return</span> []
+</code></pre>
+<p><strong>Example: First Unique Character</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">firstUniqChar</span>(<span class="hljs-params">s</span>):
+    count = {}
+
+    <span class="hljs-comment"># Count frequencies</span>
+    <span class="hljs-keyword">for</span> char <span class="hljs-keyword">in</span> s:
+        count[char] = count.get(char, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+
+    <span class="hljs-comment"># Find first with count 1</span>
+    <span class="hljs-keyword">for</span> i, char <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(s):
+        <span class="hljs-keyword">if</span> count[char] == <span class="hljs-number">1</span>:
+            <span class="hljs-keyword">return</span> i
+
+    <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>
+</code></pre>
+<p><strong>Example: Group Anagrams</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> defaultdict
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">groupAnagrams</span>(<span class="hljs-params">strs</span>):
+    groups = defaultdict(<span class="hljs-built_in">list</span>)
+
+    <span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> strs:
+        <span class="hljs-comment"># Sort as key (or use char count tuple)</span>
+        key = <span class="hljs-string">''</span>.join(<span class="hljs-built_in">sorted</span>(s))
+        groups[key].append(s)
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">list</span>(groups.values())
+</code></pre>
+<p><strong>Example: Longest Consecutive Sequence</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">longestConsecutive</span>(<span class="hljs-params">nums</span>):
+    num_set = <span class="hljs-built_in">set</span>(nums)
+    max_length = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> num_set:
+        <span class="hljs-comment"># Only start counting if it's the start of a sequence</span>
+        <span class="hljs-keyword">if</span> num - <span class="hljs-number">1</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> num_set:
+            current = num
+            length = <span class="hljs-number">1</span>
+
+            <span class="hljs-keyword">while</span> current + <span class="hljs-number">1</span> <span class="hljs-keyword">in</span> num_set:
+                current += <span class="hljs-number">1</span>
+                length += <span class="hljs-number">1</span>
+
+            max_length = <span class="hljs-built_in">max</span>(max_length, length)
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li>Use hash map when you need to <strong>remember and lookup</strong></li>
+  <li>Use hash set for <strong>existence checks</strong></li>
+  <li>Count frequencies for <strong>duplicate/unique problems</strong></li>
+  <li>Time: O(1) average, Space: O(n)</li>
+</ul>
+<hr>
+<h2>3. Stack</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Parentheses/bracket matching</li>
+  <li>"Next greater/smaller element"</li>
+  <li>Evaluating expressions</li>
+  <li>Undo operations</li>
+  <li>Processing in reverse order</li>
+  <li>Nested structures</li>
+</ul>
+<h3>Mental Model</h3>
+<p>LIFO (Last In, First Out) - like a pile of plates.</p>
+<p><strong>Example: Valid Parentheses</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">isValid</span>(<span class="hljs-params">s</span>):
+    stack = []
+    pairs = {<span class="hljs-string">'('</span>: <span class="hljs-string">')'</span>, <span class="hljs-string">'['</span>: <span class="hljs-string">']'</span>, <span class="hljs-string">'{'</span>: <span class="hljs-string">'}'</span>}
+
+    <span class="hljs-keyword">for</span> char <span class="hljs-keyword">in</span> s:
+        <span class="hljs-keyword">if</span> char <span class="hljs-keyword">in</span> pairs:  <span class="hljs-comment"># opening bracket</span>
+            stack.append(char)
+        <span class="hljs-keyword">else</span>:  <span class="hljs-comment"># closing bracket</span>
+            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> stack <span class="hljs-keyword">or</span> pairs[stack.pop()] != char:
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(stack) == <span class="hljs-number">0</span>
+</code></pre>
+<p><strong>Example: Evaluate Reverse Polish Notation</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">evalRPN</span>(<span class="hljs-params">tokens</span>):
+    stack = []
+
+    <span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> tokens:
+        <span class="hljs-keyword">if</span> token <span class="hljs-keyword">in</span> [<span class="hljs-string">'+'</span>, <span class="hljs-string">'-'</span>, <span class="hljs-string">'*'</span>, <span class="hljs-string">'/'</span>]:
+            b = stack.pop()
+            a = stack.pop()
+
+            <span class="hljs-keyword">if</span> token == <span class="hljs-string">'+'</span>:
+                stack.append(a + b)
+            <span class="hljs-keyword">elif</span> token == <span class="hljs-string">'-'</span>:
+                stack.append(a - b)
+            <span class="hljs-keyword">elif</span> token == <span class="hljs-string">'*'</span>:
+                stack.append(a * b)
+            <span class="hljs-keyword">else</span>:
+                stack.append(<span class="hljs-built_in">int</span>(a / b))
+        <span class="hljs-keyword">else</span>:
+            stack.append(<span class="hljs-built_in">int</span>(token))
+
+    <span class="hljs-keyword">return</span> stack[<span class="hljs-number">0</span>]
+</code></pre>
+<p><strong>Example: Min Stack</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MinStack</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.stack = []
+        self.min_stack = []
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">push</span>(<span class="hljs-params">self, val</span>):
+        self.stack.append(val)
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> self.min_stack <span class="hljs-keyword">or</span> val &#x3C;= self.min_stack[-<span class="hljs-number">1</span>]:
+            self.min_stack.append(val)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pop</span>(<span class="hljs-params">self</span>):
+        val = self.stack.pop()
+        <span class="hljs-keyword">if</span> val == self.min_stack[-<span class="hljs-number">1</span>]:
+            self.min_stack.pop()
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">top</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">return</span> self.stack[-<span class="hljs-number">1</span>]
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">getMin</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">return</span> self.min_stack[-<span class="hljs-number">1</span>]
+</code></pre>
+<p><strong>Example: Daily Temperatures</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">dailyTemperatures</span>(<span class="hljs-params">temperatures</span>):
+    result = [<span class="hljs-number">0</span>] * <span class="hljs-built_in">len</span>(temperatures)
+    stack = []  <span class="hljs-comment"># indices</span>
+
+    <span class="hljs-keyword">for</span> i, temp <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(temperatures):
+        <span class="hljs-keyword">while</span> stack <span class="hljs-keyword">and</span> temperatures[stack[-<span class="hljs-number">1</span>]] &#x3C; temp:
+            prev_idx = stack.pop()
+            result[prev_idx] = i - prev_idx
+
+        stack.append(i)
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<p><strong>Example: Simplify Path</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">simplifyPath</span>(<span class="hljs-params">path</span>):
+    stack = []
+    parts = path.split(<span class="hljs-string">'/'</span>)
+
+    <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> parts:
+        <span class="hljs-keyword">if</span> part == <span class="hljs-string">'..'</span> <span class="hljs-keyword">and</span> stack:
+            stack.pop()
+        <span class="hljs-keyword">elif</span> part <span class="hljs-keyword">and</span> part != <span class="hljs-string">'.'</span> <span class="hljs-keyword">and</span> part != <span class="hljs-string">'..'</span>:
+            stack.append(part)
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'/'</span> + <span class="hljs-string">'/'</span>.join(stack)
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li>Opening elements → push</li>
+  <li>Closing elements → pop and verify</li>
+  <li>"Next greater" problems → monotonic stack pattern</li>
+  <li>Nested structures → natural stack use case</li>
+</ul>
+<hr>
+<h2>4. Tree Traversal (DFS &#x26; BFS)</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Any tree/hierarchical structure</li>
+  <li>Finding paths</li>
+  <li>Level-order problems</li>
+  <li>Validation problems</li>
+  <li>Calculating depths/heights</li>
+</ul>
+<h3>A) DFS (Depth-First Search)</h3>
+<p>Go deep first, explore one path completely before backtracking.</p>
+<h4>Recursive DFS (Most Common)</h4>
+<p><strong>Example: Maximum Depth</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">maxDepth</span>(<span class="hljs-params">root</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    left_depth = maxDepth(root.left)
+    right_depth = maxDepth(root.right)
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-built_in">max</span>(left_depth, right_depth)
+</code></pre>
+<p><strong>Example: Validate Binary Search Tree</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">isValidBST</span>(<span class="hljs-params">root</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">validate</span>(<span class="hljs-params">node, min_val, max_val</span>):
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> node:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (min_val &#x3C; node.val &#x3C; max_val):
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+        <span class="hljs-keyword">return</span> (validate(node.left, min_val, node.val) <span class="hljs-keyword">and</span>
+                validate(node.right, node.val, max_val))
+
+    <span class="hljs-keyword">return</span> validate(root, <span class="hljs-built_in">float</span>(<span class="hljs-string">'-inf'</span>), <span class="hljs-built_in">float</span>(<span class="hljs-string">'inf'</span>))
+</code></pre>
+<p><strong>Example: Path Sum</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">hasPathSum</span>(<span class="hljs-params">root, targetSum</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+    <span class="hljs-comment"># Leaf node</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root.left <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> root.right:
+        <span class="hljs-keyword">return</span> root.val == targetSum
+
+    remaining = targetSum - root.val
+    <span class="hljs-keyword">return</span> (hasPathSum(root.left, remaining) <span class="hljs-keyword">or</span>
+            hasPathSum(root.right, remaining))
+</code></pre>
+<p><strong>Example: Lowest Common Ancestor</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">lowestCommonAncestor</span>(<span class="hljs-params">root, p, q</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root <span class="hljs-keyword">or</span> root == p <span class="hljs-keyword">or</span> root == q:
+        <span class="hljs-keyword">return</span> root
+
+    left = lowestCommonAncestor(root.left, p, q)
+    right = lowestCommonAncestor(root.right, p, q)
+
+    <span class="hljs-keyword">if</span> left <span class="hljs-keyword">and</span> right:
+        <span class="hljs-keyword">return</span> root
+
+    <span class="hljs-keyword">return</span> left <span class="hljs-keyword">if</span> left <span class="hljs-keyword">else</span> right
+</code></pre>
+<p><strong>Example: Diameter of Binary Tree</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">diameterOfBinaryTree</span>(<span class="hljs-params">root</span>):
+    max_diameter = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">height</span>(<span class="hljs-params">node</span>):
+        <span class="hljs-keyword">nonlocal</span> max_diameter
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> node:
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+        left_height = height(node.left)
+        right_height = height(node.right)
+
+        <span class="hljs-comment"># Update diameter</span>
+        max_diameter = <span class="hljs-built_in">max</span>(max_diameter, left_height + right_height)
+
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-built_in">max</span>(left_height, right_height)
+
+    height(root)
+    <span class="hljs-keyword">return</span> max_diameter
+</code></pre>
+<h4>Iterative DFS (Using Stack)</h4>
+<p><strong>Example: Inorder Traversal</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">inorderTraversal</span>(<span class="hljs-params">root</span>):
+    result = []
+    stack = []
+    current = root
+
+    <span class="hljs-keyword">while</span> current <span class="hljs-keyword">or</span> stack:
+        <span class="hljs-comment"># Go to leftmost node</span>
+        <span class="hljs-keyword">while</span> current:
+            stack.append(current)
+            current = current.left
+
+        <span class="hljs-comment"># Process node</span>
+        current = stack.pop()
+        result.append(current.val)
+
+        <span class="hljs-comment"># Go right</span>
+        current = current.right
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<h3>B) BFS (Breadth-First Search)</h3>
+<p>Process level by level using a queue.</p>
+<p><strong>Example: Level Order Traversal</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">levelOrder</span>(<span class="hljs-params">root</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root:
+        <span class="hljs-keyword">return</span> []
+
+    result = []
+    queue = deque([root])
+
+    <span class="hljs-keyword">while</span> queue:
+        level_size = <span class="hljs-built_in">len</span>(queue)
+        level = []
+
+        <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(level_size):
+            node = queue.popleft()
+            level.append(node.val)
+
+            <span class="hljs-keyword">if</span> node.left:
+                queue.append(node.left)
+            <span class="hljs-keyword">if</span> node.right:
+                queue.append(node.right)
+
+        result.append(level)
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<p><strong>Example: Right Side View</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">rightSideView</span>(<span class="hljs-params">root</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root:
+        <span class="hljs-keyword">return</span> []
+
+    result = []
+    queue = deque([root])
+
+    <span class="hljs-keyword">while</span> queue:
+        level_size = <span class="hljs-built_in">len</span>(queue)
+
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(level_size):
+            node = queue.popleft()
+
+            <span class="hljs-comment"># Last node in level</span>
+            <span class="hljs-keyword">if</span> i == level_size - <span class="hljs-number">1</span>:
+                result.append(node.val)
+
+            <span class="hljs-keyword">if</span> node.left:
+                queue.append(node.left)
+            <span class="hljs-keyword">if</span> node.right:
+                queue.append(node.right)
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<p><strong>Example: Minimum Depth</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">minDepth</span>(<span class="hljs-params">root</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> root:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    queue = deque([(root, <span class="hljs-number">1</span>)])
+
+    <span class="hljs-keyword">while</span> queue:
+        node, depth = queue.popleft()
+
+        <span class="hljs-comment"># First leaf found = minimum depth</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> node.left <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> node.right:
+            <span class="hljs-keyword">return</span> depth
+
+        <span class="hljs-keyword">if</span> node.left:
+            queue.append((node.left, depth + <span class="hljs-number">1</span>))
+        <span class="hljs-keyword">if</span> node.right:
+            queue.append((node.right, depth + <span class="hljs-number">1</span>))
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li><strong>DFS</strong>: Use for paths, validation, heights (recursive is cleaner)</li>
+  <li><strong>BFS</strong>: Use for shortest paths, level-order, minimum depth</li>
+  <li><strong>DFS Time/Space</strong>: O(n) time, O(h) space where h = height</li>
+  <li><strong>BFS Time/Space</strong>: O(n) time, O(w) space where w = max width</li>
+</ul>
+<hr>
+<h2>5. Linked List Manipulation</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Reversing lists</li>
+  <li>Reordering nodes</li>
+  <li>Merging lists</li>
+  <li>Detecting cycles</li>
+  <li>Finding intersections</li>
+</ul>
+<h3>Mental Model</h3>
+<p>Keep track of multiple pointers to avoid losing references.</p>
+<p><strong>Example: Reverse Linked List</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">reverseList</span>(<span class="hljs-params">head</span>):
+    prev = <span class="hljs-literal">None</span>
+    curr = head
+
+    <span class="hljs-keyword">while</span> curr:
+        next_temp = curr.<span class="hljs-built_in">next</span>  <span class="hljs-comment"># save next</span>
+        curr.<span class="hljs-built_in">next</span> = prev       <span class="hljs-comment"># reverse link</span>
+        prev = curr            <span class="hljs-comment"># move prev forward</span>
+        curr = next_temp       <span class="hljs-comment"># move curr forward</span>
+
+    <span class="hljs-keyword">return</span> prev
+</code></pre>
+<p><strong>Example: Merge Two Sorted Lists</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">mergeTwoLists</span>(<span class="hljs-params">l1, l2</span>):
+    dummy = ListNode(<span class="hljs-number">0</span>)
+    current = dummy
+
+    <span class="hljs-keyword">while</span> l1 <span class="hljs-keyword">and</span> l2:
+        <span class="hljs-keyword">if</span> l1.val &#x3C; l2.val:
+            current.<span class="hljs-built_in">next</span> = l1
+            l1 = l1.<span class="hljs-built_in">next</span>
+        <span class="hljs-keyword">else</span>:
+            current.<span class="hljs-built_in">next</span> = l2
+            l2 = l2.<span class="hljs-built_in">next</span>
+        current = current.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-comment"># Attach remaining nodes</span>
+    current.<span class="hljs-built_in">next</span> = l1 <span class="hljs-keyword">if</span> l1 <span class="hljs-keyword">else</span> l2
+
+    <span class="hljs-keyword">return</span> dummy.<span class="hljs-built_in">next</span>
+</code></pre>
+<p><strong>Example: Reorder List</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">reorderList</span>(<span class="hljs-params">head</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> head <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> head.<span class="hljs-built_in">next</span>:
+        <span class="hljs-keyword">return</span>
+
+    <span class="hljs-comment"># Find middle</span>
+    slow = fast = head
+    <span class="hljs-keyword">while</span> fast.<span class="hljs-built_in">next</span> <span class="hljs-keyword">and</span> fast.<span class="hljs-built_in">next</span>.<span class="hljs-built_in">next</span>:
+        slow = slow.<span class="hljs-built_in">next</span>
+        fast = fast.<span class="hljs-built_in">next</span>.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-comment"># Reverse second half</span>
+    second = slow.<span class="hljs-built_in">next</span>
+    slow.<span class="hljs-built_in">next</span> = <span class="hljs-literal">None</span>
+
+    prev = <span class="hljs-literal">None</span>
+    <span class="hljs-keyword">while</span> second:
+        next_temp = second.<span class="hljs-built_in">next</span>
+        second.<span class="hljs-built_in">next</span> = prev
+        prev = second
+        second = next_temp
+
+    <span class="hljs-comment"># Merge alternating</span>
+    first, second = head, prev
+    <span class="hljs-keyword">while</span> second:
+        temp1, temp2 = first.<span class="hljs-built_in">next</span>, second.<span class="hljs-built_in">next</span>
+        first.<span class="hljs-built_in">next</span> = second
+        second.<span class="hljs-built_in">next</span> = temp1
+        first, second = temp1, temp2
+</code></pre>
+<p><strong>Example: Palindrome Linked List</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">isPalindrome</span>(<span class="hljs-params">head</span>):
+    <span class="hljs-comment"># Find middle</span>
+    slow = fast = head
+    <span class="hljs-keyword">while</span> fast.<span class="hljs-built_in">next</span> <span class="hljs-keyword">and</span> fast.<span class="hljs-built_in">next</span>.<span class="hljs-built_in">next</span>:
+        slow = slow.<span class="hljs-built_in">next</span>
+        fast = fast.<span class="hljs-built_in">next</span>.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-comment"># Reverse second half</span>
+    second = slow.<span class="hljs-built_in">next</span>
+    slow.<span class="hljs-built_in">next</span> = <span class="hljs-literal">None</span>
+
+    prev = <span class="hljs-literal">None</span>
+    <span class="hljs-keyword">while</span> second:
+        next_temp = second.<span class="hljs-built_in">next</span>
+        second.<span class="hljs-built_in">next</span> = prev
+        prev = second
+        second = next_temp
+
+    <span class="hljs-comment"># Compare</span>
+    first, second = head, prev
+    <span class="hljs-keyword">while</span> second:
+        <span class="hljs-keyword">if</span> first.val != second.val:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+        first = first.<span class="hljs-built_in">next</span>
+        second = second.<span class="hljs-built_in">next</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+</code></pre>
+<p><strong>Example: Add Two Numbers</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">addTwoNumbers</span>(<span class="hljs-params">l1, l2</span>):
+    dummy = ListNode(<span class="hljs-number">0</span>)
+    current = dummy
+    carry = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">while</span> l1 <span class="hljs-keyword">or</span> l2 <span class="hljs-keyword">or</span> carry:
+        val1 = l1.val <span class="hljs-keyword">if</span> l1 <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+        val2 = l2.val <span class="hljs-keyword">if</span> l2 <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+
+        total = val1 + val2 + carry
+        carry = total // <span class="hljs-number">10</span>
+        current.<span class="hljs-built_in">next</span> = ListNode(total % <span class="hljs-number">10</span>)
+
+        current = current.<span class="hljs-built_in">next</span>
+        l1 = l1.<span class="hljs-built_in">next</span> <span class="hljs-keyword">if</span> l1 <span class="hljs-keyword">else</span> <span class="hljs-literal">None</span>
+        l2 = l2.<span class="hljs-built_in">next</span> <span class="hljs-keyword">if</span> l2 <span class="hljs-keyword">else</span> <span class="hljs-literal">None</span>
+
+    <span class="hljs-keyword">return</span> dummy.<span class="hljs-built_in">next</span>
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li>Use <strong>dummy node</strong> to simplify edge cases</li>
+  <li>Save <code>next</code> before breaking links</li>
+  <li>Three pointers for reversal: <code>prev</code>, <code>curr</code>, <code>next</code></li>
+  <li>Combine with fast/slow for complex operations</li>
+</ul>
+<hr>
+<h2>6. Sliding Window</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Longest/shortest substring/subarray</li>
+  <li>Fixed-size window problems</li>
+  <li>"All subarrays of size K"</li>
+  <li>Contiguous sequences with constraints</li>
+</ul>
+<h3>Mental Model</h3>
+<p>Maintain a window that expands (right pointer) and contracts (left pointer) to satisfy conditions.</p>
+<h3>A) Fixed Size Window</h3>
+<p><strong>Example: Maximum Sum Subarray of Size K</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">maxSumSubarray</span>(<span class="hljs-params">nums, k</span>):
+    window_sum = <span class="hljs-built_in">sum</span>(nums[:k])
+    max_sum = window_sum
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(k, <span class="hljs-built_in">len</span>(nums)):
+        <span class="hljs-comment"># Slide window: remove left, add right</span>
+        window_sum = window_sum - nums[i-k] + nums[i]
+        max_sum = <span class="hljs-built_in">max</span>(max_sum, window_sum)
+
+    <span class="hljs-keyword">return</span> max_sum
+</code></pre>
+<h3>B) Variable Size Window</h3>
+<p><strong>Example: Longest Substring Without Repeating Characters</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">lengthOfLongestSubstring</span>(<span class="hljs-params">s</span>):
+    seen = <span class="hljs-built_in">set</span>()
+    left = <span class="hljs-number">0</span>
+    max_length = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):
+        <span class="hljs-comment"># Shrink window while duplicate exists</span>
+        <span class="hljs-keyword">while</span> s[right] <span class="hljs-keyword">in</span> seen:
+            seen.remove(s[left])
+            left += <span class="hljs-number">1</span>
+
+        seen.add(s[right])
+        max_length = <span class="hljs-built_in">max</span>(max_length, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<p><strong>Example: Minimum Window Substring</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">minWindow</span>(<span class="hljs-params">s, t</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> s <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> t:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>
+
+    need = Counter(t)
+    have = {}
+
+    left = <span class="hljs-number">0</span>
+    min_len = <span class="hljs-built_in">float</span>(<span class="hljs-string">'inf'</span>)
+    min_start = <span class="hljs-number">0</span>
+    matched = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):
+        char = s[right]
+        have[char] = have.get(char, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">if</span> char <span class="hljs-keyword">in</span> need <span class="hljs-keyword">and</span> have[char] == need[char]:
+            matched += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Try to shrink window</span>
+        <span class="hljs-keyword">while</span> matched == <span class="hljs-built_in">len</span>(need):
+            <span class="hljs-keyword">if</span> right - left + <span class="hljs-number">1</span> &#x3C; min_len:
+                min_len = right - left + <span class="hljs-number">1</span>
+                min_start = left
+
+            left_char = s[left]
+            have[left_char] -= <span class="hljs-number">1</span>
+            <span class="hljs-keyword">if</span> left_char <span class="hljs-keyword">in</span> need <span class="hljs-keyword">and</span> have[left_char] &#x3C; need[left_char]:
+                matched -= <span class="hljs-number">1</span>
+
+            left += <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">""</span> <span class="hljs-keyword">if</span> min_len == <span class="hljs-built_in">float</span>(<span class="hljs-string">'inf'</span>) <span class="hljs-keyword">else</span> s[min_start:min_start + min_len]
+</code></pre>
+<p><strong>Example: Longest Repeating Character Replacement</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">characterReplacement</span>(<span class="hljs-params">s, k</span>):
+    count = {}
+    left = <span class="hljs-number">0</span>
+    max_length = <span class="hljs-number">0</span>
+    max_count = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> right <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):
+        count[s[right]] = count.get(s[right], <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+        max_count = <span class="hljs-built_in">max</span>(max_count, count[s[right]])
+
+        <span class="hljs-comment"># Window size - most frequent char > k replacements allowed</span>
+        <span class="hljs-keyword">while</span> (right - left + <span class="hljs-number">1</span>) - max_count > k:
+            count[s[left]] -= <span class="hljs-number">1</span>
+            left += <span class="hljs-number">1</span>
+
+        max_length = <span class="hljs-built_in">max</span>(max_length, right - left + <span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<p><strong>Example: Permutation in String</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">checkInclusion</span>(<span class="hljs-params">s1, s2</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(s1) > <span class="hljs-built_in">len</span>(s2):
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+
+    s1_count = Counter(s1)
+    window_count = Counter(s2[:<span class="hljs-built_in">len</span>(s1)])
+
+    <span class="hljs-keyword">if</span> s1_count == window_count:
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s1), <span class="hljs-built_in">len</span>(s2)):
+        <span class="hljs-comment"># Add new char</span>
+        window_count[s2[i]] += <span class="hljs-number">1</span>
+
+        <span class="hljs-comment"># Remove old char</span>
+        left_char = s2[i - <span class="hljs-built_in">len</span>(s1)]
+        window_count[left_char] -= <span class="hljs-number">1</span>
+        <span class="hljs-keyword">if</span> window_count[left_char] == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">del</span> window_count[left_char]
+
+        <span class="hljs-keyword">if</span> s1_count == window_count:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li><strong>Fixed window</strong>: Simple sliding, calculate on each slide</li>
+  <li><strong>Variable window</strong>: Expand with right, contract with left</li>
+  <li>Use hash map/set to track window contents</li>
+  <li>Time: O(n), Space: O(k) where k = unique elements</li>
+</ul>
+<hr>
+<h2>7. Binary Search</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Sorted arrays</li>
+  <li>"Find target/boundary/peak"</li>
+  <li>Minimizing/maximizing with constraint</li>
+  <li>"Can we achieve X?" problems</li>
+</ul>
+<h3>Mental Model</h3>
+<p>Eliminate half of search space each iteration.</p>
+<h3>A) Classic Binary Search</h3>
+<p><strong>Example: Find Target</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">search</span>(<span class="hljs-params">nums, target</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C;= right:
+        mid = left + (right - left) // <span class="hljs-number">2</span>
+
+        <span class="hljs-keyword">if</span> nums[mid] == target:
+            <span class="hljs-keyword">return</span> mid
+        <span class="hljs-keyword">elif</span> nums[mid] &#x3C; target:
+            left = mid + <span class="hljs-number">1</span>
+        <span class="hljs-keyword">else</span>:
+            right = mid - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>
+</code></pre>
+<h3>B) Finding Boundaries</h3>
+<p><strong>Example: First and Last Position</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">searchRange</span>(<span class="hljs-params">nums, target</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">findBoundary</span>(<span class="hljs-params">is_first</span>):
+        left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>
+        result = -<span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">while</span> left &#x3C;= right:
+            mid = left + (right - left) // <span class="hljs-number">2</span>
+
+            <span class="hljs-keyword">if</span> nums[mid] == target:
+                result = mid
+                <span class="hljs-keyword">if</span> is_first:
+                    right = mid - <span class="hljs-number">1</span>  <span class="hljs-comment"># search left half</span>
+                <span class="hljs-keyword">else</span>:
+                    left = mid + <span class="hljs-number">1</span>   <span class="hljs-comment"># search right half</span>
+            <span class="hljs-keyword">elif</span> nums[mid] &#x3C; target:
+                left = mid + <span class="hljs-number">1</span>
+            <span class="hljs-keyword">else</span>:
+                right = mid - <span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">return</span> result
+
+    <span class="hljs-keyword">return</span> [findBoundary(<span class="hljs-literal">True</span>), findBoundary(<span class="hljs-literal">False</span>)]
+</code></pre>
+<h3>C) Search in Rotated Array</h3>
+<p><strong>Example: Search in Rotated Sorted Array</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">search</span>(<span class="hljs-params">nums, target</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C;= right:
+        mid = left + (right - left) // <span class="hljs-number">2</span>
+
+        <span class="hljs-keyword">if</span> nums[mid] == target:
+            <span class="hljs-keyword">return</span> mid
+
+        <span class="hljs-comment"># Left half is sorted</span>
+        <span class="hljs-keyword">if</span> nums[left] &#x3C;= nums[mid]:
+            <span class="hljs-keyword">if</span> nums[left] &#x3C;= target &#x3C; nums[mid]:
+                right = mid - <span class="hljs-number">1</span>
+            <span class="hljs-keyword">else</span>:
+                left = mid + <span class="hljs-number">1</span>
+        <span class="hljs-comment"># Right half is sorted</span>
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-keyword">if</span> nums[mid] &#x3C; target &#x3C;= nums[right]:
+                left = mid + <span class="hljs-number">1</span>
+            <span class="hljs-keyword">else</span>:
+                right = mid - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>
+</code></pre>
+<h3>D) Find Peak Element</h3>
+<p><strong>Example: Find Peak</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">findPeakElement</span>(<span class="hljs-params">nums</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C; right:
+        mid = left + (right - left) // <span class="hljs-number">2</span>
+
+        <span class="hljs-keyword">if</span> nums[mid] > nums[mid + <span class="hljs-number">1</span>]:
+            <span class="hljs-comment"># Peak is on left (or mid itself)</span>
+            right = mid
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-comment"># Peak is on right</span>
+            left = mid + <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> left
+</code></pre>
+<h3>E) Minimize/Maximize Problems</h3>
+<p><strong>Example: Minimum in Rotated Sorted Array</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">findMin</span>(<span class="hljs-params">nums</span>):
+    left, right = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">while</span> left &#x3C; right:
+        mid = left + (right - left) // <span class="hljs-number">2</span>
+
+        <span class="hljs-keyword">if</span> nums[mid] > nums[right]:
+            <span class="hljs-comment"># Minimum is in right half</span>
+            left = mid + <span class="hljs-number">1</span>
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-comment"># Minimum is in left half (or mid itself)</span>
+            right = mid
+
+    <span class="hljs-keyword">return</span> nums[left]
+</code></pre>
+<p><strong>Example: Koko Eating Bananas</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">import</span> math
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">minEatingSpeed</span>(<span class="hljs-params">piles, h</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">canFinish</span>(<span class="hljs-params">speed</span>):
+        hours = <span class="hljs-built_in">sum</span>(math.ceil(pile / speed) <span class="hljs-keyword">for</span> pile <span class="hljs-keyword">in</span> piles)
+        <span class="hljs-keyword">return</span> hours &#x3C;= h
+
+    left, right = <span class="hljs-number">1</span>, <span class="hljs-built_in">max</span>(piles)
+
+    <span class="hljs-keyword">while</span> left &#x3C; right:
+        mid = left + (right - left) // <span class="hljs-number">2</span>
+
+        <span class="hljs-keyword">if</span> canFinish(mid):
+            right = mid  <span class="hljs-comment"># try slower speed</span>
+        <span class="hljs-keyword">else</span>:
+            left = mid + <span class="hljs-number">1</span>  <span class="hljs-comment"># need faster speed</span>
+
+    <span class="hljs-keyword">return</span> left
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li>Use <code>left + (right - left) // 2</code> to avoid overflow</li>
+  <li><strong>left &#x3C;= right</strong> for finding exact value</li>
+  <li><strong>left &#x3C; right</strong> for finding boundary</li>
+  <li>"Can we achieve X?" → Binary search on answer space</li>
+  <li>Time: O(log n)</li>
+</ul>
+<hr>
+<h2>8. Prefix Sum</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Subarray sum problems</li>
+  <li>Range sum queries</li>
+  <li>"Count subarrays with sum = K"</li>
+  <li>Problems with negative numbers</li>
+</ul>
+<h3>Mental Model</h3>
+<p>Precompute cumulative sums to answer range queries in O(1).</p>
+<p><strong>Example: Subarray Sum Equals K</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">subarraySum</span>(<span class="hljs-params">nums, k</span>):
+    count = <span class="hljs-number">0</span>
+    prefix_sum = <span class="hljs-number">0</span>
+    sum_count = {<span class="hljs-number">0</span>: <span class="hljs-number">1</span>}  <span class="hljs-comment"># prefix_sum -> count</span>
+
+    <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> nums:
+        prefix_sum += num
+
+        <span class="hljs-comment"># Check if there's a previous prefix that gives us k</span>
+        <span class="hljs-keyword">if</span> prefix_sum - k <span class="hljs-keyword">in</span> sum_count:
+            count += sum_count[prefix_sum - k]
+
+        sum_count[prefix_sum] = sum_count.get(prefix_sum, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">return</span> count
+</code></pre>
+<p><strong>Example: Contiguous Array (Equal 0s and 1s)</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">findMaxLength</span>(<span class="hljs-params">nums</span>):
+    <span class="hljs-comment"># Treat 0 as -1, find subarray with sum 0</span>
+    max_length = <span class="hljs-number">0</span>
+    sum_index = {<span class="hljs-number">0</span>: -<span class="hljs-number">1</span>}  <span class="hljs-comment"># sum -> first index</span>
+    running_sum = <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> i, num <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(nums):
+        running_sum += <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> num == <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> -<span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">if</span> running_sum <span class="hljs-keyword">in</span> sum_index:
+            max_length = <span class="hljs-built_in">max</span>(max_length, i - sum_index[running_sum])
+        <span class="hljs-keyword">else</span>:
+            sum_index[running_sum] = i
+
+    <span class="hljs-keyword">return</span> max_length
+</code></pre>
+<p><strong>Example: Range Sum Query (Immutable)</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">NumArray</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, nums</span>):
+        self.prefix = [<span class="hljs-number">0</span>]
+        <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> nums:
+            self.prefix.append(self.prefix[-<span class="hljs-number">1</span>] + num)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">sumRange</span>(<span class="hljs-params">self, left, right</span>):
+        <span class="hljs-keyword">return</span> self.prefix[right + <span class="hljs-number">1</span>] - self.prefix[left]
+</code></pre>
+<p><strong>Example: Product of Array Except Self</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">productExceptSelf</span>(<span class="hljs-params">nums</span>):
+    n = <span class="hljs-built_in">len</span>(nums)
+    result = [<span class="hljs-number">1</span>] * n
+
+    <span class="hljs-comment"># Left products</span>
+    left_product = <span class="hljs-number">1</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):
+        result[i] = left_product
+        left_product *= nums[i]
+
+    <span class="hljs-comment"># Right products</span>
+    right_product = <span class="hljs-number">1</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n - <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>):
+        result[i] *= right_product
+        right_product *= nums[i]
+
+    <span class="hljs-keyword">return</span> result
+</code></pre>
+<h3>Key Insights</h3>
+<ul>
+  <li><strong>Prefix sum</strong>: <code>sum(i, j) = prefix[j+1] - prefix[i]</code></li>
+  <li>Use hash map to store prefix sums for subarray problems</li>
+  <li>Works with negative numbers (unlike sliding window)</li>
+  <li>Time: O(n), Space: O(n)</li>
+</ul>
+<hr>
+<h2>9. Graph Traversal</h2>
+<h3>When to Use</h3>
+<ul>
+  <li>Connected components</li>
+  <li>Cycle detection</li>
+  <li>Shortest paths</li>
+  <li>Topological sorting</li>
+  <li>Dependencies (course schedule)</li>
+</ul>
+<h3>A) DFS on Graph</h3>
+<p><strong>Example: Number of Islands</strong></p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">numIslands</span>(<span class="hljs-params">grid</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> grid:
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dfs</span>(<span class="hljs-params">r, c</span>):
+        <span class="hljs-keyword">if</span> (r &#x3C; <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> r >= <span class="hljs-built_in">len</span>(grid) <span class="hljs-keyword">or</span> c &#x3C; <span class="hljs-number">0</span>
+
+<span class="hljs-comment">## The Recognition Framework</span>
+
+Most easy-mid problems can be solved by asking yourself these questions <span class="hljs-keyword">in</span> order:
+
+<span class="hljs-number">1.</span> Does this involve a <span class="hljs-built_in">sorted</span> array <span class="hljs-keyword">or</span> finding pairs/triplets?
+   → Two Pointers
+<span class="hljs-number">2.</span> Do I need to check <span class="hljs-keyword">if</span> something exists <span class="hljs-keyword">or</span> count frequencies?
+   → Hash Table/<span class="hljs-type">Set</span>
+<span class="hljs-number">3.</span> Does this involve parentheses, operations <span class="hljs-keyword">in</span> reverse order, <span class="hljs-keyword">or</span> <span class="hljs-string">"most recent"</span> logic?
+   → Stack
+<span class="hljs-number">4.</span> Is this about a tree <span class="hljs-keyword">or</span> graph structure?
+   → DFS (Recursion) <span class="hljs-keyword">or</span> BFS (Queue)
+<span class="hljs-number">5.</span> Does this involve reversing <span class="hljs-keyword">or</span> reordering a linked <span class="hljs-built_in">list</span>?
+   → Three-Pointer Technique
+</code></pre>
+</article></section></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"noteKey":["algorithms","basic_algorithms"],"note":{"title":"Basic algorithms","date":"2025-10-04","content":"\n\u003ch1\u003eComplete LeetCode Patterns Guide\u003c/h1\u003e\n\u003cp\u003eA comprehensive guide to all major algorithm patterns for technical interview preparation.\u003c/p\u003e\n\u003chr\u003e\n\u003ch2\u003e1. Two Pointers\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eSorted arrays\u003c/li\u003e\n  \u003cli\u003eFinding pairs/triplets\u003c/li\u003e\n  \u003cli\u003eRemoving duplicates in-place\u003c/li\u003e\n  \u003cli\u003ePalindrome checking\u003c/li\u003e\n  \u003cli\u003eLinked list cycle detection\u003c/li\u003e\n  \u003cli\u003eFinding middle element\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eSub-Patterns\u003c/h3\u003e\n\u003ch4\u003eA) Opposite Direction\u003c/h4\u003e\n\u003cp\u003eStart from both ends, move toward center.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Two Sum II (Sorted Array)\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003etwoSum\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, target\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right:\n        current_sum = nums[left] + nums[right]\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e current_sum == target:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e [left, right]\n        \u003cspan class=\"hljs-keyword\"\u003eelif\u003c/span\u003e current_sum \u0026#x3C; target:\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# need larger sum\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            right -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# need smaller sum\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e []\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Valid Palindrome\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eisPalindrome\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right:\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e s[left].isalnum():\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e s[right].isalnum():\n            right -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e s[left].lower() != s[right].lower():\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\n        left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        right -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Container With Most Water\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxArea\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eheight\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(height) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n    max_water = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right:\n        width = right - left\n        current_height = \u003cspan class=\"hljs-built_in\"\u003emin\u003c/span\u003e(height[left], height[right])\n        max_water = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_water, width * current_height)\n\n        \u003cspan class=\"hljs-comment\"\u003e# Move pointer with smaller height\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e height[left] \u0026#x3C; height[right]:\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            right -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_water\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch4\u003eB) Fast and Slow (Floyd's Algorithm)\u003c/h4\u003e\n\u003cp\u003eBoth pointers move in same direction at different speeds.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Linked List Cycle Detection\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ehasCycle\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003ehead\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e head:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\n    slow = fast = head\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e fast \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e:\n        slow = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        fast = fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e slow == fast:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Find Middle of Linked List\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emiddleNode\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003ehead\u003c/span\u003e):\n    slow = fast = head\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e fast \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e:\n        slow = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        fast = fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e slow\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch4\u003eC) Same Direction with Gap\u003c/h4\u003e\n\u003cp\u003eMaintain fixed distance between pointers.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Remove Nth Node From End\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eremoveNthFromEnd\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003ehead, n\u003c/span\u003e):\n    dummy = ListNode(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e)\n    dummy.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = head\n    fast = slow = dummy\n\n    \u003cspan class=\"hljs-comment\"\u003e# Move fast n+1 steps ahead\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e _ \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(n + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e):\n        fast = fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Move both until fast reaches end\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e fast:\n        fast = fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        slow = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Remove node\u003c/span\u003e\n    slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e dummy.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch4\u003eD) Same Direction (Write Pointer)\u003c/h4\u003e\n\u003cp\u003eOne pointer scans, another writes.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Remove Duplicates from Sorted Array\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eremoveDuplicates\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e nums:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    write_pos = \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)):\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[i] != nums[i-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]:\n            nums[write_pos] = nums[i]\n            write_pos += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e write_pos\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Move Zeroes\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emoveZeroes\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums\u003c/span\u003e):\n    write_pos = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Move all non-zeros to front\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)):\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[i] != \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n            nums[write_pos] = nums[i]\n            write_pos += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Fill rest with zeros\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(write_pos, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)):\n        nums[i] = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eOpposite direction\u003c/strong\u003e: Works on sorted data, makes directional decisions\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eFast/slow\u003c/strong\u003e: Detects cycles, finds middle elements\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eGap\u003c/strong\u003e: Useful for \"Nth from end\" problems\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eWrite pointer\u003c/strong\u003e: In-place array modifications\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e2. Hash Tables and Sets\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003e\"Does X exist?\"\u003c/li\u003e\n  \u003cli\u003e\"Have I seen this before?\"\u003c/li\u003e\n  \u003cli\u003eCounting frequencies\u003c/li\u003e\n  \u003cli\u003eFinding duplicates\u003c/li\u003e\n  \u003cli\u003eComplement searches\u003c/li\u003e\n  \u003cli\u003eGrouping/categorizing data\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eMental Model\u003c/h3\u003e\n\u003cp\u003eTrade space for speed - remember past elements for O(1) lookups.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Two Sum (Unsorted)\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003etwoSum\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, target\u003c/span\u003e):\n    seen = {}  \u003cspan class=\"hljs-comment\"\u003e# value -\u003e index\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i, num \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003eenumerate\u003c/span\u003e(nums):\n        complement = target - num\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e complement \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e seen:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e [seen[complement], i]\n\n        seen[num] = i\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e []\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: First Unique Character\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efirstUniqChar\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es\u003c/span\u003e):\n    count = {}\n\n    \u003cspan class=\"hljs-comment\"\u003e# Count frequencies\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e s:\n        count[char] = count.get(char, \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Find first with count 1\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i, char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003eenumerate\u003c/span\u003e(s):\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e count[char] == \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e i\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Group Anagrams\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e defaultdict\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003egroupAnagrams\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003estrs\u003c/span\u003e):\n    groups = defaultdict(\u003cspan class=\"hljs-built_in\"\u003elist\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e s \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e strs:\n        \u003cspan class=\"hljs-comment\"\u003e# Sort as key (or use char count tuple)\u003c/span\u003e\n        key = \u003cspan class=\"hljs-string\"\u003e''\u003c/span\u003e.join(\u003cspan class=\"hljs-built_in\"\u003esorted\u003c/span\u003e(s))\n        groups[key].append(s)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elist\u003c/span\u003e(groups.values())\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Longest Consecutive Sequence\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003elongestConsecutive\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums\u003c/span\u003e):\n    num_set = \u003cspan class=\"hljs-built_in\"\u003eset\u003c/span\u003e(nums)\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e num \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e num_set:\n        \u003cspan class=\"hljs-comment\"\u003e# Only start counting if it's the start of a sequence\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e num - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e num_set:\n            current = num\n            length = \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n            \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e current + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e num_set:\n                current += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n                length += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n            max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, length)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eUse hash map when you need to \u003cstrong\u003eremember and lookup\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003eUse hash set for \u003cstrong\u003eexistence checks\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003eCount frequencies for \u003cstrong\u003eduplicate/unique problems\u003c/strong\u003e\u003c/li\u003e\n  \u003cli\u003eTime: O(1) average, Space: O(n)\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e3. Stack\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eParentheses/bracket matching\u003c/li\u003e\n  \u003cli\u003e\"Next greater/smaller element\"\u003c/li\u003e\n  \u003cli\u003eEvaluating expressions\u003c/li\u003e\n  \u003cli\u003eUndo operations\u003c/li\u003e\n  \u003cli\u003eProcessing in reverse order\u003c/li\u003e\n  \u003cli\u003eNested structures\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eMental Model\u003c/h3\u003e\n\u003cp\u003eLIFO (Last In, First Out) - like a pile of plates.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Valid Parentheses\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eisValid\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es\u003c/span\u003e):\n    stack = []\n    pairs = {\u003cspan class=\"hljs-string\"\u003e'('\u003c/span\u003e: \u003cspan class=\"hljs-string\"\u003e')'\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'['\u003c/span\u003e: \u003cspan class=\"hljs-string\"\u003e']'\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'{'\u003c/span\u003e: \u003cspan class=\"hljs-string\"\u003e'}'\u003c/span\u003e}\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e s:\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e pairs:  \u003cspan class=\"hljs-comment\"\u003e# opening bracket\u003c/span\u003e\n            stack.append(char)\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:  \u003cspan class=\"hljs-comment\"\u003e# closing bracket\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e stack \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e pairs[stack.pop()] != char:\n                \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(stack) == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Evaluate Reverse Polish Notation\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eevalRPN\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003etokens\u003c/span\u003e):\n    stack = []\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e token \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e tokens:\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e token \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e [\u003cspan class=\"hljs-string\"\u003e'+'\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'-'\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'*'\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e'/'\u003c/span\u003e]:\n            b = stack.pop()\n            a = stack.pop()\n\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e token == \u003cspan class=\"hljs-string\"\u003e'+'\u003c/span\u003e:\n                stack.append(a + b)\n            \u003cspan class=\"hljs-keyword\"\u003eelif\u003c/span\u003e token == \u003cspan class=\"hljs-string\"\u003e'-'\u003c/span\u003e:\n                stack.append(a - b)\n            \u003cspan class=\"hljs-keyword\"\u003eelif\u003c/span\u003e token == \u003cspan class=\"hljs-string\"\u003e'*'\u003c/span\u003e:\n                stack.append(a * b)\n            \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n                stack.append(\u003cspan class=\"hljs-built_in\"\u003eint\u003c/span\u003e(a / b))\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            stack.append(\u003cspan class=\"hljs-built_in\"\u003eint\u003c/span\u003e(token))\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e stack[\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e]\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Min Stack\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003eclass\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eMinStack\u003c/span\u003e:\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003e__init__\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself\u003c/span\u003e):\n        self.stack = []\n        self.min_stack = []\n\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003epush\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself, val\u003c/span\u003e):\n        self.stack.append(val)\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e self.min_stack \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e val \u0026#x3C;= self.min_stack[-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]:\n            self.min_stack.append(val)\n\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003epop\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself\u003c/span\u003e):\n        val = self.stack.pop()\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e val == self.min_stack[-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]:\n            self.min_stack.pop()\n\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003etop\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself\u003c/span\u003e):\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e self.stack[-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]\n\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003egetMin\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself\u003c/span\u003e):\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e self.min_stack[-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Daily Temperatures\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003edailyTemperatures\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003etemperatures\u003c/span\u003e):\n    result = [\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e] * \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(temperatures)\n    stack = []  \u003cspan class=\"hljs-comment\"\u003e# indices\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i, temp \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003eenumerate\u003c/span\u003e(temperatures):\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e stack \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e temperatures[stack[-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]] \u0026#x3C; temp:\n            prev_idx = stack.pop()\n            result[prev_idx] = i - prev_idx\n\n        stack.append(i)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Simplify Path\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esimplifyPath\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003epath\u003c/span\u003e):\n    stack = []\n    parts = path.split(\u003cspan class=\"hljs-string\"\u003e'/'\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e part \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e parts:\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e part == \u003cspan class=\"hljs-string\"\u003e'..'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e stack:\n            stack.pop()\n        \u003cspan class=\"hljs-keyword\"\u003eelif\u003c/span\u003e part \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e part != \u003cspan class=\"hljs-string\"\u003e'.'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e part != \u003cspan class=\"hljs-string\"\u003e'..'\u003c/span\u003e:\n            stack.append(part)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'/'\u003c/span\u003e + \u003cspan class=\"hljs-string\"\u003e'/'\u003c/span\u003e.join(stack)\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eOpening elements → push\u003c/li\u003e\n  \u003cli\u003eClosing elements → pop and verify\u003c/li\u003e\n  \u003cli\u003e\"Next greater\" problems → monotonic stack pattern\u003c/li\u003e\n  \u003cli\u003eNested structures → natural stack use case\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e4. Tree Traversal (DFS \u0026#x26; BFS)\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eAny tree/hierarchical structure\u003c/li\u003e\n  \u003cli\u003eFinding paths\u003c/li\u003e\n  \u003cli\u003eLevel-order problems\u003c/li\u003e\n  \u003cli\u003eValidation problems\u003c/li\u003e\n  \u003cli\u003eCalculating depths/heights\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eA) DFS (Depth-First Search)\u003c/h3\u003e\n\u003cp\u003eGo deep first, explore one path completely before backtracking.\u003c/p\u003e\n\u003ch4\u003eRecursive DFS (Most Common)\u003c/h4\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Maximum Depth\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxDepth\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    left_depth = maxDepth(root.left)\n    right_depth = maxDepth(root.right)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e + \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(left_depth, right_depth)\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Validate Binary Search Tree\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eisValidBST\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003evalidate\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enode, min_val, max_val\u003c/span\u003e):\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e node:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e (min_val \u0026#x3C; node.val \u0026#x3C; max_val):\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e (validate(node.left, min_val, node.val) \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e\n                validate(node.right, node.val, max_val))\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e validate(root, \u003cspan class=\"hljs-built_in\"\u003efloat\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'-inf'\u003c/span\u003e), \u003cspan class=\"hljs-built_in\"\u003efloat\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'inf'\u003c/span\u003e))\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Path Sum\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ehasPathSum\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot, targetSum\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Leaf node\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root.left \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root.right:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e root.val == targetSum\n\n    remaining = targetSum - root.val\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e (hasPathSum(root.left, remaining) \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e\n            hasPathSum(root.right, remaining))\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Lowest Common Ancestor\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003elowestCommonAncestor\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot, p, q\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e root == p \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e root == q:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e root\n\n    left = lowestCommonAncestor(root.left, p, q)\n    right = lowestCommonAncestor(root.right, p, q)\n\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e left \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e right:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e root\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e left \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e left \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e right\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Diameter of Binary Tree\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ediameterOfBinaryTree\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    max_diameter = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eheight\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enode\u003c/span\u003e):\n        \u003cspan class=\"hljs-keyword\"\u003enonlocal\u003c/span\u003e max_diameter\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e node:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n        left_height = height(node.left)\n        right_height = height(node.right)\n\n        \u003cspan class=\"hljs-comment\"\u003e# Update diameter\u003c/span\u003e\n        max_diameter = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_diameter, left_height + right_height)\n\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e + \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(left_height, right_height)\n\n    height(root)\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_diameter\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch4\u003eIterative DFS (Using Stack)\u003c/h4\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Inorder Traversal\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003einorderTraversal\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    result = []\n    stack = []\n    current = root\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e current \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e stack:\n        \u003cspan class=\"hljs-comment\"\u003e# Go to leftmost node\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e current:\n            stack.append(current)\n            current = current.left\n\n        \u003cspan class=\"hljs-comment\"\u003e# Process node\u003c/span\u003e\n        current = stack.pop()\n        result.append(current.val)\n\n        \u003cspan class=\"hljs-comment\"\u003e# Go right\u003c/span\u003e\n        current = current.right\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eB) BFS (Breadth-First Search)\u003c/h3\u003e\n\u003cp\u003eProcess level by level using a queue.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Level Order Traversal\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e deque\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003elevelOrder\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e []\n\n    result = []\n    queue = deque([root])\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e queue:\n        level_size = \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(queue)\n        level = []\n\n        \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e _ \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(level_size):\n            node = queue.popleft()\n            level.append(node.val)\n\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.left:\n                queue.append(node.left)\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.right:\n                queue.append(node.right)\n\n        result.append(level)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Right Side View\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003erightSideView\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e []\n\n    result = []\n    queue = deque([root])\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e queue:\n        level_size = \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(queue)\n\n        \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(level_size):\n            node = queue.popleft()\n\n            \u003cspan class=\"hljs-comment\"\u003e# Last node in level\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e i == level_size - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e:\n                result.append(node.val)\n\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.left:\n                queue.append(node.left)\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.right:\n                queue.append(node.right)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Minimum Depth\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eminDepth\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eroot\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e root:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    queue = deque([(root, \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)])\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e queue:\n        node, depth = queue.popleft()\n\n        \u003cspan class=\"hljs-comment\"\u003e# First leaf found = minimum depth\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e node.left \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e node.right:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e depth\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.left:\n            queue.append((node.left, depth + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e))\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e node.right:\n            queue.append((node.right, depth + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e))\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eDFS\u003c/strong\u003e: Use for paths, validation, heights (recursive is cleaner)\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eBFS\u003c/strong\u003e: Use for shortest paths, level-order, minimum depth\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eDFS Time/Space\u003c/strong\u003e: O(n) time, O(h) space where h = height\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eBFS Time/Space\u003c/strong\u003e: O(n) time, O(w) space where w = max width\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e5. Linked List Manipulation\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eReversing lists\u003c/li\u003e\n  \u003cli\u003eReordering nodes\u003c/li\u003e\n  \u003cli\u003eMerging lists\u003c/li\u003e\n  \u003cli\u003eDetecting cycles\u003c/li\u003e\n  \u003cli\u003eFinding intersections\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eMental Model\u003c/h3\u003e\n\u003cp\u003eKeep track of multiple pointers to avoid losing references.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Reverse Linked List\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ereverseList\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003ehead\u003c/span\u003e):\n    prev = \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n    curr = head\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e curr:\n        next_temp = curr.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# save next\u003c/span\u003e\n        curr.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = prev       \u003cspan class=\"hljs-comment\"\u003e# reverse link\u003c/span\u003e\n        prev = curr            \u003cspan class=\"hljs-comment\"\u003e# move prev forward\u003c/span\u003e\n        curr = next_temp       \u003cspan class=\"hljs-comment\"\u003e# move curr forward\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e prev\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Merge Two Sorted Lists\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emergeTwoLists\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003el1, l2\u003c/span\u003e):\n    dummy = ListNode(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e)\n    current = dummy\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e l1 \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e l2:\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e l1.val \u0026#x3C; l2.val:\n            current.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = l1\n            l1 = l1.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            current.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = l2\n            l2 = l2.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        current = current.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Attach remaining nodes\u003c/span\u003e\n    current.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = l1 \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e l1 \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e l2\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e dummy.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Reorder List\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ereorderList\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003ehead\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e head \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e head.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Find middle\u003c/span\u003e\n    slow = fast = head\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e:\n        slow = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        fast = fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Reverse second half\u003c/span\u003e\n    second = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n    slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n\n    prev = \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e second:\n        next_temp = second.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        second.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = prev\n        prev = second\n        second = next_temp\n\n    \u003cspan class=\"hljs-comment\"\u003e# Merge alternating\u003c/span\u003e\n    first, second = head, prev\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e second:\n        temp1, temp2 = first.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e, second.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        first.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = second\n        second.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = temp1\n        first, second = temp1, temp2\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Palindrome Linked List\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eisPalindrome\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003ehead\u003c/span\u003e):\n    \u003cspan class=\"hljs-comment\"\u003e# Find middle\u003c/span\u003e\n    slow = fast = head\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e:\n        slow = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        fast = fast.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-comment\"\u003e# Reverse second half\u003c/span\u003e\n    second = slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n    slow.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n\n    prev = \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e second:\n        next_temp = second.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        second.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = prev\n        prev = second\n        second = next_temp\n\n    \u003cspan class=\"hljs-comment\"\u003e# Compare\u003c/span\u003e\n    first, second = head, prev\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e second:\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e first.val != second.val:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n        first = first.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        second = second.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Add Two Numbers\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eaddTwoNumbers\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003el1, l2\u003c/span\u003e):\n    dummy = ListNode(\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e)\n    current = dummy\n    carry = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e l1 \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e l2 \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e carry:\n        val1 = l1.val \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e l1 \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n        val2 = l2.val \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e l2 \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n        total = val1 + val2 + carry\n        carry = total // \u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e\n        current.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e = ListNode(total % \u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e)\n\n        current = current.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n        l1 = l1.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e l1 \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n        l2 = l2.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e l2 \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eNone\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e dummy.\u003cspan class=\"hljs-built_in\"\u003enext\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eUse \u003cstrong\u003edummy node\u003c/strong\u003e to simplify edge cases\u003c/li\u003e\n  \u003cli\u003eSave \u003ccode\u003enext\u003c/code\u003e before breaking links\u003c/li\u003e\n  \u003cli\u003eThree pointers for reversal: \u003ccode\u003eprev\u003c/code\u003e, \u003ccode\u003ecurr\u003c/code\u003e, \u003ccode\u003enext\u003c/code\u003e\u003c/li\u003e\n  \u003cli\u003eCombine with fast/slow for complex operations\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e6. Sliding Window\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eLongest/shortest substring/subarray\u003c/li\u003e\n  \u003cli\u003eFixed-size window problems\u003c/li\u003e\n  \u003cli\u003e\"All subarrays of size K\"\u003c/li\u003e\n  \u003cli\u003eContiguous sequences with constraints\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eMental Model\u003c/h3\u003e\n\u003cp\u003eMaintain a window that expands (right pointer) and contracts (left pointer) to satisfy conditions.\u003c/p\u003e\n\u003ch3\u003eA) Fixed Size Window\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Maximum Sum Subarray of Size K\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003emaxSumSubarray\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, k\u003c/span\u003e):\n    window_sum = \u003cspan class=\"hljs-built_in\"\u003esum\u003c/span\u003e(nums[:k])\n    max_sum = window_sum\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(k, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)):\n        \u003cspan class=\"hljs-comment\"\u003e# Slide window: remove left, add right\u003c/span\u003e\n        window_sum = window_sum - nums[i-k] + nums[i]\n        max_sum = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_sum, window_sum)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_sum\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eB) Variable Size Window\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Longest Substring Without Repeating Characters\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003elengthOfLongestSubstring\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es\u003c/span\u003e):\n    seen = \u003cspan class=\"hljs-built_in\"\u003eset\u003c/span\u003e()\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s)):\n        \u003cspan class=\"hljs-comment\"\u003e# Shrink window while duplicate exists\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e s[right] \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e seen:\n            seen.remove(s[left])\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        seen.add(s[right])\n        max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Minimum Window Substring\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e Counter\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eminWindow\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es, t\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e s \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e t:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"\"\u003c/span\u003e\n\n    need = Counter(t)\n    have = {}\n\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    min_len = \u003cspan class=\"hljs-built_in\"\u003efloat\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'inf'\u003c/span\u003e)\n    min_start = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    matched = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s)):\n        char = s[right]\n        have[char] = have.get(char, \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e need \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e have[char] == need[char]:\n            matched += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Try to shrink window\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e matched == \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(need):\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u0026#x3C; min_len:\n                min_len = right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n                min_start = left\n\n            left_char = s[left]\n            have[left_char] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e left_char \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e need \u003cspan class=\"hljs-keyword\"\u003eand\u003c/span\u003e have[left_char] \u0026#x3C; need[left_char]:\n                matched -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"\"\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e min_len == \u003cspan class=\"hljs-built_in\"\u003efloat\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'inf'\u003c/span\u003e) \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e s[min_start:min_start + min_len]\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Longest Repeating Character Replacement\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003echaracterReplacement\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es, k\u003c/span\u003e):\n    count = {}\n    left = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    max_count = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e right \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s)):\n        count[s[right]] = count.get(s[right], \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        max_count = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_count, count[s[right]])\n\n        \u003cspan class=\"hljs-comment\"\u003e# Window size - most frequent char \u003e k replacements allowed\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e (right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e) - max_count \u003e k:\n            count[s[left]] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            left += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, right - left + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e)\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Permutation in String\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e collections \u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e Counter\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003echeckInclusion\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003es1, s2\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1) \u003e \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s2):\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\n    s1_count = Counter(s1)\n    window_count = Counter(s2[:\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1)])\n\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e s1_count == window_count:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(\u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1), \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s2)):\n        \u003cspan class=\"hljs-comment\"\u003e# Add new char\u003c/span\u003e\n        window_count[s2[i]] += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-comment\"\u003e# Remove old char\u003c/span\u003e\n        left_char = s2[i - \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(s1)]\n        window_count[left_char] -= \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e window_count[left_char] == \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e:\n            \u003cspan class=\"hljs-keyword\"\u003edel\u003c/span\u003e window_count[left_char]\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e s1_count == window_count:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003eFixed window\u003c/strong\u003e: Simple sliding, calculate on each slide\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eVariable window\u003c/strong\u003e: Expand with right, contract with left\u003c/li\u003e\n  \u003cli\u003eUse hash map/set to track window contents\u003c/li\u003e\n  \u003cli\u003eTime: O(n), Space: O(k) where k = unique elements\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e7. Binary Search\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eSorted arrays\u003c/li\u003e\n  \u003cli\u003e\"Find target/boundary/peak\"\u003c/li\u003e\n  \u003cli\u003eMinimizing/maximizing with constraint\u003c/li\u003e\n  \u003cli\u003e\"Can we achieve X?\" problems\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eMental Model\u003c/h3\u003e\n\u003cp\u003eEliminate half of search space each iteration.\u003c/p\u003e\n\u003ch3\u003eA) Classic Binary Search\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Find Target\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esearch\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, target\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C;= right:\n        mid = left + (right - left) // \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[mid] == target:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e mid\n        \u003cspan class=\"hljs-keyword\"\u003eelif\u003c/span\u003e nums[mid] \u0026#x3C; target:\n            left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            right = mid - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eB) Finding Boundaries\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: First and Last Position\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esearchRange\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, target\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efindBoundary\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eis_first\u003c/span\u003e):\n        left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        result = -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C;= right:\n            mid = left + (right - left) // \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[mid] == target:\n                result = mid\n                \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e is_first:\n                    right = mid - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# search left half\u003c/span\u003e\n                \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n                    left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e   \u003cspan class=\"hljs-comment\"\u003e# search right half\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eelif\u003c/span\u003e nums[mid] \u0026#x3C; target:\n                left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n                right = mid - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e [findBoundary(\u003cspan class=\"hljs-literal\"\u003eTrue\u003c/span\u003e), findBoundary(\u003cspan class=\"hljs-literal\"\u003eFalse\u003c/span\u003e)]\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eC) Search in Rotated Array\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Search in Rotated Sorted Array\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esearch\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, target\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C;= right:\n        mid = left + (right - left) // \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[mid] == target:\n            \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e mid\n\n        \u003cspan class=\"hljs-comment\"\u003e# Left half is sorted\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[left] \u0026#x3C;= nums[mid]:\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[left] \u0026#x3C;= target \u0026#x3C; nums[mid]:\n                right = mid - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n                left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-comment\"\u003e# Right half is sorted\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[mid] \u0026#x3C; target \u0026#x3C;= nums[right]:\n                left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n            \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n                right = mid - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eD) Find Peak Element\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Find Peak\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efindPeakElement\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right:\n        mid = left + (right - left) // \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[mid] \u003e nums[mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e]:\n            \u003cspan class=\"hljs-comment\"\u003e# Peak is on left (or mid itself)\u003c/span\u003e\n            right = mid\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            \u003cspan class=\"hljs-comment\"\u003e# Peak is on right\u003c/span\u003e\n            left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e left\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eE) Minimize/Maximize Problems\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Minimum in Rotated Sorted Array\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efindMin\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums\u003c/span\u003e):\n    left, right = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums) - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right:\n        mid = left + (right - left) // \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e nums[mid] \u003e nums[right]:\n            \u003cspan class=\"hljs-comment\"\u003e# Minimum is in right half\u003c/span\u003e\n            left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            \u003cspan class=\"hljs-comment\"\u003e# Minimum is in left half (or mid itself)\u003c/span\u003e\n            right = mid\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e nums[left]\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Koko Eating Bananas\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003eimport\u003c/span\u003e math\n\n\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eminEatingSpeed\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003epiles, h\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003ecanFinish\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003espeed\u003c/span\u003e):\n        hours = \u003cspan class=\"hljs-built_in\"\u003esum\u003c/span\u003e(math.ceil(pile / speed) \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e pile \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e piles)\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e hours \u0026#x3C;= h\n\n    left, right = \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(piles)\n\n    \u003cspan class=\"hljs-keyword\"\u003ewhile\u003c/span\u003e left \u0026#x3C; right:\n        mid = left + (right - left) // \u003cspan class=\"hljs-number\"\u003e2\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e canFinish(mid):\n            right = mid  \u003cspan class=\"hljs-comment\"\u003e# try slower speed\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            left = mid + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e  \u003cspan class=\"hljs-comment\"\u003e# need faster speed\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e left\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eUse \u003ccode\u003eleft + (right - left) // 2\u003c/code\u003e to avoid overflow\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eleft \u0026#x3C;= right\u003c/strong\u003e for finding exact value\u003c/li\u003e\n  \u003cli\u003e\u003cstrong\u003eleft \u0026#x3C; right\u003c/strong\u003e for finding boundary\u003c/li\u003e\n  \u003cli\u003e\"Can we achieve X?\" → Binary search on answer space\u003c/li\u003e\n  \u003cli\u003eTime: O(log n)\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e8. Prefix Sum\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eSubarray sum problems\u003c/li\u003e\n  \u003cli\u003eRange sum queries\u003c/li\u003e\n  \u003cli\u003e\"Count subarrays with sum = K\"\u003c/li\u003e\n  \u003cli\u003eProblems with negative numbers\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eMental Model\u003c/h3\u003e\n\u003cp\u003ePrecompute cumulative sums to answer range queries in O(1).\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Subarray Sum Equals K\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esubarraySum\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums, k\u003c/span\u003e):\n    count = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    prefix_sum = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    sum_count = {\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e: \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e}  \u003cspan class=\"hljs-comment\"\u003e# prefix_sum -\u003e count\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e num \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e nums:\n        prefix_sum += num\n\n        \u003cspan class=\"hljs-comment\"\u003e# Check if there's a previous prefix that gives us k\u003c/span\u003e\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e prefix_sum - k \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e sum_count:\n            count += sum_count[prefix_sum - k]\n\n        sum_count[prefix_sum] = sum_count.get(prefix_sum, \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e) + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e count\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Contiguous Array (Equal 0s and 1s)\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003efindMaxLength\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums\u003c/span\u003e):\n    \u003cspan class=\"hljs-comment\"\u003e# Treat 0 as -1, find subarray with sum 0\u003c/span\u003e\n    max_length = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n    sum_index = {\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e: -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e}  \u003cspan class=\"hljs-comment\"\u003e# sum -\u003e first index\u003c/span\u003e\n    running_sum = \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i, num \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003eenumerate\u003c/span\u003e(nums):\n        running_sum += \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e num == \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e running_sum \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e sum_index:\n            max_length = \u003cspan class=\"hljs-built_in\"\u003emax\u003c/span\u003e(max_length, i - sum_index[running_sum])\n        \u003cspan class=\"hljs-keyword\"\u003eelse\u003c/span\u003e:\n            sum_index[running_sum] = i\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e max_length\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Range Sum Query (Immutable)\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003eclass\u003c/span\u003e \u003cspan class=\"hljs-title class_\"\u003eNumArray\u003c/span\u003e:\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003e__init__\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself, nums\u003c/span\u003e):\n        self.prefix = [\u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e]\n        \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e num \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e nums:\n            self.prefix.append(self.prefix[-\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e] + num)\n\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003esumRange\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003eself, left, right\u003c/span\u003e):\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e self.prefix[right + \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e] - self.prefix[left]\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Product of Array Except Self\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003eproductExceptSelf\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003enums\u003c/span\u003e):\n    n = \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(nums)\n    result = [\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e] * n\n\n    \u003cspan class=\"hljs-comment\"\u003e# Left products\u003c/span\u003e\n    left_product = \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(n):\n        result[i] = left_product\n        left_product *= nums[i]\n\n    \u003cspan class=\"hljs-comment\"\u003e# Right products\u003c/span\u003e\n    right_product = \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e\n    \u003cspan class=\"hljs-keyword\"\u003efor\u003c/span\u003e i \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e \u003cspan class=\"hljs-built_in\"\u003erange\u003c/span\u003e(n - \u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e, -\u003cspan class=\"hljs-number\"\u003e1\u003c/span\u003e):\n        result[i] *= right_product\n        right_product *= nums[i]\n\n    \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e result\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eKey Insights\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003cstrong\u003ePrefix sum\u003c/strong\u003e: \u003ccode\u003esum(i, j) = prefix[j+1] - prefix[i]\u003c/code\u003e\u003c/li\u003e\n  \u003cli\u003eUse hash map to store prefix sums for subarray problems\u003c/li\u003e\n  \u003cli\u003eWorks with negative numbers (unlike sliding window)\u003c/li\u003e\n  \u003cli\u003eTime: O(n), Space: O(n)\u003c/li\u003e\n\u003c/ul\u003e\n\u003chr\u003e\n\u003ch2\u003e9. Graph Traversal\u003c/h2\u003e\n\u003ch3\u003eWhen to Use\u003c/h3\u003e\n\u003cul\u003e\n  \u003cli\u003eConnected components\u003c/li\u003e\n  \u003cli\u003eCycle detection\u003c/li\u003e\n  \u003cli\u003eShortest paths\u003c/li\u003e\n  \u003cli\u003eTopological sorting\u003c/li\u003e\n  \u003cli\u003eDependencies (course schedule)\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eA) DFS on Graph\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eExample: Number of Islands\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-python\"\u003e\u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003enumIslands\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003egrid\u003c/span\u003e):\n    \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003enot\u003c/span\u003e grid:\n        \u003cspan class=\"hljs-keyword\"\u003ereturn\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n    \u003cspan class=\"hljs-keyword\"\u003edef\u003c/span\u003e \u003cspan class=\"hljs-title function_\"\u003edfs\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003er, c\u003c/span\u003e):\n        \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e (r \u0026#x3C; \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e r \u003e= \u003cspan class=\"hljs-built_in\"\u003elen\u003c/span\u003e(grid) \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e c \u0026#x3C; \u003cspan class=\"hljs-number\"\u003e0\u003c/span\u003e\n\n\u003cspan class=\"hljs-comment\"\u003e## The Recognition Framework\u003c/span\u003e\n\nMost easy-mid problems can be solved by asking yourself these questions \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e order:\n\n\u003cspan class=\"hljs-number\"\u003e1.\u003c/span\u003e Does this involve a \u003cspan class=\"hljs-built_in\"\u003esorted\u003c/span\u003e array \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e finding pairs/triplets?\n   → Two Pointers\n\u003cspan class=\"hljs-number\"\u003e2.\u003c/span\u003e Do I need to check \u003cspan class=\"hljs-keyword\"\u003eif\u003c/span\u003e something exists \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e count frequencies?\n   → Hash Table/\u003cspan class=\"hljs-type\"\u003eSet\u003c/span\u003e\n\u003cspan class=\"hljs-number\"\u003e3.\u003c/span\u003e Does this involve parentheses, operations \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e reverse order, \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"most recent\"\u003c/span\u003e logic?\n   → Stack\n\u003cspan class=\"hljs-number\"\u003e4.\u003c/span\u003e Is this about a tree \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e graph structure?\n   → DFS (Recursion) \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e BFS (Queue)\n\u003cspan class=\"hljs-number\"\u003e5.\u003c/span\u003e Does this involve reversing \u003cspan class=\"hljs-keyword\"\u003eor\u003c/span\u003e reordering a linked \u003cspan class=\"hljs-built_in\"\u003elist\u003c/span\u003e?\n   → Three-Pointer Technique\n\u003c/code\u003e\u003c/pre\u003e\n"}},"__N_SSG":true},"page":"/notes/[...noteKey]","query":{"noteKey":["algorithms","basic_algorithms"]},"buildId":"6V8_yxN3djhrhbRemYkax","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
